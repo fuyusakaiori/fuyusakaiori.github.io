@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="加载        目的：[IO 读取字节码存储在方法区中，并由类加载器生成 Class 对象]{.red}  IO 根据类的 [全限定名称]{.red} 获取该类的字节码文件   12&#x2F;&#x2F; String 类的全限定名java.lang.String 类加载器将静态存储的字节码文件存储在 [方法区]{.red}    [注：字节码文件必须经过 验证阶段 才可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="类加载机制-类加载过程">
+<meta property="og:url" content="http://example.com/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="加载        目的：[IO 读取字节码存储在方法区中，并由类加载器生成 Class 对象]{.red}  IO 根据类的 [全限定名称]{.red} 获取该类的字节码文件   12&#x2F;&#x2F; String 类的全限定名java.lang.String 类加载器将静态存储的字节码文件存储在 [方法区]{.red}    [注：字节码文件必须经过 验证阶段 才可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/16/f29c8a9c04e9d600b0921e523608e39a.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/16/0474b737a23553c66d67a8f284ee98fa.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/16/e486c7b9469cf5c061e033fb8b97dcbb.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/16/97321fa1890963012f978d81a04d0d3f.jpg">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/16/7a47e10f5a257079392bb286dce4f5b2.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/16/f7dda6ef44ee19a60138b4b166d9ca3f.png">
+<meta property="article:published_time" content="2021-09-28T09:49:15.822Z">
+<meta property="article:modified_time" content="2021-09-28T09:52:42.117Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/16/f29c8a9c04e9d600b0921e523608e39a.png"><title>类加载机制-类加载过程 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">类加载机制-类加载过程</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h2 id="加载"   >
+          <a href="#加载" class="heading-link"><i class="fas fa-link"></i></a><a href="#加载" class="headerlink" title="加载"></a>加载</h2>
+      <ul>
+<li><p>目的：[IO 读取字节码存储在方法区中，并由类加载器生成 Class 对象]{.red}</p>
+<ul>
+<li><p>IO 根据类的 [全限定名称]{.red} 获取该类的字节码文件</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// String 类的全限定名</span></span><br><span class="line">java.lang.String</span><br></pre></td></tr></table></div></figure></li>
+<li><p>类加载器将静态存储的字节码文件存储在 [方法区]{.red} </p>
+<p>  [注：字节码文件必须经过 <strong>验证阶段</strong> 才可以存储在方法区]{.red}</p>
+</li>
+<li><p>类加载器在内存中生成类对应的 Class 对象</p>
+<p>  [Class 对象也称为 DNA 元数据模板]{.red}</p>
+</li>
+</ul>
+</li>
+<li><p>加载时机：</p>
+<ul>
+<li><p>调用 new (创建对象)、getstatic (读取静态变量)、putstatic (设置静态变量)、invokestatic (调用静态方法) 四条字节码指令时开始加载类</p>
+<blockquote>
+<p>[注：创建对象前显然是需要类的存在的；静态成员是属于类的，显然也需要加载类]{.blue}</p>
+</blockquote>
+</li>
+<li><p>反射调用</p>
+</li>
+<li><p>子类加载前优先加载父类</p>
+</li>
+<li><p>含有 [main]{.red} 方法的类优先加载</p>
+</li>
+<li><p>动态代理</p>
+</li>
+<li><p>接口实现类被加载前优先加载接口</p>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li><p>[上述六种情况出现时虚拟机必须立刻对相应的类进行加载]{.red}</p>
+</li>
+<li><p>[有且仅有这六种情况是必须要立刻加载的；其余的类加载由虚拟机的具体实现决定]{.red}</p>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>字节码文件的获取方式：</p>
+<ul>
+<li><p>[本地加载得到]{.red}</p>
+</li>
+<li><p>[压缩文件获取（zip，jar，war）]{.red}</p>
+<blockquote>
+<ul>
+<li>[jar 包里面存放的就是字节码文件；war 包是 web 应用开发的压缩包]{.red}</li>
+<li>Maven 管理的就是各种各样的 jar 包</li>
+</ul>
+</blockquote>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.mysql.jdbc.Driver</span><br></pre></td></tr></table></div></figure>
+
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/16/f29c8a9c04e9d600b0921e523608e39a.png" alt="f29c8a9c04e9d600b0921e523608e39a.png" style="zoom:80%;" />
+
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/16/0474b737a23553c66d67a8f284ee98fa.png" alt="0474b737a23553c66d67a8f284ee98fa.png" style="zoom:80%;" /></li>
+<li><p>网络获取：Applet</p>
+</li>
+<li><p>[运行时计算生成：动态代理（反射）]{.red}</p>
+<p>  [动态代理类能够在运行的时候生成接口对应的实现类，再编译成相应的字节码文件]{.red}</p>
+</li>
+<li><p>数据库中获取</p>
+</li>
+<li><p>加密文件中获取</p>
+</li>
+</ul>
+<p>  <a target="_blank" rel="noopener" href="https://xpic.jp/image/0BSB"><img src="https://i1.xpic.jp/file/xpicjp/2021/05/16/e486c7b9469cf5c061e033fb8b97dcbb.png" alt="e486c7b9469cf5c061e033fb8b97dcbb.png" style="zoom:80%;" /></a></p>
+</li>
+<li><p>图示：[加载]{.red} 的完整过程</p>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/16/97321fa1890963012f978d81a04d0d3f.jpg" alt="97321fa1890963012f978d81a04d0d3f.jpg" style="zoom:80%;" />
+
+
+        <h2 id="连接"   >
+          <a href="#连接" class="heading-link"><i class="fas fa-link"></i></a><a href="#连接" class="headerlink" title="连接"></a>连接</h2>
+      <ul>
+<li>核心：[验证 + 准备 + 解析]{.red}</li>
+</ul>
+
+        <h3 id="验证"   >
+          <a href="#验证" class="heading-link"><i class="fas fa-link"></i></a><a href="#验证" class="headerlink" title="验证"></a>验证</h3>
+      <ul>
+<li><p>目的：</p>
+<ul>
+<li>保证字节码文件符合虚拟机规范</li>
+<li>保证字节码被加载后不会危害虚拟机安全</li>
+</ul>
+</li>
+<li><p>验证方式</p>
+<ul>
+<li><p>文件格式验证：验证加载的字节码是否符合字节码文件规范形式，且是否可以被当前版本的虚拟机执行</p>
+<ul>
+<li><p>[字节码文件是否以魔数 0xCAFEBABE 开头]{.red}</p>
+<blockquote>
+<p> notepad++ 中安装 hex-editor 插件可以查看字节码的 16 进制格式</p>
+</blockquote>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/16/7a47e10f5a257079392bb286dce4f5b2.png" alt="7a47e10f5a257079392bb286dce4f5b2.png" style="zoom:80%;" /></li>
+<li><p>文件格式验证通过之后字节码加载生成的 Class 对象才可以进入方法区中存储</p>
+</li>
+</ul>
+</li>
+<li><p>元数据验证：对字节码文件进行语义分析，确保不与虚拟机规定的语义有所违背</p>
+<blockquote>
+<p>没太明白是个啥…</p>
+</blockquote>
+</li>
+<li><p>[字节码验证]{.red}（最复杂的阶段）：通过数据流和控制流分析字节码文件中的 &lt; Code &gt; 属性，确保字节码文件不会做出危害虚拟机安全的操作</p>
+<ul>
+<li>[翻译：对被加载的 Class 对象的具体方法进行校验 -&gt; 确保符合 Java 语法规范]{.red}</li>
+<li>无论经过多么严密的检查都不可能完全保证字节码一定安全（<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.zhihu.com/question/20081359/answer/275107187" >停机问题</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>）</li>
+<li>JDK 6 之前采用 [类型推导]{.red} 的方式检验；JDK 7 之后强制采用 [StackMapTable]{.red} 属性检验</li>
+</ul>
+</li>
+<li><p>符号引用验证：</p>
+<ul>
+<li>翻译：</li>
+<li>符号引用验证发生在 [解析]{.red} 阶段中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>细节：如果字节码文件已经被反复验证过了，可以尝试关闭大部分验证措施</p>
+</li>
+</ul>
+
+        <h3 id="准备"   >
+          <a href="#准备" class="heading-link"><i class="fas fa-link"></i></a><a href="#准备" class="headerlink" title="准备"></a>准备</h3>
+      <ul>
+<li><p>目的：[为 <strong>类变量分配内存</strong> 并且设置 <strong>类变量的初始值</strong>]{.red}</p>
+<ul>
+<li><p>类变量 &amp; 实例变量</p>
+<ul>
+<li><p>类变量：属于类的变量 -&gt; 静态变量</p>
+</li>
+<li><p>实例变量：属于实例对象的变量 -&gt; 成员变量</p>
+<blockquote>
+<p>[JDK 6 之前类变量应该分配在方法区中 -&gt; JDK 7 之后类变量跟随 Class 对象分配在堆中]{.red}</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>常量值：采用 static + final 共同修饰的并不属于类变量</p>
+<ul>
+<li><p>常量值在 [编译阶段]{.red} 设置初始值，在准备阶段赋值</p>
+<blockquote>
+<ul>
+<li>编译阶段：将 Java源代码（.java）编译成 字节码文件（.class）的过程</li>
+<li>设置初始值：给该类型的设置为默认值；赋值：给该类型设置程序员提供的值</li>
+</ul>
+</blockquote>
+</li>
+<li><p>[常量值实际并不属于所在类，而是属于运行的主类]{.red}</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 常量值所在类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConstantClass</span></span>&#123;</span><br><span class="line">    <span class="comment">// 常量值</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> constantValue = <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 常量值所在的运行类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitializationClass</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 引用类的常量值</span></span><br><span class="line">        System.out.println(Constant.constantValue);</span><br><span class="line">        <span class="comment">// 编译阶段通过常量传播优化，常量值并没有存储在 ConstantClass 的常量池中，而是存储在 NotInitializationClass 类中</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>设置初始值：</p>
+<ul>
+<li><p>设置初始值 ≠ 赋值</p>
+</li>
+<li><p>类变量的值会被设置为当前类型的默认值</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SetValue</span></span>&#123;</span><br><span class="line">    <span class="comment">// 1. 准备阶段 value 被分配内存空间，同时被设置初始值为 0</span></span><br><span class="line">   	<span class="comment">// 2. 初始化阶段 value 被赋值，设置值为 2</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> value = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>  :::primary</p>
+<ul>
+<li><p>[赋值的行为是在初始化阶段进行的]{.red}</p>
+</li>
+<li><p>[每种数据类型的默认值都是不同的]{.red}</p>
+</li>
+</ul>
+<p>  :::</p>
+</li>
+</ul>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>默认值</th>
+<th>数据类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>int</td>
+<td>0</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>long</td>
+<td>0L</td>
+<td>float</td>
+<td>0.0f</td>
+</tr>
+<tr>
+<td>short</td>
+<td>(short)0</td>
+<td>double</td>
+<td>0.0d</td>
+</tr>
+<tr>
+<td>char</td>
+<td>‘\u0000’（采用的unicode编码）</td>
+<td>reference（引用类型）</td>
+<td>null</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>(byte)0</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table></div>
+</li>
+</ul>
+
+        <h3 id="解析"   >
+          <a href="#解析" class="heading-link"><i class="fas fa-link"></i></a><a href="#解析" class="headerlink" title="解析"></a>解析</h3>
+      <ul>
+<li><p>目的：[将常量池内的符号引用转换为直接引用]{.red}</p>
+<ul>
+<li><p>符号引用：用于代替被引用类的未知地址</p>
+<p>  解释：某个类中引用了其他类，但是虚拟机并不知道这个引用类的实际地址，使用 ++符号引用++ 来暂时表示这个引用类的地址，等到解析阶段确定真正的地址</p>
+</li>
+<li><p>直接引用：引用类在虚拟机内存中的实际地址</p>
+<p>  [符号引用是无效的，必须转换成直接引用才有用]{.red}</p>
+</li>
+</ul>
+</li>
+<li><p>解析类型：</p>
+</li>
+</ul>
+<p>:::info</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34402394/article/details/72793119" >符号引用和直接引用(1)</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41490593/article/details/95110259?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control" >符号引用和直接引用(2)</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+
+        <h2 id="初始化"   >
+          <a href="#初始化" class="heading-link"><i class="fas fa-link"></i></a><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2>
+      <ul>
+<li><p>目的：[执行 类构造器 &lt; clinit &gt; 方法的过程]{.red}</p>
+<ul>
+<li>&lt; clinit &gt; &amp; &lt; init &gt;<ul>
+<li>&lt; clinit &gt; 方法：编译器自动收集类中的 [静态变量]{.red} 和 [静态代码块(static{ })]{.red} 合并而成</li>
+<li>&lt; init &gt; 方法：类的构造器方法 -&gt; 虚拟机认为这是实例构造器</li>
+</ul>
+</li>
+<li>编译器是按照从上到下的代码顺序进行收集的</li>
+</ul>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</span><br><span class="line">	<span class="comment">// 类中的构造器就是虚拟机中的 &lt;init&gt; 方法	</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.value = <span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;类正在初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 类中的静态变量 + 静态代码块就是虚拟机中的 &lt;clinit&gt; 方法</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> staticValue;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        staticValue = <span class="number">1</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;静态变量初始化...&quot;</span>);</span><br><span class="line">        <span class="comment">// 问题：为什么可以先赋值后声明变量</span></span><br><span class="line">        <span class="comment">// 1. 在准备阶段中虚拟机就已经为静态变量分配了对应的内存空间并且设置了初始值</span></span><br><span class="line">        <span class="comment">// 2. 在初始化阶段虚拟机才会执行 &lt;clinit&gt; 方法，也就意味着静态代码块才会被调用</span></span><br><span class="line">        <span class="comment">// 3. 总结：虚拟机会先将所有定义好的静态变量设置初始值，然后再执行 &lt;clinit&gt; 方法中的内容</span></span><br><span class="line">        afterStaticValue = <span class="number">3</span>;</span><br><span class="line">        <span class="comment">// 问题：那么为什么可以赋值，但是却不可以调用呢?（调用会抛出前向引用变量的错误）</span></span><br><span class="line">        System.out.println(afterStaticValue);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 静态代码块之后的静态变量可以进行赋值但是不可以调用</span></span><br><span class="line">    <span class="comment">// 如果代码中出现两次赋值，根据自上而下的顺序赋值，因为编译器是自上而下收集的，这里最后的值是 4</span></span><br><span class="line">    <span class="comment">// 静态变量先在准备阶段赋值为0，然后在初始化阶段被赋值为3，最后再被赋值为4</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> afterStaticValue = <span class="number">4</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li><p>父子类关系（<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/Java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" >静态代码块和构造方法的先后调用关系</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>）：</p>
+<ul>
+<li><p>&lt; init &gt; 方法：子类初始化需要使用父类时才会显式调用父类的 &lt; init &gt; 方法</p>
+</li>
+<li><p>&lt; clinit &gt; 方法：无论子类初始化是否需要使用父类，虚拟机都会执行父类的 &lt; clinit &gt; 方法</p>
+<blockquote>
+<p>[父类的&lt; init &gt;和&lt; clinit &gt;都是优先于子类执行，但是区别在于是否显式调用，&lt; clinit &gt; 不被调用也会优先执行]{.red}</p>
+</blockquote>
+</li>
+</ul>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Father</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Brother</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Brother</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;兄弟类被初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Brother brother = <span class="keyword">new</span> Brother();</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类代码块初始化&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Son</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>如果类中没有任何的类变量和静态代码块，编译器不会生成对应的 &lt; clinit &gt; 方法</p>
+</li>
+<li><p>接口的 &lt; clinit &gt; 方法</p>
+<ul>
+<li><p>[执行子接口的 &lt; clinit &gt; 方法不需要优先执行父接口的 &lt; clinit &gt; 方法 -&gt; 父接口被使用时才会执行 &lt; clinit &gt; 方法]{.red}</p>
+</li>
+<li><p>[执行接口实现类的 &lt; clinit &gt; 方法不需要优先执行父接口的 &lt; clinit &gt; 方法]{.red}</p>
+</li>
+<li><p>接口中没有类变量但是拥有常量，所有的常量在初始化阶段仍然需要赋值操作</p>
+<blockquote>
+<p>问题在于，字节码文件中并没有看到 &lt; clinit &gt; 方法啊…</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>[&lt; clinit &gt; 方法在多线程环境下需要正确的加锁]{.red}</p>
+<blockquote>
+<p>解释：</p>
+<p>(1) 多个线程都想初始化同一个类时只允许一个线程优先初始化这个类，其余线程只能够等待，所以 &lt; clinit &gt; 方法也只能够被一个线程使用</p>
+<p>(2) 其余线程虽然会被阻塞，但是在当前线程执行结束 &lt; clinit &gt; 方法之后，其余线程也不会再执行，因为 &lt; clinit &gt; 方法包含的是属于类的静态成员，类仅加载一次，所以 &lt; clinit &gt; 方法也只执行一次</p>
+</blockquote>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/16/f7dda6ef44ee19a60138b4b166d9ca3f.png" alt="f7dda6ef44ee19a60138b4b166d9ca3f.png" style="zoom:80%;" /></li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/">http://example.com/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/28/os/process/%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">进程同步</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/"><span class="paginator-prev__text">类加载机制-双亲委派机制</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">
+          加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5"><span class="toc-number">2.</span> <span class="toc-text">
+          连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81"><span class="toc-number">2.1.</span> <span class="toc-text">
+          验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">2.2.</span> <span class="toc-text">
+          准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90"><span class="toc-number">2.3.</span> <span class="toc-text">
+          解析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">
+          初始化</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

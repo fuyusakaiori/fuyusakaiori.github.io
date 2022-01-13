@@ -1,0 +1,464 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="虚拟内存        引入：  程序加载进入内存中有两种方式：(1) 程序 &#x3D;&#x3D;完整&#x3D;&#x3D; 地加载进入内存 (2) 仅加载 &#x3D;&#x3D;部分&#x3D;&#x3D; 程序，剩余部分在需要时再进行加载   解释 1：此前提到的 &#x3D;&#x3D;分页技术&#x3D;&#x3D; 都是在内存中为程序的每页都分配相应的帧：相当于将程序完整地加载进入内存中   解释 2：此前提到的 &#x3D;&#x3D;动态加载&#x3D;&#x3D; 就是加载部分程序，需要时再">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟内存">
+<meta property="og:url" content="http://example.com/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="虚拟内存        引入：  程序加载进入内存中有两种方式：(1) 程序 &#x3D;&#x3D;完整&#x3D;&#x3D; 地加载进入内存 (2) 仅加载 &#x3D;&#x3D;部分&#x3D;&#x3D; 程序，剩余部分在需要时再进行加载   解释 1：此前提到的 &#x3D;&#x3D;分页技术&#x3D;&#x3D; 都是在内存中为程序的每页都分配相应的帧：相当于将程序完整地加载进入内存中   解释 2：此前提到的 &#x3D;&#x3D;动态加载&#x3D;&#x3D; 就是加载部分程序，需要时再">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/03/cf892cbdfc01d5b16b3d8da015844a66.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/03/c5cf9fe08fb4d27f3d7a0b714dd1126f.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/03/76f455f3e5b40584b68cea4eb9db2fcd.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/03/f57e06381954a1a3882b51ec2fae42dd.png">
+<meta property="article:published_time" content="2021-09-18T07:29:22.081Z">
+<meta property="article:modified_time" content="2021-09-28T11:02:25.825Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/03/cf892cbdfc01d5b16b3d8da015844a66.png"><title>虚拟内存 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">虚拟内存</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="虚拟内存"   >
+          <a href="#虚拟内存" class="heading-link"><i class="fas fa-link"></i></a><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h1>
+      <ul>
+<li><p>引入：</p>
+<ul>
+<li><p>程序加载进入内存中有两种方式：(1) 程序 ==完整== 地加载进入内存 (2) 仅加载 ==部分== 程序，剩余部分在需要时再进行加载</p>
+<p>  解释 1：此前提到的 ==分页技术== 都是在内存中为程序的每页都分配相应的帧：<a style="color:red;">相当于将程序完整地加载进入内存中</a></p>
+<p>  解释 2：此前提到的 ==动态加载== 就是加载部分程序，需要时再加载；即将提到的 ==虚拟内存== 基本原理也是如此</p>
+<p>  <a style="color:red;">注：动态加载和虚拟内存都是基于分页/分段技术，而不是独立出来的技术，是一种扩展</a></p>
+</li>
+<li><p>完整地加载整个程序会产生许多问题：(1) <a style="color:red;">程序的大小受限于物理内存的大小</a> (2) <a style="color:red;">多道程序系统的度受到限制</a></p>
+<p>  解释 1：游戏等大型软件就不可能制作超过百G大小，因为不可能有这么大的内存（除非你插很多的内存条）来完整地存放这个游戏</p>
+<p>  解释 2：物理内存为 16G 的个人计算机最多只能够容纳 16个 1G 大小的软件（操作系统通常还要占据 1G~4G），如果软件更大，显然容纳的个数就越少</p>
+</li>
+</ul>
+</li>
+<li><p>问题解决方式：(1) 动态加载 (2) 虚拟内存</p>
+</li>
+</ul>
+
+        <h2 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      <ul>
+<li><p>定义：利用 ==按需调页== 和 ==页面置换== 技术在 ==逻辑上== 对物理内存进行 ==扩大== 的技术</p>
+</li>
+<li><p>核心：<a style="color:red;">按需调页 + 页面置换</a></p>
+</li>
+<li><p>解释：</p>
+<ul>
+<li><p>程序在加载进入内存中时，仅将程序的 <strong>需要使用的页</strong> 装入内存，而将 <strong>暂时不需要使用的页</strong>留在后备存储中</p>
+<p>  处理器再执行程序中的指令时，访问的部分没有被加载进入内存中，此时将这部分程序加载进入内存中 -&gt; <a style="color:red;">按需调页</a></p>
+</li>
+<li><p>空闲内存低于阈值时，会将内存中 <strong>暂时没有使用页换出</strong> 到后备存储的 <strong>交换空间</strong> 中，<strong>换入</strong> 当前处理器 <strong>需要访问的页</strong> -&gt; <a style="color:red;">页面置换</a></p>
+</li>
+<li><p>因为不断地换入换出进程的页面，用户就会感觉进程 <strong>整个</strong> 都在内存中运行，就好像使用了比实际物理内存更大内存，也就是虚拟内存</p>
+<p>  <a style="color:red;">虚拟内存技术可以说就是制造“假象”的技术</a></p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/06/03/cf892cbdfc01d5b16b3d8da015844a66.png" alt="cf892cbdfc01d5b16b3d8da015844a66.png" style="zoom:80%;" /></li>
+<li><p>举例：在线观看视频</p>
+<ul>
+<li><p>浏览器并不会将整个视频全部传输完成再播放，那样显然就变成下载了；</p>
+</li>
+<li><p>浏览器每播放一部分就下载一部分，播放过的部分就会被正在播放的部分直接覆盖； </p>
+</li>
+<li><p>用户需要倒推观看时会发现仍然需要缓冲（除非网速很快），因为之前观看的部分已经被删除了；</p>
+</li>
+<li><p>这样给用户的感觉就是整个视频都被加载到内存中播放，但实际上仅仅用了很少的内存 </p>
+</li>
+</ul>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><a style="color:red;">多次性</a>：不需要一次性将程序的所有页全部加载进入内存</li>
+<li><a style="color:red;">对换性</a>：允许进程的页在运行过程中换出内存进入交换空间</li>
+<li><a style="color:red;">虚拟性</a></li>
+</ul>
+</li>
+<li><p>实现：</p>
+<ul>
+<li>基于 ==分页式== 的内存管理</li>
+<li>基于 ==分段式== 的内存管理</li>
+<li>基于 ==段页式== 的内存管理</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>虚拟内存称呼：</p>
+<ul>
+<li><p>虚拟内存技术：内存管理的一种技术，并不是指的某个具体存储空间</p>
+</li>
+<li><p>虚拟内存空间（交换空间）：硬盘等外部存储设备利用部分存储空间存储临时性的虚拟地址，这里指的就是实际存在的存储空间，也被称为交换空间</p>
+<p>  注：这两个概念通常都被简称为虚拟内存，实际代表什么需要根据上下文语境来查看</p>
+</li>
+</ul>
+</li>
+<li><p>虚拟内存查看：</p>
+<blockquote>
+<p>windows： systeminfo 指令可以查看虚拟内存情况</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/06/03/c5cf9fe08fb4d27f3d7a0b714dd1126f.png" alt="c5cf9fe08fb4d27f3d7a0b714dd1126f.png" style="zoom:80%;" />
+
+
+
+
+        <h2 id="请求调页"   >
+          <a href="#请求调页" class="heading-link"><i class="fas fa-link"></i></a><a href="#请求调页" class="headerlink" title="请求调页"></a>请求调页</h2>
+      
+        <h3 id="概述-1"   >
+          <a href="#概述-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述-1" class="headerlink" title="概述"></a>概述</h3>
+      <ul>
+<li><p>定义：<a style="color:red;">仅在进程需要时才将后备存储中的页调入内存</a></p>
+<p>  注：按需调页也被称为 ==惰性交换==</p>
+</li>
+<li><p>调页器：</p>
+<ul>
+<li><p>定义：负责将进程的 <strong>页面</strong> ==换出== 和 ==换入== 内存</p>
+<p>  <a style="color:red;">调页器调度的基本单位是 <strong>进程的页</strong> &lt;-&gt; 调度程序调度的基本单位是 <strong>进程</strong></a></p>
+</li>
+<li><p>过程：</p>
+<ol>
+<li>调页器 <strong>猜测</strong> 进程的运行可能需要哪些相关的页</li>
+<li>调页器 <strong>调入</strong> 进程正常运行可能需要的相关页（<a style="color:red;">页表和帧表都会相应的更新</a>）</li>
+<li>调页器 <strong>设置</strong> 被调入页的 ==有效-无效位== 为 <strong>有效</strong></li>
+</ol>
+</li>
+<li><p>细节：调度器和调度程序执行的工作是相同的 -&gt; 在讨论进程调度时通常使用调度程序这个较大的概念，在讨论请求调页时通常使用调页器这个较小的概念</p>
+<p>  注：<em>暂时不清楚在实际的操作系统中是如何实现的</em></p>
+</li>
+</ul>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li>优点：减少 ==交换时间== 和所需要使用的 ==物理内存空间==</li>
+<li>缺点：产生 <a href="#%E9%A1%B5%E9%94%99">页错误</a></li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/06/03/76f455f3e5b40584b68cea4eb9db2fcd.png" alt="76f455f3e5b40584b68cea4eb9db2fcd.png" style="zoom:80%;" />
+
+
+        <h3 id="页错"   >
+          <a href="#页错" class="heading-link"><i class="fas fa-link"></i></a><a href="#页错" class="headerlink" title="页错"></a>页错</h3>
+      <ul>
+<li><p>定义：<a style="color:red;">进程试图访问没有被调入内存的页面时产生的错误</a></p>
+<p>  注：不能够说进程试图访问有效-无效位为无效的页面时产生的错误：==没有被调入内存 ≠ 有效-无效位为无效==</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p><a style="color:red;">进程访问的页确实是无效的</a> -&gt; 系统就没计划为其分配内存，产生页错</p>
+</li>
+<li><p><a style="color:red;">进程访问的页面是有效的</a> -&gt; 系统计划为其分配内存但是并没有真正分配，产生页错</p>
+<p>  解释：这种情况的出现主要是由于程序员声明了分配内存，但是暂时还没有使用这块内存，所以系统不会为其真正分配内存</p>
+</li>
+</ul>
+</li>
+<li><p>==处理==：</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/06/03/f57e06381954a1a3882b51ec2fae42dd.png" alt="f57e06381954a1a3882b51ec2fae42dd.png" style="zoom:80%;" />
+
+<ol>
+<li><p>操作系统执行 <strong>陷阱处理</strong> 程序</p>
+</li>
+<li><p>调度程序 <strong>保存进程上下文</strong>（进程的程序计数器，进程状态…）</p>
+</li>
+<li><p>开始处理中断：判断中断是否为 <strong>缺页中断</strong>：</p>
+<p> (1) 如果是缺页中断： <strong>调入相应的页进入空闲帧</strong></p>
+<p> 注：如果帧表中存在空闲帧，那么直接调入就行；如果帧表中不存在空闲帧，那么需要使用 <a href="#%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2">页面置换</a>，换出暂不使用的页，换入需要使用的页</p>
+<p> (2) 如果是越界中断：<strong>直接终止进程</strong></p>
+</li>
+<li><p>I/O 系统控制磁盘读取相应的页：</p>
+<p> (1) 调度程序执行上下文切换：<strong>进程进入设备队列等待</strong>（<code>running</code> -&gt; <code>waiting</code>）</p>
+<p> (2) 等待磁盘的的寻道时间（查询数据的时间）</p>
+<p> (3) 磁盘查询到相应数据开始传输数据</p>
+</li>
+<li><p>调度程序将处理器 <strong>分配给其余需要使用的进程</strong></p>
+</li>
+<li><p>I/O 系统在磁盘传输完成后 <strong>发出中断</strong></p>
+</li>
+<li><p>调度程序 <strong>保存进程上下文</strong></p>
+</li>
+<li><p>确定中断来自于磁盘并且开始处理中断</p>
+</li>
+<li><p><strong>更新页表</strong> 及其相关信息 （<code>waiting</code> -&gt; <code>ready</code>）</p>
+</li>
+<li><p>调度程序再次执行上下文切换</p>
+</li>
+<li><p>重新将处理器分配给该进程并且 <strong>重新执行指令</strong></p>
+</li>
+</ol>
+</li>
+<li><p>性能分析：</p>
+<ul>
+<li><p>处理页错是十分花费时间和消耗性能的事情</p>
+</li>
+<li><p>页错误处理时间：<a style="color:red;">处理缺页中断 + 载入页面 + 重新启动进程</a></p>
+<p>  注：使用 I/O 载入页面时很有可能遇上等待，有时候不能只考虑 I/O 的读取时间，还要考虑等待时间</p>
+</li>
+<li><p>正常情况：<a style="color:red;">内存访问时间 * 页未出错概率 + 页错误处理时间 * 页出错概率</a></p>
+</li>
+<li><p>特殊情况：页错误概率 = 0：代表当前进程的所有页都被加载进内存了；页错误概率 = 1：代表当前进程没有页被加载进内存、</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><a style="color:red;">通常情况下：每个进程被分配的帧数 <strong>越多</strong> 出现页错误的概率 <strong>越低</strong></a></p>
+</li>
+<li><p>纯请求调页：</p>
+<ul>
+<li><p>定义：调页器在处理器执行指令前 ==不加载任何页面== 进入内存，等到处理器开始执行指令发现需要页面不存在时，调页器才开始调用需要的页面</p>
+</li>
+<li><p>特点：<a style="color:red;">从一开始就会发生页错，并且会持续发生页错，直到进程需要的页面全部存在于内存中</a></p>
+<p>  解释：这是一种非常极端的情况，应该没有操作系统会这样去实现</p>
+</li>
+</ul>
+</li>
+<li><p>交换空间：</p>
+<ul>
+<li><p>定义：磁盘上一块 ==存储被调出页面== 的连续空间</p>
+<p>  <a style="color:red;">注：本质上还是缓存</a></p>
+</li>
+<li><p>特点：<a style="color:red;">交换空间的 I/O 操作快于文件系统的 I/O 操作</a></p>
+</li>
+<li><p>使用方式：</p>
+<ol>
+<li><p>程序被载入内存前：交换空间中存储程序的 ==所有页面==，后续的 ==读取页面== 和 ==调度页面== 都在 ==交换空间== 中进行</p>
+</li>
+<li><p>程序被载入内存前：交换空间中仅存储被从内存中 ==调出的页面==，系统从 ==文件系统中读取页面==，从 ==交换空间中调入页面==</p>
+<p> 解释：处理页错误时，如果交换空间存在需要的页面那就从交换空间中获取；如果交换空间没有就说明这个页面没有加载过，显然从文件中获取</p>
+</li>
+</ol>
+</li>
+<li><p><a style="color:red;">交换空间也被称为虚拟内存空间/匿名内存</a>：因为这块磁盘上的空间存储的都是从内存中调出的页面，所以相当于是内存的扩展，但并不属于内存</p>
+<p>  解释：运行大型游戏的时候，有时候会发现在运行期间C盘会变小，变小的那部分空间就被用作虚拟内存使用了，系统希望为游戏的运行腾出更多空间</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="页面置换"   >
+          <a href="#页面置换" class="heading-link"><i class="fas fa-link"></i></a><a href="#页面置换" class="headerlink" title="页面置换"></a>页面置换</h2>
+      
+        <h3 id="概述-2"   >
+          <a href="#概述-2" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述-2" class="headerlink" title="概述"></a>概述</h3>
+      <ul>
+<li><p>前提：内存中已经 <strong>没有空闲帧</strong> 用于存放新加载进入内存的页面</p>
+<ul>
+<li>解决方式：(1) 终止当前需要调页的进程 (2) <strong>换出</strong> 其他进程释放空间 (3) 页面置换</li>
+</ul>
+</li>
+<li><p>定义：</p>
+<ul>
+<li>调度程序选择 ==牺牲帧== 并将其 ==换出== 到后备存储的 ==交换空间== 中</li>
+<li>调度程序再将 <strong>需要使用的帧</strong> 换入（加载）进入内存的 ==空闲帧== 中</li>
+</ul>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>局部替换策略：仅允许进程从 ==属于自己的物理帧== 中选择替换</p>
+</li>
+<li><p>全局替换策略：允许进程可以从 ==所有的物理帧== 中选择替换</p>
+<p>  <a style="color:red;">意味着进程可以抢占其他进程的物理帧使用</a></p>
+</li>
+</ul>
+</li>
+<li><p>处理过程：</p>
+<ol>
+<li><p>内存管理单元根据 <strong>页表</strong> 确定需要使用的 <strong>页面的磁盘地址</strong></p>
+</li>
+<li><p>调度程序寻找 <strong>空闲帧</strong></p>
+<ul>
+<li><p>内存中存在空闲帧：随机选择某个空闲帧存放页面（<strong>优先</strong>）</p>
+</li>
+<li><p>内存中不存在空闲帧：利用 <strong>页面置换算法</strong> 选择 <strong>牺牲帧</strong> 将其换出到 <strong>交换空间</strong> 中腾出空闲帧存放页面</p>
+<p>  <a style="color:red;">牺牲帧并不一定需要换出到交换空间</a>：只要牺牲帧没有被修改过就不需要</p>
+</li>
+</ul>
+</li>
+<li><p>内存管理单元 <strong>修改帧表和页表</strong></p>
+</li>
+<li><p>从发生缺页错误的位置继续执行进程</p>
+</li>
+</ol>
+</li>
+<li><p>修改位（脏位）</p>
+<ul>
+<li><p>定义：用于标记页面是否被 ==修改== 过</p>
+</li>
+<li><p>功能：用于 ==减少== 页面置换时产生的换入换出 ==开销==</p>
+<p>  解释：如果页面没有被修改过，那么就不需要再将其换出到交换空间中，因为和磁盘存储的页面是一样的；如果页面修改过，就需要将其换出到交换空间中</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">页面置换是请求调页的 <strong>基础</strong></a></li>
+<li><a style="color:red;">页面置换实现了逻辑内存和物理内存之间的分离；使用较小的物理内存就可以实现非常大的虚拟内存</a></li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="置换算法"   >
+          <a href="#置换算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#置换算法" class="headerlink" title="置换算法"></a>置换算法</h3>
+      <ul>
+<li><p>前提：下列所有算法都是 <strong>基于局部替换策略</strong></p>
+</li>
+<li><p>内存引用串：</p>
+<ul>
+<li><p>定义：处理器一段时间内需要访问的 <strong>页号序列</strong></p>
+<blockquote>
+<p>举例：逻辑地址序列 101 114 514 223 233 页面大小 100 -&gt;  内存引用串：1 1 5 2 2</p>
+</blockquote>
+</li>
+<li><p>计算方式：</p>
+<ul>
+<li><p>10 进制逻辑地址：逻辑地址 ÷ 页面大小 = <strong>页号</strong> + 偏移量</p>
+</li>
+<li><p>2 进制逻辑地址：</p>
+<ul>
+<li>方法一：2进制逻辑地址转换为10进制逻辑地址再算</li>
+<li>方法二：(1) 2进制逻辑地址的比特位个数 - 表示页面大小需要的比特位个数 = 表示页号需要的比特位个数 (2) 再将2进制的页号转为10进制</li>
+</ul>
+<blockquote>
+<p>举例：2进制逻辑地址：10110011 页面大小 15：相当于是最低 4 位表示 ？？？</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>算法评判标准：<a style="color:red;">帧错误率尽可能低</a></p>
+</li>
+<li><p>细节：<a style="color:red;">进程被分配的物理帧越多帧错误率会越低</a></p>
+</li>
+</ul>
+
+        <h4 id="FIFO-置换算法"   >
+          <a href="#FIFO-置换算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#FIFO-置换算法" class="headerlink" title="FIFO 置换算法"></a>FIFO 置换算法</h4>
+      <ul>
+<li><p>定义：每次选择 ==最早进入== 内存的页面进行替换</p>
+</li>
+<li><p>实现：<a style="color:red;">利用 <strong>队列</strong> 记录页面进入内存的“时间”</a>：并不记录具体的时间</p>
+<p>  解释：最早进入内存的页面就是队首元素，后续进入的页面依次进入队列；</p>
+<p>  ​         每次页面置换的时候就选择队首元素替换，然后让队列第二个元素称为队首元素，新的页面称为队尾元素</p>
+</li>
+<li><p>优点：实现最为简单</p>
+</li>
+<li><p>缺陷：(1) 产生 ==Belady异常==：随着进程被分配的 <strong>物理帧数的增加</strong>，<strong>缺页错误的数量也增多</strong> (2) 性能 <strong>最差</strong></p>
+</li>
+</ul>
+
+        <h4 id="OPT-置换算法"   >
+          <a href="#OPT-置换算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#OPT-置换算法" class="headerlink" title="OPT 置换算法"></a>OPT 置换算法</h4>
+      <ul>
+<li>定义：每次选择那些在 ==<strong>未来</strong> 长时间不使用== 的页面进行替换</li>
+<li>优点：具有 <strong>最优</strong> 的性能</li>
+<li>缺点：几乎不能实现（解释：不可能预测到哪些页面将会在未来访问）</li>
+</ul>
+
+        <h4 id="LRU-置换算法"   >
+          <a href="#LRU-置换算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#LRU-置换算法" class="headerlink" title="LRU 置换算法"></a>LRU 置换算法</h4>
+      <ul>
+<li>定义：每次选择那些在 ==<strong>过去</strong> 长时间不使用== 的页面进行替换</li>
+<li>实现：<ul>
+<li>计数器实现<ol>
+<li>每个页面维护一个计数器</li>
+<li>每次页面被访问时该页面的计数器就递增 </li>
+</ol>
+</li>
+<li>堆栈实现<ol>
+<li>堆栈中保存当前 <strong>使用过</strong> 的页号</li>
+<li>堆栈中的页号每次被引用时都从栈中移除然后 <strong>压入栈顶</strong>；不存在于堆栈的页号被引用时 <strong>直接压入栈顶</strong></li>
+<li>确保堆栈的 <strong>顶端</strong> 是最近访问的页面，堆栈的 <strong>底端</strong> 是长时间没有访问页面</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>两种实现方式都属于 <strong>堆栈算法</strong>，绝对不会产生 Belady 异常</li>
+<li>采用这两种实现方式的 LRU 算法也被称作标准 LRU 算法：<a style="color:red;"><strong>是不可能实现的</strong></a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39290490/article/details/82251421" >页置换算法</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+
+        <h4 id="近似-LRU-置换算法"   >
+          <a href="#近似-LRU-置换算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#近似-LRU-置换算法" class="headerlink" title="近似 LRU 置换算法"></a>近似 LRU 置换算法</h4>
+      <ul>
+<li><p>额外引用位算法</p>
+<ol>
+<li><p>每个页面都必须维护一个 ==<strong>8位</strong> 的移位寄存器==：表示为 $R = R_7R_6···R_2R_1R_0$(表示寄存器的位数)</p>
+</li>
+<li><p>每次访问某个页面时都将该页面的移位寄存器中的 ==R<del>7</del> 位置为 1==</p>
+</li>
+<li><p>每隔一定的时间移位寄存器中就会 ==右移一位==，最低位直接 ==抛弃==</p>
+<blockquote>
+<p>举例：时钟信号发出，移位寄存器右移，R<del>3</del> = R<del>4</del> = 1，其余位置一样</p>
+</blockquote>
+</li>
+<li><p>最后选择 ==寄存器数值最小== 的作为长时间没有访问页面</p>
+<blockquote>
+<p>举例：页面 0 寄存器：11001100； 页面 1 寄存器：00110101 ；页面 2 寄存器 00010111 -&gt; 显然页面 2 是寄存器数值最小的页面 </p>
+</blockquote>
+</li>
+</ol>
+<p>  <a style="color:red;">注：可能同时多个页面的寄存器数值一样大：(1) 可以全部替换 (2) 可以使用 FIFO 在这些页面当中选择</a></p>
+</li>
+<li><p>第二次机会算法：</p>
+<ol>
+<li>每个页面仅维护 ==1位== 的引用位；并且将所有页面以 ==循环队列== 的方式维护</li>
+<li>每次替换页面时就在循环队列中查找：(1) 如果引用位为 0 就直接替换该页面 (2) 如果引用位为 1 就继续循环查找并将当前页面的引用位置为 0（二次机会）</li>
+</ol>
+<p>  <a style="color:red;">注：最坏的情况是每页的引用位都是 1</a>：那么该算法将会将所有的引用位重新置为 0 再进行循环查找 （相当于退化成 FIFO 算法）</p>
+</li>
+</ul>
+
+        <h4 id="基于计数的置换算法"   >
+          <a href="#基于计数的置换算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#基于计数的置换算法" class="headerlink" title="基于计数的置换算法"></a>基于计数的置换算法</h4>
+      <ul>
+<li>最不常使用算法</li>
+<li>最常使用算法</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">http://example.com/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">内存分配</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/18/os/overview/%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/"><span class="paginator-prev__text">硬件概述</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="toc-number">1.</span> <span class="toc-text">
+          虚拟内存</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E8%B0%83%E9%A1%B5"><span class="toc-number">1.2.</span> <span class="toc-text">
+          请求调页</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E9%94%99"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          页错</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2"><span class="toc-number">1.3.</span> <span class="toc-text">
+          页面置换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.</span> <span class="toc-text">
+          置换算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FIFO-%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">
+          FIFO 置换算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#OPT-%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">
+          OPT 置换算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LRU-%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">
+          LRU 置换算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%91%E4%BC%BC-LRU-%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">
+          近似 LRU 置换算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E8%AE%A1%E6%95%B0%E7%9A%84%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.5.</span> <span class="toc-text">
+          基于计数的置换算法</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

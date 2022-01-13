@@ -1,0 +1,244 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="进程加载       前提：基于硬件的语言编写的程序（Java 编写的程序是在虚拟机上运行的 -&gt; 存在一定的出入）                     编译        定义： 编译程序将 &#x3D;&#x3D;源代码&#x3D;&#x3D;（高级语言）编译成处理器可识别的 &#x3D;&#x3D;目标代码&#x3D;&#x3D; 编译程序将 &#x3D;&#x3D;目标代码&#x3D;&#x3D; 分割成许多目标代码段，目标代码段被封装形成 &#x3D;&#x3D;目标模块&#x3D;&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程加载">
+<meta property="og:url" content="http://example.com/2021/09/18/os/process/%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="进程加载       前提：基于硬件的语言编写的程序（Java 编写的程序是在虚拟机上运行的 -&gt; 存在一定的出入）                     编译        定义： 编译程序将 &#x3D;&#x3D;源代码&#x3D;&#x3D;（高级语言）编译成处理器可识别的 &#x3D;&#x3D;目标代码&#x3D;&#x3D; 编译程序将 &#x3D;&#x3D;目标代码&#x3D;&#x3D; 分割成许多目标代码段，目标代码段被封装形成 &#x3D;&#x3D;目标模块&#x3D;&#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/29/cdd7d551a1e8db9a569dfaaa423e5aff.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/29/a439af3c9d75652b07777f1b93e2abd7.png">
+<meta property="article:published_time" content="2021-09-18T07:33:14.152Z">
+<meta property="article:modified_time" content="2021-09-28T11:01:54.043Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/29/cdd7d551a1e8db9a569dfaaa423e5aff.png"><title>进程加载 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/18/os/process/%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">进程加载</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="进程加载"   >
+          <a href="#进程加载" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程加载" class="headerlink" title="进程加载"></a>进程加载</h1>
+      <p><a style="color:red;">前提：基于硬件的语言编写的程序</a>（Java 编写的程序是在虚拟机上运行的 -&gt; 存在一定的出入）</p>
+
+        <h2 id="编译"   >
+          <a href="#编译" class="heading-link"><i class="fas fa-link"></i></a><a href="#编译" class="headerlink" title="编译"></a>编译</h2>
+      <ul>
+<li>定义：<ul>
+<li>编译程序将 ==源代码==（高级语言）编译成处理器可识别的 ==目标代码==</li>
+<li>编译程序将 ==目标代码== 分割成许多目标代码段，目标代码段被封装形成 ==目标模块==</li>
+<li>编译程序为每个目标模块分配 ==逻辑地址空间== 然后 ==存放在磁盘== 中</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li><code>Java</code> 源代码被编译成 <strong>字节码</strong> 被虚拟机执行 &lt;-&gt; <code>C/C++</code> 源代码被编译成 <strong>汇编语言</strong> 被操作系统执行 </li>
+<li>编译程序并不是操作系统的一部分，不同的语言的编译器是不同的：<code>Java</code> 编译器是 <code>javac</code>；<code>C/C++</code> 编译器是 <code>gcc</code></li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="链接"   >
+          <a href="#链接" class="heading-link"><i class="fas fa-link"></i></a><a href="#链接" class="headerlink" title="链接"></a>链接</h2>
+      <ul>
+<li><p>定义：链接程序将一组目标模块和需要使用的 <strong>库函数</strong> 链接起来 -&gt; 形成 ==装入模块==（可执行文件 .exe）</p>
+<blockquote>
+<p>解释：比如编写 <code>C/C++</code> 程序时需要使用到编译器内置的函数，链接程序就需要将这些引用的内置函数找到，并且将其和源代码一起封装到目标模块中</p>
+</blockquote>
+</li>
+<li><p>库函数：</p>
+<ul>
+<li><p>定义：<code>C/C++</code> 编译器提供的可供程序员直接使用的函数</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>静态链接库：编译阶段就将使用到的静态库中的函数链接到目标模块中去</p>
+</li>
+<li><p>动态链接库：进程在运行过程中需要使用时才将动态链接库中函数链接到目标模块中去</p>
+<p>  <a style="color:red;">(1) 静态链接库不需要被加载到内存中区</a>：因为每个目标模块中已经有需要使用的函数了</p>
+<p>  <a style="color:red;">(2) 动态链接库必须被加载到内存中去</a>：因为每个目标模块在运行时才会调用相应的函数；<a style="color:red;">所有的进程都可以共享动态链接库</a>：也被称为共享库</p>
+</li>
+</ul>
+</li>
+<li><p>区别：</p>
+<ul>
+<li><a style="color:red;">库函数不是系统调用</a></li>
+<li><a style="color:red;">库函数是用户进程（编译器）的一部分 &lt;-&gt; 系统调用是操作系统内核的一部分</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>方式：</p>
+<ul>
+<li><p>静态链接：在程序被加载进入内存之前就将程序可能使用到的全部函数链接到目标模块中：</p>
+<ul>
+<li>(1) 程序会相对较大加载进入内存的速度较慢 (2) 占据内存较大</li>
+<li><a style="color:red;">C/C++ 都是采用这种方式来链接库函数的</a></li>
+</ul>
+</li>
+<li><p>装入链接：在程序加载进入内存时就将程序可能使用到的全部库函数链接到目标模块中</p>
+<ul>
+<li><a style="color:red;">Java 是采用这种方式链接库函数的</a> </li>
+</ul>
+</li>
+<li><p>动态链接：在进程需要使用到某些库函数时再将需要的库函数链接到目标模块：</p>
+<ul>
+<li>(1) 程序相对较小载入内存速度更快 (2) 节省内存空间</li>
+<li><a style="color:red;">系统发现内存没有需要使用的库函数会去磁盘中将其加载到内存中</a></li>
+<li><a style="color:red;">Java 和 C++ 中的反射原理就是这样</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>细节：<a style="color:red;">装入模块封装完成后是不可以再拆卸的</a></p>
+</li>
+</ul>
+
+        <h2 id="加载"   >
+          <a href="#加载" class="heading-link"><i class="fas fa-link"></i></a><a href="#加载" class="headerlink" title="加载"></a>加载</h2>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li><p>加载程序为程序 ==分配合适的物理内存== (<a href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D">内存分配</a>)</p>
+</li>
+<li><p>加载程序将程序的各个装入模块载入到内存中</p>
+<p>  <a style="color:red;">加载过程不一定进行地址绑定</a></p>
+</li>
+</ul>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>静态加载：程序加载时将所有目标模块全部加载进入内存</p>
+<p>  <a style="color:red;">全部加载进入内存会使内存的利用率变低</a>：因为并不是所有的目标模块都会被经常使用，如果部分模块不会经常使用，那么加载到内存就是浪费</p>
+</li>
+<li><p>动态加载：</p>
+<ul>
+<li><p>定义：只有在程序的目标模块 ==被调用时== 才会加载到内存中</p>
+<p>  解释：进程在执行过程中需要另一个进程，那么调度程序就会检查内存中是否存在，如果不存在就会去磁盘中寻找对应的目标模块，并加载进内存</p>
+<p>  举例：网页下载资源时，如果迅雷没有开启，那么浏览器会自动帮你打开迅雷，然后使用迅雷下载</p>
+</li>
+<li><p>细节：<a style="color:red;">内存的利用率会相对较高</a></p>
+<p>  解释：软件开发中通常业务核心代码只占据 30% ~ 40%，剩余全是异常处理；显然在程序载入时将这些异常处理都载入进去是不合理的</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>动态加载 &amp; 动态链接 &amp; <a href="#%E8%AF%B7%E6%B1%82%E8%B0%83%E9%A1%B5">请求调页</a></p>
+<ul>
+<li><p>动态加载：是在需要某个 <strong>子进程</strong> 时将相应的子进程加载进入内存中：<a style="color:red;">单位是程序（进程）</a></p>
+</li>
+<li><p>动态链接：是在需要某个 <strong>库函数</strong> 时将相应的库函数链接到进程中去：<a style="color:red;">单位是链接</a></p>
+</li>
+<li><p>请求调页：是在需要进程的 <strong>某个页面</strong> 的时候将相应的页面加载进入内存中去：<a style="color:red;">单位是页面</a></p>
+<p>  注：动态加载更多是历史原因，在以前没有分页管理时，进程只能够被全部加载进去</p>
+<p>  ​      尽可能地节约内存就只能采用动态加载，暂时不用的子程序就放在磁盘中；不过现在采用分页管理了，动态加载也实际上就是请求调页了</p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E5%9C%B0%E5%9D%80%E7%BB%91%E5%AE%9A">地址绑定</a></p>
+</li>
+</ul>
+
+        <h3 id="地址绑定"   >
+          <a href="#地址绑定" class="heading-link"><i class="fas fa-link"></i></a><a href="#地址绑定" class="headerlink" title="地址绑定"></a>地址绑定</h3>
+      <ul>
+<li><p>定义：加载程序将程序的逻辑地址 ==映射== 到内存中的物理地址 (==地址绑定==)</p>
+<p>  <a style="color:red;">地址绑定就是将逻辑地址映射到相应的物理地址 -&gt; 处理器就可以利用逻辑地址访问到内存中的物理地址</a></p>
+</li>
+<li><p>方式：</p>
+<ul>
+<li><p>编译时绑定：</p>
+<ul>
+<li><p>定义：程序 ==编译阶段== 就将逻辑地址 ==修改== 成物理地址</p>
+<p>  <a style="color:red;">编译时绑定会使逻辑地址和物理地址完全相同</a></p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：处理器执行目标代码相对较快</p>
+</li>
+<li><p>缺点：(1) <a style="color:red;">进程运行过程中无法再更改其物理地址</a> (2) 难以提前预知进程在内存中的实际位置</p>
+<p>  注：如果想要修改程序在内存中的地址只能够 ==重编译== </p>
+</li>
+</ul>
+</li>
+<li><p>处理器使用过程：</p>
+<ol>
+<li>调度程序交付给处理器进程的入口地址（逻辑地址）</li>
+<li>处理器将 ==逻辑地址== 和 ==基地址 &amp; 界限地址== 进行比较<ul>
+<li>如果超出地址界限 -&gt; 寻址错误造成操作系统陷入</li>
+<li>如果没有超出地址界限 -&gt; 处理器就可以正常访问进程在内存中的位置</li>
+</ul>
+</li>
+</ol>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/29/cdd7d551a1e8db9a569dfaaa423e5aff.png" alt="cdd7d551a1e8db9a569dfaaa423e5aff.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>加载时绑定：</p>
+<ul>
+<li><p>定义：程序加载进入内存时就确定逻辑地址和物理地址的映射关系（关系确立好了显然就是不能改的了）</p>
+<p>  <a style="color:red;">加载时绑定不会使逻辑地址和物理地址相同</a></p>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li><p>优点：不需要硬件支持</p>
+</li>
+<li><p>缺点：(1) <a style="color:red;">进程运行过程中无法再更改其物理地址</a></p>
+<p>  注：想要修改程序在内存中的位置只能够 ==重启== 进程</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>运行时绑定：</p>
+<ul>
+<li><p>定义：进程被调度执行时才确定逻辑地址和物理地址的映射关系</p>
+<p>  解释：程序被载入内存中并不一定立刻执行，只有当处理器真的需要执行这个进程的时候，才确定逻辑地址和物理地址的映射关系</p>
+<p>  <a style="color:red;">运行时绑定不会使逻辑地址和物理地址相同</a></p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：<a style="color:red;">进程运行过程中可以随意更改其物理地址</a></p>
+</li>
+<li><p>缺点：需要硬件提供支持 -&gt; <a style="color:red;">需要提供 内存管理单元(MMU)</a></p>
+<p>  注：内存管理单元就是用于保存逻辑地址到物理地址映射的硬件 -&gt; 之后的页表寄存器，转换表缓冲区…都设置在这里面</p>
+</li>
+</ul>
+</li>
+<li><p>处理器使用过程：</p>
+<ol>
+<li>调度程序交付给处理器进程的入口地址（逻辑地址）</li>
+<li>处理器将 ==逻辑地址== 交付给 ==内存管理单元(MMU)==</li>
+<li>内存管理单元将 ==逻辑地址映射到物理地址== （…）</li>
+<li>处理器正常访问到进程在内存中的位置</li>
+</ol>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/29/a439af3c9d75652b07777f1b93e2abd7.png" alt="a439af3c9d75652b07777f1b93e2abd7.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/18/os/process/%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD/">http://example.com/2021/09/18/os/process/%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/20/jvm/runtime/heapspace/%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">堆空间-直接内存</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"><span class="paginator-prev__text">内存分配</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">
+          进程加载</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">1.1.</span> <span class="toc-text">
+          编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">1.2.</span> <span class="toc-text">
+          链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.3.</span> <span class="toc-text">
+          加载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%B0%E5%9D%80%E7%BB%91%E5%AE%9A"><span class="toc-number">1.3.1.</span> <span class="toc-text">
+          地址绑定</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

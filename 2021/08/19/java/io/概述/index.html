@@ -1,0 +1,560 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="概述                           知识框架                             简介        Java I&#x2F;O系统 是什么?   全称：Input&#x2F;Output  定义：IO 系统全称为输入输出系统，通常应用于 [设备之间]{.red} 进行数据传输  设备：通常交换数据的设备在 [文件和进程之间（文件编程）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概述">
+<meta property="og:url" content="http://example.com/2021/08/19/java/io/%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="概述                           知识框架                             简介        Java I&#x2F;O系统 是什么?   全称：Input&#x2F;Output  定义：IO 系统全称为输入输出系统，通常应用于 [设备之间]{.red} 进行数据传输  设备：通常交换数据的设备在 [文件和进程之间（文件编程）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/IO 知识框架.7jak8kqrfgk0.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/07/403449fef38a2b39746f574e59b3a6f1.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/21/a99748a07ca5c0f198e3e65059f968e5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/IO 流程.25dyfqwn03mo.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/22/beced3d854b7a17012e9473eadb252dc.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/22/2d5e244e2864ee0fe10d1af4ad59029a.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/22/4b2259ebfaaccc22fd365434a302e7d0.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/22/5c9278b107be64e5de694dcf905b137d.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/22/18a67cc67534c5479aa3fb04963553aa.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/BIO 通信模型.1h4z3970je9s.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/伪异步.1u0xqicyiyrk.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/轮询模型.5v6m9wj7dfo0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/多路复用.2shl0b9ohn40.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/AIO.i95xm33f7co.png">
+<meta property="article:published_time" content="2021-08-19T02:58:11.189Z">
+<meta property="article:modified_time" content="2021-09-09T08:07:58.879Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/IO 知识框架.7jak8kqrfgk0.png"><title>概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/08/19/java/io/%E6%A6%82%E8%BF%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-08-19</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-09</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
+      
+        <h2 id="知识框架"   >
+          <a href="#知识框架" class="heading-link"><i class="fas fa-link"></i></a><a href="#知识框架" class="headerlink" title="知识框架"></a>知识框架</h2>
+      <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/IO 知识框架.7jak8kqrfgk0.png" alt="IO 知识框架" style="zoom:80%;" />
+
+
+        <h2 id="简介"   >
+          <a href="#简介" class="heading-link"><i class="fas fa-link"></i></a><a href="#简介" class="headerlink" title="简介"></a>简介</h2>
+      <blockquote>
+<p><strong>Java I/O系统 是什么?</strong></p>
+</blockquote>
+<ul>
+<li><p>全称：<code>Input/Output</code></p>
+</li>
+<li><p>定义：<code>IO</code> 系统全称为输入输出系统，通常应用于 [设备之间]{.red} 进行数据传输</p>
+</li>
+<li><p>设备：通常交换数据的设备在 [文件和进程之间（文件编程）、客户端和服务器之间（网络编程）]{.red}</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><code>I/O</code> 的主要应用场景就是网络编程，[用于客户端和服务器之间传递数据，而不是用于读取文件的]{.blue}，文件已经被数据库取代</li>
+<li><code>Tomcat</code> 是应用服务器，仅能够解析 <code>HTTP</code> 请求，底层理所应当地是采用 [I/O + 网络编程]{.red} 实现的</li>
+<li><code>Netty</code> 是通信框架，能够自定义解析各种各样的请求，底层自然也是采用 [I/O + 网络编程]{.red} 实现的</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>Java I/O 发展历史</strong></p>
+</blockquote>
+<ul>
+<li><code>BIO(Blocking I/O)</code>：<code>JDK 1.0</code> 提供最基本的 [阻塞式]{.red} <code>IO</code> 框架</li>
+<li><code>NIO(New I/O)</code>：<code>JDK 1.4</code> 进一步提供 [非阻塞式]{.red} 的 <code>IO</code> 框架</li>
+<li><code>AIO(Asynchronous I/O)</code>：<code>JDK 1.7</code> 提供额外的 [异步式]{.red} 的 <code>IO</code> 框架  </li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/08/07/403449fef38a2b39746f574e59b3a6f1.png" alt="403449fef38a2b39746f574e59b3a6f1.png" style="zoom:80%;" />
+
+
+        <h2 id="编码格式"   >
+          <a href="#编码格式" class="heading-link"><i class="fas fa-link"></i></a><a href="#编码格式" class="headerlink" title="编码格式"></a>编码格式</h2>
+      <blockquote>
+<p><strong>编码格式</strong></p>
+</blockquote>
+<ul>
+<li><p>前提：<code>IO</code> 框架涉及到字符和字节的转换，就有必要了解字节的编码格式</p>
+</li>
+<li><p>定义：编码就是把字符转换成字节表示并存储，解码就是把字节转换成字符表示</p>
+</li>
+<li><p>字符集和编码规则：</p>
+<ul>
+<li>字符集：<code>Unicode</code></li>
+<li>编码规则：<code>UTF-8</code>、<code>UTF-16</code>、<code>UTF-32</code>、<code>ASCII</code>、<code>GB2312</code>、<code>GBK</code>、<code>GB18030</code></li>
+</ul>
+</li>
+<li><p>历史：</p>
+<ul>
+<li><p>ASCII 编码：早期计算机仅有英文国家使用，所以仅采用 [7 bit (128)]{.red} 对英文字符进行编码，后来随着使用计算机的国家变多，[8 bit (256)]{.red} 全被用于编码使用</p>
+</li>
+<li><p>GB2312 编码：ASCII 编码没有足够的位数给中文字符编码，所以中国抛弃了后面的 128 个字符，[规定 两个 ASCII 编码大于 127 字符连接在一起就表示汉字]{.red}</p>
+</li>
+<li><p>GBK、GB18030 编码：随着时代发展不能够提供足够使用汉字，所以又在 GB2312 的基础上进行改进，得到了 GBK、GB18030 等国标码</p>
+<p>  [注：GB2312 等国标码都是在 ASCII 码的基础上扩展而来的]{.red}</p>
+</li>
+<li><p>UTF-8、UTF-16编码：</p>
+<ul>
+<li>每个国家为了在计算机中使用自己的文字，都制定了只有自己才能够使用的编码方案，不利于各个国家的交流，所以最后 ISO 制定了 Unicode 字符集，为世界上每个字符都分配了编码</li>
+<li>UTF-8、UTF-16 则是具体的编码方案，将每 [8 bit、16bit]{.red} 组成一个编码单元，并且使用特定的标志位为计算机提供信息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>UTF-8</code></p>
+<ul>
+<li><p>范围：0x0000 ~ 0x10FFFF</p>
+</li>
+<li><p>规则：根据每个字符的 Unicode 编码找到对应的编码格式，然后将二进制的 Unicode 编码分别填入 x 中，最后就得到了 UTF-8 编码</p>
+<blockquote>
+<p>0x0000 ~ 0x007F: 0xxxxxxx</p>
+<p>0x0080 ~ 0x07FF: 110xxxxxx 10xxxxxx</p>
+<p>0x0800 ~ 0xFFFF: 1110xxxx 10xxxxxx 10xxxxxx</p>
+<p>0x10000 ~ 0x10FFFF:11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
+<p>[知] Unicode 编码为 30693，二进制编码为 1110111 11100101, 填入第三行的编码格式得到 UTF-8 编码 11100111 10011111 10100101，采用十六进制表示：E79FA5</p>
+</blockquote>
+</li>
+<li><p>字节数量</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th align="left"></th>
+<th>UTF-8</th>
+<th>UTF-16</th>
+<th>GBK</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">英文英文字符</td>
+<td><code>1B</code></td>
+<td><code>2B</code></td>
+<td><code>1B</code></td>
+</tr>
+<tr>
+<td align="left">汉字汉字字符</td>
+<td><code>3B</code></td>
+<td><code>2B</code></td>
+<td><code>2B</code></td>
+</tr>
+</tbody></table></div>
+</li>
+</ul>
+</li>
+<li><p>问题</p>
+<ul>
+<li><blockquote>
+<p><strong>为什么 UTF-8 和 UTF-16 对于中文编码的字节数量不一样？</strong></p>
+</blockquote>
+<p>  UTF-8 提供的标志位更多，每个编码单元能存储的实际信息相对 UTF-16 要少，所以需要采用更多的字节来编码中文</p>
+</li>
+<li><blockquote>
+<p><strong>字符集和编码规则有什么区别？</strong></p>
+</blockquote>
+<p>  字符集只是对每个不同的字符 [分配唯一的编号（码位、码点）]{.red}：[知] Unicode 编号为 30693；十六进制表示为 0x77E5</p>
+<p>  编码规则则是根据 [特定的方式]{.red} 将字符的编号转换成二进制进行存储：[知] 11100111 10011111 10100101</p>
+<p>  你可以尝试将二进制再换算成十六进制，得到的值肯定是不一样的，这就是因为具体的编码规则不同导致的，这里采用是 UTF-8</p>
+<p>  [注：字符集是对全世界的字符编码的规范，编码格式则是存储字符的具体实现]{.red}</p>
+</li>
+<li><blockquote>
+<p><strong>为什么要分别提供字符集和编码规则呢？</strong></p>
+</blockquote>
+<p>  如果直接将字符集提供的编号转换成二进制存储就会出现问题：[每个字符编号长度不同就会造成计算机在读取时的歧义]{.red}</p>
+<p>  [知] 二进制表示为 1110111 11100101 [W] 二进制表示为：1110111：显然计算机就会直接将 [知] 的前半部分解读为 [W]，这是显然错误的</p>
+<p>  为了正确解读每个字符的编号显然需要使用 [标志位]{.red}，从而让计算机意识到解读开始和解读结束</p>
+<p>  因为 [标志位]{.red} 设计的不同就导致诞生了不同格式的编码规则</p>
+</li>
+<li><blockquote>
+<p><strong>为什么已经存在 UTF-8 等国际化的编码，中文编码仍在使用</strong></p>
+</blockquote>
+<p>  等待更新…</p>
+</li>
+</ul>
+</li>
+<li><p>细节：[Java 虚拟机内部采用 UTF-16 编码，字节码采用 UTF-8 编码、源代码可以自行设定编码格式]{.red}</p>
+</li>
+</ul>
+
+        <h2 id="同步与阻塞"   >
+          <a href="#同步与阻塞" class="heading-link"><i class="fas fa-link"></i></a><a href="#同步与阻塞" class="headerlink" title="同步与阻塞"></a>同步与阻塞</h2>
+      <blockquote>
+<p><strong>阻塞、非阻塞、同步、异步</strong></p>
+</blockquote>
+<p>:::info</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36573828/article/details/89149057" >同步、异步、阻塞、非阻塞IO总结（IO模型总结）</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/lengxiao1993/article/details/78154467" >同步/异步，阻塞/非阻塞概念深度解析</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.zhihu.com/question/19732473" >怎样理解阻塞非阻塞与同步异步的区别？</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>（这个知乎上有个回答基本解决了我的疑惑）</p>
+<p>:::</p>
+<p>:::warning</p>
+<p>I/O 的同步、异步的概念和并发中的同步、异步的概念是完全不同的</p>
+<p>:::</p>
+<blockquote>
+<p>① 先来了解数据进程（程序）究竟是如何通过 I/O 获取到数据的</p>
+</blockquote>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/08/21/a99748a07ca5c0f198e3e65059f968e5.png" alt="a99748a07ca5c0f198e3e65059f968e5.png" style="zoom:80%;" />
+
+<ul>
+<li><p>前提：[理解这幅图需要 <strong>操作系统</strong> 的相关知识]{.red}</p>
+</li>
+<li><p>I/O 流程</p>
+<ul>
+<li><p>发起请求：</p>
+<ul>
+<li><p>进程使用 recvfrom 系统调用发起 I/O 请求（应用程序层面的 I/O 请求）</p>
+</li>
+<li><p>操作系统 查找相应驱动程序发起 I/O 请求 （操作系统层面的 I/O 请求）</p>
+</li>
+<li><p>控制器完成实际的 I/O 操作</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/IO 流程.25dyfqwn03mo.png" alt="IO 流程" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>接收数据：</p>
+<ul>
+<li>网络或者磁盘中的数据经由总线传输进入内核缓冲区中：操作系统层面的 I/O 操作完成</li>
+<li>内核缓冲区中的数据拷贝进入进程所占用的内存空间中：应用程序层面的 I/O 操作完成</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>同步与阻塞</p>
+<ul>
+<li>应用程序发起 I/O 请求实际涉及到两次 I/O 操作：一次是操作系统层面的，一次是应用程序层面的</li>
+<li>那么我们在讨论同步和阻塞的时候应该将这两次 I/O 操作分开讨论，混为一谈容易导致概念混乱<ul>
+<li>操作系统层面的 I/O 操作：现代操作系统的 I/O 操作全部都是异步非阻塞式的，因为效率高</li>
+<li>应用程序层面的 I/O 操作：现代操作系统提供给程序员的方法都是同步式的（阻塞或者非阻塞），为了程序员编程的便利</li>
+</ul>
+</li>
+<li>因为操作系统层面的 I/O 操作的设计已经固定，所以通常不去讨论，接下来所有的讨论都是针对应用程序层面的</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>② 再来了解阻塞、非阻塞、同步、异步的概念</p>
+</blockquote>
+<ul>
+<li><p>阻塞和非阻塞</p>
+<ul>
+<li>定义：阻塞和非阻塞描述的是 [进程的状态]{.red} </li>
+<li>阻塞：请求发送方在请求结果返回之前都 [不完成其他任何任务]{.red}</li>
+<li>非阻塞：请求发送方在请求调用结果返回之前 [可以完成其他任务]{.red}</li>
+</ul>
+</li>
+<li><p>同步和异步</p>
+<ul>
+<li>定义：同步和异步描述的是 [进程之间协作完成事件的动作]{.red}</li>
+<li>同步：[请求接收方为了和请求发送方保持一致性，在处理完请求之前不会返回任何结果]{.red}</li>
+<li>异步：<ul>
+<li>[请求接收方不想和请求发送方保持一致性，那么就会立刻返回确认请求]{.red}</li>
+<li>[请求发送方在接收到确认请求后就可以去完成其他的任务]{.red}</li>
+<li>[请求接收方处理结束后就利用事件通知请求发送方，请求发送方就利用回调函数继续处理]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>区别：</p>
+<ul>
+<li>同步、异步 与 阻塞、非阻塞的关系<ul>
+<li>同步和异步表示的 [行为]{.red} &lt;-&gt; 阻塞和非阻塞表示的是 [状态]{.red}</li>
+<li>同步和异步是从 [接收方]{.red} 的角度看待的 &lt;-&gt; 阻塞和非阻塞是从 [发送方]{.red} 的角度看待的</li>
+</ul>
+</li>
+<li>同步和异步的区别：<ul>
+<li>同步：应用程序层面的 I/O 操作始终必须由自己主导完成</li>
+<li>异步：应用程序层面的 I/O 操作完全交给操作系统一起完成，自己只需要等待数据进入自己的内存空间就行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>组合：[两组概念可以两两任意组合]{.red}</p>
+<ul>
+<li>同步阻塞：<ul>
+<li>请求发送方等待返回结果，确保和请求接收方的一致性</li>
+<li>采用这种组合就会导致请求发送方在等待的过程中什么都不做，工作效率低</li>
+</ul>
+</li>
+<li>同步非阻塞：<ul>
+<li>请求发送方等待返回结果的期间会不停地询问请求接收方，确保能及时接收到返回结果保持一致性</li>
+<li>采用这种组合就会导致发送方长时间运行，[导致处理器满负荷运行，非常占用系统资源]{.red}</li>
+</ul>
+</li>
+<li>异步非阻塞：<ul>
+<li>请求发送方在发送请求之后就不再关心返回结果，只需要等待请求接收方返回结果</li>
+</ul>
+</li>
+<li>异步阻塞：理论存在的情况，实际并没有人使用</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>③ 同步与阻塞的相关问题</p>
+</blockquote>
+<ul>
+<li>同步和阻塞、异步和非阻塞有必然的联系吗？<ul>
+<li>同步和异步是进程间协作的方式，确实可以导致进程出现阻塞或者非阻塞的状态。</li>
+<li>[但是并没有必然的联系]{.blue}，同步不一定导致进程阻塞，异步也不一定导致进程处于非阻塞。</li>
+</ul>
+</li>
+<li>操作系统层面是异步非阻塞式操作，但是应用程序层面使用同步式调用难道不会导致操作系统阻塞吗？<ul>
+<li>同步式调用只会导致请求发送方出现阻塞的状态，请求接收方是不会出现的</li>
+<li>操作系统由于采用的异步非阻塞式的 I/O 操作，所以在 I/O 控制器没有完成之前，操作系统是可以继续做其他事情的</li>
+<li>应用程序采用的是同步式调用，始终在等待操作系统返回相应的结果，操作系统在没有收到数据前也是不会返回结果的</li>
+<li>所以等待的始终只会是进程而不是操作系统</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>④ 总结</p>
+</blockquote>
+<ul>
+<li>阻塞&amp;非阻塞 与 同步&amp;异步仅仅只是看待问题的角度不同而已</li>
+<li>不存在说同步&amp;异步是操作系统层面的概念，阻塞&amp;非阻塞是进程层面的概念</li>
+<li>详细分析 IO 流程，显然是有两次 I/O 操作的，而在这两次 I/O 操作中是可以根据需要选择组合方案的</li>
+<li>只不过现代操作系统通常采用异步非阻塞式、提供给应用程序使用的通常是同步式调用</li>
+<li>实际上，应用程序也可以直接使用操作系统的异步非阻塞式调用</li>
+</ul>
+
+        <h2 id="Linux-通信模型"   >
+          <a href="#Linux-通信模型" class="heading-link"><i class="fas fa-link"></i></a><a href="#Linux-通信模型" class="headerlink" title="Linux 通信模型"></a>Linux 通信模型</h2>
+      <blockquote>
+<p><strong>Linux 通信模型</strong></p>
+</blockquote>
+<p>:::info</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=Mzg3MjA4MTExMw==&mid=2247484746&idx=1&sn=c0a7f9129d780786cabfcac0a8aa6bb7&source=41#wechat_redirect" >漫话：如何给女朋友解释什么是Linux的五种IO模型？</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36573828/article/details/89149057" >同步、异步、阻塞、非阻塞IO总结（IO模型总结）</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.pdai.tech/md/java/io/java-io-model.html#io-%e5%a4%8d%e7%94%a8" >IO 模型 - Unix IO 模型</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<ul>
+<li><p>前提：</p>
+<ul>
+<li>Linux 通信模型是对上面概念的实际实现，能够帮助更好的理解同步与阻塞的概念</li>
+<li>Linux 通信模型不再涉及对操作系统层面 I/O 操作的讨论，因为基本都是异步非阻塞式的</li>
+<li>[五种通信模型都是操作系统层面的模型，Java 通信模型是在操作系统层面的通信模型的封装]{.blue}</li>
+</ul>
+</li>
+<li><p>同步 I/O 模型</p>
+<ul>
+<li><p>阻塞式 I/O 模型</p>
+<ul>
+<li><p>进程使用 <code>recvfrom</code> 同步阻塞式方法发起 I/O 请求等待数据进入内存中：进程变为阻塞态</p>
+</li>
+<li><p>网卡或者磁盘中的数据进入操作系统的缓冲区中：数据到达缓冲区</p>
+</li>
+<li><p>进程解除阻塞状态继续执行 <code>recvfrom</code> 同步阻塞式的方法：缓冲区中的数据进入进程所属内存中</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/22/beced3d854b7a17012e9473eadb252dc.png" alt="beced3d854b7a17012e9473eadb252dc.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>非阻塞式 I/O 模型</p>
+<ul>
+<li>进程设置为同步非阻塞：进程不会进入阻塞态</li>
+<li>进程不停地使用 <code>recvfrom</code> 同步阻塞式方法，询问操作系统数据是否到达缓冲区中：进程始终处于运行态</li>
+<li>网卡或者磁盘中的数据进入操作系统的缓冲区中：数据到达缓冲区</li>
+<li>进程解除阻塞状态继续执行 <code>recvfrom</code> 同步阻塞式的方法：缓冲区中的数据进入进程所属内存中<img src="https://i1.xpic.jp/file/xpicjp/2021/08/22/2d5e244e2864ee0fe10d1af4ad59029a.png" alt="2d5e244e2864ee0fe10d1af4ad59029a.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>[多路复用式 I/O 模型]{.red}：</p>
+<ul>
+<li><p>进程设置为同步非阻塞：[进程不会阻塞在 I/O 操作上而是阻塞在方法上]{.red}</p>
+</li>
+<li><p>进程使用 <code>select、poll、epoll、kqueue</code> 同步阻塞式的方法：</p>
+</li>
+<li><p><code>select、poll、epoll、kqueue</code> 方法监视并且不断轮询操作系统，询问操作系统数据是否到达缓冲区中</p>
+</li>
+<li><p><code>select、poll、epoll、kqueue</code> 方法监视到数据进入操作系统缓冲区后就通知进程</p>
+<p>+++ 细节</p>
+<ul>
+<li>这种模型的优势在于可以可以同时处理多个发生的 I/O 事件，而不像阻塞式模型仅能够处理单个 I/O 事件</li>
+<li><code>select</code> 方法采用的是集合存储，<code>poll</code> 方法采用的是链表存储</li>
+<li><code>epoll</code> 方法不需要存储多个事件，它为每个事件关联一个句柄，哪个事件发生，它立刻就会返回该事件，而不是一个集合</li>
+</ul>
+<p>+++</p>
+</li>
+<li><p>进程解除阻塞状态继续执行 <code>recvfrom</code> 同步阻塞式的方法：缓冲区中的数据进入进程所属内存中</p>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/08/22/4b2259ebfaaccc22fd365434a302e7d0.png" alt="4b2259ebfaaccc22fd365434a302e7d0.png" style="zoom:80%;" /></li>
+<li><p>信号驱动式 I/O 模型：</p>
+<ul>
+<li>进程使用 sigaction` 方法发起 I/O 请求后收到确认请求，继续执行其他任务：进程处于运行态</li>
+<li>网卡或者磁盘中的数据进入操作系统的缓冲区中：数据到达缓冲区</li>
+<li>SIGIO 信号处理程序发出信号 <code>SIGIO</code> 通知进程可以开始读取数据</li>
+<li>进程使用 <code>recvfrom</code> 同步阻塞式方法发起 I/O 请求将数据读取到进程内存中  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/22/5c9278b107be64e5de694dcf905b137d.png" alt="5c9278b107be64e5de694dcf905b137d.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>异步 I/O 模型：</p>
+<ul>
+<li>进程使用 <code>aio_read</code> 异步非阻塞式的方法发起 I/O 请求后继续执行自己的任务：始终处于运行态</li>
+<li>[网卡或者磁盘中的数据进入操作系统的缓冲区中，操作系统将缓冲区的数据拷贝到进程内存空间]{.red}</li>
+<li>操作系统通知进程数据已经准备完成可以直接使用  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/22/18a67cc67534c5479aa3fb04963553aa.png" alt="18a67cc67534c5479aa3fb04963553aa.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="Java-通信模型"   >
+          <a href="#Java-通信模型" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-通信模型" class="headerlink" title="Java 通信模型"></a>Java 通信模型</h2>
+      <blockquote>
+<p><strong>Java 通信模型</strong></p>
+</blockquote>
+<ul>
+<li><p>前提：Linux 通信模型或者 Java 通信模型都是为了服务器开发而设计的，并不是客户端开发</p>
+</li>
+<li><p>BIO 编程模型</p>
+<ul>
+<li><p>对应关系：[Linux 阻塞式通信模型]{.red}</p>
+</li>
+<li><p>工具类：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/Java/io/IO/" >传统 IO 类</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</li>
+<li><p>服务器设计</p>
+<ul>
+<li><p>单线程模型：</p>
+<ul>
+<li>传统 IO 类提供的方法都是 [同步阻塞式]{.red} 的，所以单个线程仅能够负责单个用户</li>
+<li>[如果服务器端仅提供单个线程，显然服务器就只能够为单个客户端提供服务，造成服务器端资源的浪费]{.blue}</li>
+</ul>
+</li>
+<li><p>多线程模型</p>
+<ul>
+<li><p>v1：</p>
+<ul>
+<li><p>解决方案：++为了解决单线程模型的问题最直接的办法就是为每个连接的客户端都提供一个线程，每个线程都负责一个用户++</p>
+<p>  +++ 缺点</p>
+<ul>
+<li>[大量线程的创建和销毁需要占用非常多的服务器资源]{.green}</li>
+<li>[大量线程的创建和销毁需要占用非常多的服务器资源 大量线程的存在会导致服务器频繁的执行上下文切换，浪费线程的执行时间]{.green}</li>
+</ul>
+<p>  +++</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/BIO 通信模型.1h4z3970je9s.png" alt="BIO 通信模型" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>v2：（伪异步模型）</p>
+<ul>
+<li><p>解决方案：++为了避免v1版的多线程模型下创建销毁线程的开销，最直接的办法就是提供线程池，每个用户仅能够由已存在的线程提供服务++</p>
+<p>  +++ 缺点</p>
+<ul>
+<li>[大量的线程依然会导致频繁的执行上下文切换]{.green}</li>
+<li>[线程池的线程数量是固定的就会导致在大量请求同时发出时，必然存在客户端长时间等待的情况]{.green}</li>
+</ul>
+<p>  +++</p>
+<p>  +++ 优点</p>
+<p>  [避免服务器创建和销毁大量的线程造成的资源浪费]{.red}</p>
+<p>  +++</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/伪异步.1u0xqicyiyrk.png" alt="伪异步" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>NIO 编程模型</p>
+<ul>
+<li><p>对应关系：</p>
+<ul>
+<li>原生 NIO 模型：Linux 同步非阻塞式模型</li>
+<li>原生 NIO 模型 + Selector：Linux 多路复用式模型</li>
+</ul>
+</li>
+<li><p>工具类：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/Java/io/NIO/" >NIO 类</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</li>
+<li><p>服务器设计：</p>
+<ul>
+<li><p>单线程版</p>
+<ul>
+<li><p>核心：</p>
+<p>  伪异步模型中使用了线程池依然避免不了大量线程的存在，从而导致频繁的上下文切换，以及用户过长的等待时间</p>
+<p>  最直接的解决方案依然是仅在客户端发出请求时，服务器端才给予相应的处理</p>
+</li>
+<li><p>同步非阻塞式模型（轮询模型）</p>
+<ul>
+<li><p>解决方案：++服务器端会不断地询问客户端是否有请求需要处理，如果没有则服务器端继续完成剩下的代码，如果有就处理客户端的请求++</p>
+<p>  +++ 优点</p>
+<p>  [减少服务器需要的线程数量，即单个线程就可以完成，避免资源的大量占用和上下文切换占用的时间]{.red}</p>
+<p>  +++</p>
+<p>  +++ 缺点</p>
+<ul>
+<li>[单个线程可能来不及 <strong>同时</strong> 处理多个客户端请求，依然存在客户端等待的情况]{.green}</li>
+<li>[没有任何客户端发出请求时，服务器端存在 <strong>空转</strong> 的情况，浪费服务器资源]{.green}</li>
+</ul>
+<p>  +++</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/轮询模型.5v6m9wj7dfo0.png" alt="轮询模型" style="zoom:80%;" /></li>
+<li><p>多路复用式模型</p>
+<ul>
+<li><p>解决方案：++为了处理轮询模型中出现的服务器端空转现象，最直接的方法就是只有在客户端发出请求的时候服务器端才处理，其余时候阻塞，利用 Selector 类可以做到监视客户端的功能，从而确认当前是否有事件发生++</p>
+<p>  +++ 优点</p>
+<ul>
+<li>[减少服务器需要的线程数量，即单个线程就可以完成，避免资源的大量占用和上下文切换占用的时间]{.red}</li>
+<li>[服务器不存在空转现象，只在有需要的时候提供服务，其余时候阻塞即可]{.red}</li>
+</ul>
+<p>  +++</p>
+<p>  +++ 缺点</p>
+<p>  [单个线程可能来不及 <strong>同时</strong> 处理多个客户端请求，依然存在客户端等待的情况]{.green}</p>
+<p>  +++</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/多路复用.2shl0b9ohn40.png" alt="多路复用" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>多线程版：<a href="">Reactor</a>、<a href="">Proactor</a></p>
+<blockquote>
+<p>利用多线程彻底解决此前模型的等待问题</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>AIO 编程模型</p>
+<ul>
+<li><p>对应关系：Linux 异步非阻塞模型</p>
+</li>
+<li><p>工具类：<a href="">AIO 工具类</a></p>
+</li>
+<li><p>服务器设计</p>
+<ul>
+<li><p>解决方案：++进程向操作系统注册后继续完成自己的其他任务，操作系统在 IO 事件发生之后会自行寻找 AsynchronousChannelGroup 对象，调用线程池中的线程去执行之前编写好的回调函数，回调函数处理发生的 IO 事件，也就意味着进程在自己不知道的情况下就已经完成了 IO 事件++</p>
+<p>  +++ 优点</p>
+<ul>
+<li>[异步非阻塞式模型不需要采用 Selector 轮询处理事件的方式而是采用订阅-通知的方式处理事件，效率更高]{.red}</li>
+<li>[Linux 并没有实现真正的异步非阻塞式调用而是采用同步式的 epoll 调用进行模拟的，之前提到过 epoll，确实很类似 AIO]{.red}</li>
+<li>[Windows 下实现了真正的异步非阻塞式调用，采用的是 IOCP 技术]{.red}</li>
+</ul>
+<p>  +++</p>
+<p>  +++ 缺点</p>
+<p>  [程序的编写相对复杂并且不是很好理解]{.green}</p>
+<p>  +++</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/AIO.i95xm33f7co.png" alt="AIO" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/08/19/java/io/%E6%A6%82%E8%BF%B0/">http://example.com/2021/08/19/java/io/%E6%A6%82%E8%BF%B0/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/08/19/java/io/IO/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">IO</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/08/18/java/io/NIO/"><span class="paginator-prev__text">NIO</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">
+          概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E6%A1%86%E6%9E%B6"><span class="toc-number">1.1.</span> <span class="toc-text">
+          知识框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.2.</span> <span class="toc-text">
+          简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">
+          编码格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E4%B8%8E%E9%98%BB%E5%A1%9E"><span class="toc-number">1.4.</span> <span class="toc-text">
+          同步与阻塞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.</span> <span class="toc-text">
+          Linux 通信模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.6.</span> <span class="toc-text">
+          Java 通信模型</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

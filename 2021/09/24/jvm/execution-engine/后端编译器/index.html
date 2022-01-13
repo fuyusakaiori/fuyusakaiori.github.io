@@ -1,0 +1,392 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="后端编译器                           即时编译器        什么是即时编译器?   前提：  虚拟机规范中并没有强制要求必须实现即时编译器，虚拟机可以采用纯解释执行 但是 [即时编译器性能的好坏、对于代码优化质量的高低]{.blue} 却是衡量虚拟机是否优秀的关键标准   名称：即时编译器（Just In Time 编译器）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="执行引擎-后端编译器">
+<meta property="og:url" content="http://example.com/2021/09/24/jvm/execution-engine/%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="后端编译器                           即时编译器        什么是即时编译器?   前提：  虚拟机规范中并没有强制要求必须实现即时编译器，虚拟机可以采用纯解释执行 但是 [即时编译器性能的好坏、对于代码优化质量的高低]{.blue} 却是衡量虚拟机是否优秀的关键标准   名称：即时编译器（Just In Time 编译器）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释模式.7j3rnjsbqio0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/编译模式.5x9nc8v7cno0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/混合模式.g4usdv50h9k.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释器和编译器.7ammm6bwlz00.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/方法调用计数器.54qypk5j6b40.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/回边计数器.2ree7t6c62s0.png">
+<meta property="article:published_time" content="2021-09-24T09:26:49.639Z">
+<meta property="article:modified_time" content="2021-09-25T08:16:52.187Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释模式.7j3rnjsbqio0.png"><title>执行引擎-后端编译器 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/24/jvm/execution-engine/%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">执行引擎-后端编译器</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-25</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="后端编译器"   >
+          <a href="#后端编译器" class="heading-link"><i class="fas fa-link"></i></a><a href="#后端编译器" class="headerlink" title="后端编译器"></a>后端编译器</h1>
+      
+        <h2 id="即时编译器"   >
+          <a href="#即时编译器" class="heading-link"><i class="fas fa-link"></i></a><a href="#即时编译器" class="headerlink" title="即时编译器"></a>即时编译器</h2>
+      <blockquote>
+<p><strong>什么是即时编译器?</strong></p>
+</blockquote>
+<ul>
+<li><p>前提：</p>
+<ul>
+<li>虚拟机规范中并没有强制要求必须实现即时编译器，虚拟机可以采用纯解释执行</li>
+<li>但是 [即时编译器性能的好坏、对于代码优化质量的高低]{.blue} 却是衡量虚拟机是否优秀的关键标准</li>
+</ul>
+</li>
+<li><p>名称：即时编译器（Just In Time 编译器）</p>
+</li>
+<li><p>定义：[负责在 <strong>进程运行期间</strong> 将 <strong>热点探测</strong> 决定的字节码指令 <strong>编译并且优化</strong> 成本地机器指令]{.red}</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>客户端编译器：</p>
+<ul>
+<li>名称：Client Compiler（C1 编译器）</li>
+<li>特点：[采用的代码优化策略相对简单可靠，确保客户端的编译速度]{.red}</li>
+</ul>
+</li>
+<li><p>服务器端编译器：</p>
+<ul>
+<li>名称：Server Compiler（C2 编译器）</li>
+<li>特点：[采用的代码优化策略更加的激进，全局性的优化，服务器端的执行速度也更快]{.red}</li>
+</ul>
+<p>  :::info</p>
+<p>  ① 采用的优化策略更多，显然编译器执行的编译过程就更长，显然编译速度就会更慢</p>
+<p>  ② 只要编译期间采用的优化策略越多，代码质量就会越好，执行速度就会越快</p>
+<p>  :::</p>
+</li>
+<li><p>Graal 编译器：JDK 10 之后提供的编译器，目的是替代服务器端编译器</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>[虚拟机预热：]{.red}<ul>
+<li>虚拟机刚启动时只采用解释执行，热点探测本质就是统计方法的调用次数，即时编译器无法立刻生效</li>
+<li>[虚拟机在等待即时编译器生效的这段时间称为虚拟机预热]{.blue}</li>
+</ul>
+</li>
+<li>[虚拟机假死：]{.red}<ul>
+<li>虚拟机预热完成之前都称为冷机状态，虚拟机长时间运行之后称为热机状态</li>
+<li>[虚拟机的热机状态所能够承受的负载显然要大于虚拟机的冷机状态]{.blue}</li>
+<li>[如果将处于热机状态的虚拟机的部分任务分配给处于冷机状态的虚拟机，就会导致其无法承受过大的流量而假死；毕竟虚拟机刚开始只采用解释执行，突然将大流量的任务交给处于冷机状态的虚拟机，肯定难以承受]{.green}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>解释器和即时编译器如何配合执行?</strong></p>
+</blockquote>
+<p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000009371813" >jvm分层编译级别</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<ul>
+<li><p>解释模式：</p>
+<ul>
+<li><p>定义：仅使用解释器执行代码的模式</p>
+</li>
+<li><p>设置解释模式命令：[-Xint]{.blue}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释模式.7j3rnjsbqio0.png" alt="解释模式" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>编译模式</p>
+<ul>
+<li><p>定义：仅使用即时编译器执行的模式</p>
+</li>
+<li><p>设置编译模式命令：[-Xcomp]{.blue}</p>
+</li>
+<li><p>细节：[在即时编译器无法执行的情况下，解释器会强制介入]{.red}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/编译模式.5x9nc8v7cno0.png" alt="编译模式" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>混合模式</p>
+<ul>
+<li><p>定义：解释器和即时编译器混合执行的模式</p>
+</li>
+<li><p>设置混合模式命令：[-Xmixed]{.blue}</p>
+<ul>
+<li>[HotSpot 虚拟机默认采用混合模式]{.red}</li>
+</ul>
+</li>
+<li><p>常规混合模式：[解释器配合任意一个即时编译器进行工作]{.red}</p>
+</li>
+<li><p>分层编译模式：</p>
+<ul>
+<li><p>前提：即时编译器想要完成更好的优化，就可能需要解释器的介入，替他监控并收集相关信息</p>
+</li>
+<li><p>开启分层编译策略：</p>
+<ul>
+<li>命令：[-XX:+TieredCompilation 开启分层策略 / -XX:-TieredCompilation 关闭分层策略]{.blue}</li>
+<li>JDK 6 分层编译策略被初步实现，JDK 7 之后分层编译才作为默认策略被开启</li>
+</ul>
+</li>
+<li><p>分层：</p>
+<ul>
+<li><p>第 0 层（解释执行）：程序纯解释执行，并且不开启性能监控功能</p>
+</li>
+<li><p>第 1 层（简单 C1 编译）：开启客户端编译器进行代码优化，解释器仍然不开启性能监控功能</p>
+<p>  !!不开启性能监控怎么知道哪些代码是热点代码啊？!!{.bulr}</p>
+</li>
+<li><p>第 2 层（受限 C1 编译）：继续使用客户端编译器进行代码优化，解释器开启 [部分性能监控功能]{.red}</p>
+<ul>
+<li>方法调用计数器和回边计数器等少量性能监控功能</li>
+</ul>
+</li>
+<li><p>第 3 层（完全 C1 编译）：继续使用客户端编译器进行代码优化，解释器开启 [全部性能监控功能]{.red}</p>
+<ul>
+<li>新增分支跳转、虚方法调用版本等信息的收集</li>
+<li>[大多数方法第一次被编译就是采用第 3 层级别的编译]{.red}</li>
+</ul>
+</li>
+<li><p>第 4 层（C2 编译）：开启服务器端编译器进行代码优化，将会采取更加激进的优化策略</p>
+<ul>
+<li>[服务器端编译器较忙的情况下会将方法下放到第 2 层级别的编译]{.red}</li>
+<li>[等到服务器端编译器不太忙的时候，再对此前下放的方法重新编译]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>核心：</p>
+<ul>
+<li>执行频率较高的代码优先被C1编译器编译</li>
+<li>随着时间的推移再采用C2编译器做进一步优化编译，此前的本地代码被抛弃</li>
+</ul>
+</li>
+<li><p>细节：启用分层编译之后，不再是单独使用任何一个即时编译器，而是交替使用，同时使用</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/混合模式.g4usdv50h9k.png" alt="混合模式" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>速率测试：</p>
+<ul>
+<li><p>测试代码</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">    testMethod(<span class="number">10000000</span>);</span><br><span class="line">    <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">    System.out.println(end - start);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算质数的方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testMethod</span><span class="params">(<span class="keyword">int</span> count)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;开始执行...&quot;</span>);</span><br><span class="line">    <span class="comment">// 没有经过任何优化的算法采用纯解释执行实在是太他妈的慢了</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt; count; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">2</span>; j &lt; Math.sqrt(i); j++)&#123;</span><br><span class="line">            <span class="keyword">if</span> (i % j == <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;执行结束...&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>测试结果</p>
+<ul>
+<li>纯解释执行的效率显然是非常低下的，尤其是在算法没有优化且计算量大的情况下，非常糟糕</li>
+<li>纯编译执行效果显然是非常好的，即使算法写的不好，虚拟机也会采用相应的优化策略，提高效率</li>
+<li>混合执行效果也不错，但是相比于纯编译似乎没有多大的提升，甚至有点下降</li>
+<li>这是你可能产生了一个疑问，既然纯编译效果这么好，那为什么还要留着解释器呢？接下来就会提到这个问题</li>
+</ul>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 解释器和编译器配合模式测试</span></span><br><span class="line"><span class="comment">// 纯解释执行 36980</span></span><br><span class="line"><span class="comment">// 纯编译执行 4902</span></span><br><span class="line"><span class="comment">// 混合执行 5031</span></span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>运行模式</p>
+<ul>
+<li>服务器端：[没有分层编译的混合模式中默认使用服务器端即时编译器]{.red}<ul>
+<li>设置命令：[-server]{.blue}</li>
+</ul>
+</li>
+<li>客户端：[没有分层编译的混合模式默认使用客户端即时编译器]{.red}<ul>
+<li>设置命令：[client]{.blue}</li>
+</ul>
+</li>
+<li>细节：虚拟机根据宿主机器选择运行模式，不过在 [64位的虚拟机]{.blue} 中默认采用服务器端运行</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>为什么要采用解释器和即时编译器并存的架构呢?</strong></p>
+</blockquote>
+<ul>
+<li><p>回顾：</p>
+<ul>
+<li>主流的 HotSpot、OpenJ9 虚拟机都采用解释器和即时编译并存的架构</li>
+<li>远古时代的 Classsic 虚拟机仅采用解释执行的架构</li>
+<li>BEA 开发的 JRockit 虚拟机仅采用编译执行的架构</li>
+</ul>
+</li>
+<li><p>原因：</p>
+<ul>
+<li>Java 程序不仅需要运行在服务器端也需要运行在客户端</li>
+<li>[客户端程序更加关心程序的启动速度，对运行速率没有太高要求，过长的编译期会严重影响客户端的启动]{.red}<ul>
+<li>[解释器不需要对源码执行编译过程所以启动速度非常快，也不需要和具体的硬件产生关系]{.blue}</li>
+</ul>
+</li>
+<li>[服务器端则更加关心其运行速度，因为需要频繁处理客户端的请求，所以需要更加全局性的代码优化策略]{.red}<ul>
+<li>但是解释器每次都需要向处理器解释源码的含义，对于长时间运行的服务器来说效率非常差</li>
+<li>所以即时编译器就用来解决运行时的执行效率问题</li>
+<li>[即时编译器会采用热点探测，对频繁执行的代码进行编译，再次执行该代码时就会提高其运行效率]{.blue}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>核心：[虚拟机能够同时兼具启动速度和执行速度两种优势，能够适应不同进程情况]{.red}</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>[即时编译器和解释器是异步执行：代码在编译的过程中，同时进入解释器执行，等到再次调用时再编译执行]{.red}</li>
+<li>[解释器还可以作为即时编译器激进优化的逃生门]{.red}</li>
+</ul>
+<p>  :::info</p>
+<p>  ① 即时编译器有时候会采用非常激进的优化策略，这些优化策略并不是一定都能够成功的，是由一定概率的</p>
+<p>  ② 如果优化策略没有成功，那么代码就会从编译执行退回到解释执行</p>
+<p>  :::</p>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释器和编译器.7ammm6bwlz00.png" alt="解释器和编译器" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>如何触发即时编译?</strong></p>
+</blockquote>
+<ul>
+<li><p>热点代码（HotSpot Code）</p>
+<ul>
+<li>定义：[被多次调用的 <strong>方法</strong> 或者被多次执行的 <strong>循环体</strong>]{.red}<ul>
+<li>多次调用？多次执行？到底是多少次呢？有没有一个定量呢？</li>
+</ul>
+</li>
+<li>替换方式：<ul>
+<li>普通方式：<ul>
+<li>内容：方法下次调用时再使用编译好的本地代码</li>
+<li>特点：适用于方法调用计数器</li>
+</ul>
+</li>
+<li>栈上替换（On Stack Replacement: OSR）：<ul>
+<li>内容：[循环体代码将在解释执行的过程中被编译生成的本地代码替换]{.red}</li>
+<li>特点：适用于回边计数器</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>细节：[无论是多次调用的方法还是循环体，编译的对象都是整个方法]{.red}</li>
+</ul>
+</li>
+<li><p>热点探测（HotSpot Code Detection）</p>
+<ul>
+<li><p>定义：探测执行的代码是否为热点代码</p>
+</li>
+<li><p>方式：</p>
+<ul>
+<li>基于采样的热点探测<ul>
+<li>内容：[虚拟机将会 <strong>周期性</strong> 的检查各个线程的调用栈顶，频繁出现在栈顶的方法被认为是热点代码]{.red}</li>
+<li>特点：<ul>
+<li>[实现简单且高效，可以得知方法之间的调用关系]{.red}（不太理解后面这个优点）</li>
+<li>[难以精确确定方法的热度，而且由于是周期性的，容易受到线程阻塞的影响]{.green}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>基于计数器的热点探测<ul>
+<li>内容：[虚拟机将会为每个方法建立 <strong>计数器</strong>，统计执行的次数，超过阈值的方法就认为是热点代码]{.red}</li>
+<li>分类：[方法调用计数器、回边计数器]{.red}</li>
+<li>特点：<ul>
+<li>[能够精确测定方法的热度，并且可以使用热度衰减技术]{.red}</li>
+<li>[为每个方法都维护计数器显然比较麻烦，并且无法得知方法之间的调用关系]{.green}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>计数器：</p>
+<ul>
+<li><p>方法调用计数器</p>
+<ul>
+<li><p>作用：统计一个方法被执行的次数，[方法调用计数器和回边计数器之和]{.red} 超过阈值之后发起编译请求</p>
+</li>
+<li><p>阈值：</p>
+<ul>
+<li>默认阈值：客户端默认值为 1500 次，服务器端默认值为 10000 次</li>
+<li>设置阈值的命令：[-XX:CompileThreshold=threshold]{.blue}</li>
+</ul>
+</li>
+<li><p>过程</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/方法调用计数器.54qypk5j6b40.png" alt="方法调用计数器" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>回边计数器</p>
+<ul>
+<li><p>作用：统计一个方法中循环体被执行的次数</p>
+<p>  [方法调用计数器和回边计数器之和]{.red} 超过阈值之后发起 [OSR 编译请求]{.red}</p>
+</li>
+<li><p>阈值：</p>
+<ul>
+<li>客户端默认阈值：[方法调用计数器默认值 x OSR 默认比率 / 100]{.blue} 默认值 13995<ul>
+<li>[方法调用计数器的值（-XX:CompileThreshold）：默认值 1500]{.blue}</li>
+<li>[OSR 比率（-XX:OnStackReplacePercengtage）：默认值 933]{.blue}</li>
+</ul>
+</li>
+<li>服务器端默认值：[方法调用计数器默认值 x (OSR 比率 - 解释器监控比率) / 100]{.blue} 默认值 10700<ul>
+<li>[OSR 比率（-XX:OnStackReplacePercengtage）：默认值 140]{.blue}</li>
+<li>[解释器监控比率（-XX:InterperterProfilePercentage）: 默认值 33]{.blue}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>过程：</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/回边计数器.2ree7t6c62s0.png" alt="回边计数器" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>细节：J9 曾采用基于采样的热点探测，HotSpot 采用基于计数器的热点探测</p>
+</li>
+</ul>
+</li>
+<li><p>热度衰减（Counter Decay）</p>
+<ul>
+<li>前提：仅有基于计数器的热点探测中的方法计数器可以使用热端衰减，回边计数器无法使用</li>
+<li>定义：[周期时间内某个方法始终没有达到方法调用计数器的阈值，那么该方法的方法调用计数器的值减半]{.red}</li>
+<li>周期时间：《深入理解虚拟机》中没有明确指明默认时间到底是多久，只说了这段时间又称为半衰周期</li>
+<li>命令：<ul>
+<li>[-XX:+UseCounterDecay 开启热度衰减 / -XX:-UseCounterDecay 关闭热度衰减]{.blue}</li>
+<li>[-XX:CounterHalfLifeTime=time 设置半衰周期的时间，单位是秒]{.blue}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>即时编译如何进行的?</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>即时编译会采用哪些优化策略呢?</strong></p>
+</blockquote>
+<ul>
+<li>核心：[不同的即时编译器采用的优化策略也不尽相同]{.red}</li>
+<li>C1 编译器：<ul>
+<li>方法内联</li>
+<li>去虚拟化</li>
+<li>冗余访问消除</li>
+<li>复写传播</li>
+</ul>
+</li>
+<li>C2 编译器：[逃逸分析是 C2 编译器进行优化的前提]{.red}<ul>
+<li>栈上分配</li>
+<li>标量替换</li>
+<li>同步消除</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="提前编译器"   >
+          <a href="#提前编译器" class="heading-link"><i class="fas fa-link"></i></a><a href="#提前编译器" class="headerlink" title="提前编译器"></a>提前编译器</h2>
+      </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/24/jvm/execution-engine/%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/">http://example.com/2021/09/24/jvm/execution-engine/%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">执行引擎-概述</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/24/jvm/execution-engine/%E5%89%8D%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/"><span class="paginator-prev__text">执行引擎-前端编译器</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">
+          后端编译器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%B3%E6%97%B6%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">
+          即时编译器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E5%89%8D%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-number">1.2.</span> <span class="toc-text">
+          提前编译器</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

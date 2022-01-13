@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="线程概述       [牢记：单个处理器仅可以运行一个单线程进程或者一个线程]{.red}                     线程概念        线程引入：  问题：多个用户向网站的服务器发出请求，仅具有单个处理请求的程序的服务器效率显然是非常低的  改善方案 V1：  服务器在接收到多个用户的请求时 [创建多个进程]{.blue} 用于处理多个用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程概述">
+<meta property="og:url" content="http://example.com/2021/09/13/os/process/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="线程概述       [牢记：单个处理器仅可以运行一个单线程进程或者一个线程]{.red}                     线程概念        线程引入：  问题：多个用户向网站的服务器发出请求，仅具有单个处理请求的程序的服务器效率显然是非常低的  改善方案 V1：  服务器在接收到多个用户的请求时 [创建多个进程]{.blue} 用于处理多个用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/21/df207dd35f71f5ca67e484f439d6f856.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/21/c232dbe2c08e6fb3983d087ff3676c2f.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/用户级线程.49olyk0bgmw0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/内核级线程.7kbhi35xtt80.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/混合实现.2ls1ul18jge0.png">
+<meta property="article:published_time" content="2021-09-13T07:46:49.578Z">
+<meta property="article:modified_time" content="2021-09-28T11:01:26.858Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/21/df207dd35f71f5ca67e484f439d6f856.png"><title>线程概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/13/os/process/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">线程概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="线程概述"   >
+          <a href="#线程概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程概述" class="headerlink" title="线程概述"></a>线程概述</h1>
+      <p>[牢记：单个处理器仅可以运行一个单线程进程或者一个线程]{.red}</p>
+
+        <h2 id="线程概念"   >
+          <a href="#线程概念" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程概念" class="headerlink" title="线程概念"></a>线程概念</h2>
+      <ul>
+<li><p>线程引入：</p>
+<ul>
+<li><p>问题：多个用户向网站的服务器发出请求，仅具有单个处理请求的程序的服务器效率显然是非常低的</p>
+</li>
+<li><p>改善方案 V1：</p>
+<ul>
+<li>服务器在接收到多个用户的请求时 [创建多个进程]{.blue} 用于处理多个用户的需求</li>
+<li>并利用 [上下文切换]{.blue} 交替执行多个进程</li>
+</ul>
+</li>
+<li><p>方案问题：</p>
+<ul>
+<li>进程的 [创建]{.red} 非常消耗处理器的资源而且效率非常低</li>
+<li>进程的 [上下文切换]{.red} 效率非常低</li>
+</ul>
+</li>
+<li><p>解释：</p>
+<ul>
+<li>创建的多个程序都是完成相同的工作使用相同的资源，但是每个进程都具有自己独立的物理内存，这显然是非常浪费的</li>
+<li>所以考虑是否可以将多个完成相同任务的 “进程” 合并在一起，多个 “进程” 共享相同的物理内存</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>线程定义：</p>
+<ul>
+<li>线程是包含 [程序计数器、寄存器、堆栈]{.red} </li>
+<li>并且拥有所属进程的 [代码段、数据段、硬件资源]{.red} 的处理器的 [基本单元]{.red}</li>
+</ul>
+</li>
+<li><p>线程特点：</p>
+<ul>
+<li><p>[线程是处理器调度的最小单位，进程是资源分配的最小单位]{.red}</p>
+<p>  :::danger</p>
+<p>  核心：线程的引入将进程的资源分配和调度执行完全分开，各个线程可以共享进程提供的资源又可以独立调度</p>
+<p>  :::</p>
+</li>
+<li><p>[每个线程都具有自己 <strong>独立</strong> 的程序计数器、寄存器、堆栈]{.red}（与执行过程相关）</p>
+</li>
+<li><p>所有线程共享进程提供的代码段、数据段、硬件资源（与硬件资源相关）</p>
+</li>
+<li><p>进程拥有的所有线程的虚拟地址和物理地址都是完全相同的</p>
+</li>
+<li><p>所有线程自身拥有的所有资源是不受保护的：每个线程都可以访问其他线程的拥有的资源</p>
+<p>  :::info</p>
+<p>  注：线程自身拥有的资源主要是程序计数器、寄存器、堆栈</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>线程优点：</p>
+<ul>
+<li>改善响应性：与用户交互的线程堵塞 -&gt; 可切换其他线程继续执行</li>
+<li>节省资源：创建线程消耗的资源相对较少</li>
+<li>共享资源：进程的资源共享都需要使用相应的机制；线程与生俱来就是资源共享的</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/21/df207dd35f71f5ca67e484f439d6f856.png" alt="df207dd35f71f5ca67e484f439d6f856.png" style="zoom:80%;" /></li>
+<li><p>状态：(1) 初始态 (2) 就绪态 (3) 阻塞态(++blocked++) (4) 运行态 (5) 终止态</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/21/c232dbe2c08e6fb3983d087ff3676c2f.png" alt="c232dbe2c08e6fb3983d087ff3676c2f.png" style="zoom:80%;" /></li>
+<li><p>线程池：</p>
+<ul>
+<li>引入：<ul>
+<li>每次进程都会执行 [创建线程 -&gt; 线程执行任务 -&gt; 线程被销毁]{.blue} 这个流程</li>
+<li>每次进程都会执行创建线程的操作，如果创建的线程数量过多，可能导致耗尽操作系统所有资源</li>
+</ul>
+</li>
+<li>定义：进程在被创建之后立刻创建 [固定数量]{.red} 的线程等待请求的到来</li>
+<li>执行过程：<ul>
+<li>进程接收到用户请求后立刻 [唤醒]{.red} 线程池中的 [某个线程]{.red} 用于处理当前的用户请求</li>
+<li>线程结束用户请求的处理之后 [不会被立刻销毁]{.red} 而是被重新放回线程池中等待下一次用户请求的处理</li>
+</ul>
+</li>
+<li>优点：<ul>
+<li>[节省时间]{.red}：线程的创建只在进程创建的时候，接收并处理用户请求时并不会花费时间去创建线程</li>
+<li>[限制线程的数量]{.red}：对于不支持高并发的系统来说是有好处的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>改善方案 V2：</p>
+<ul>
+<li>服务器创建分派线程：分派线程用于接收请求并创建和指定工作线程处理请求</li>
+<li>服务器接收多个用户请求就相应地创建多个工作线程<ul>
+<li>每个工作线程由于只需要程序计数器，寄存器，堆栈较小的资源，所以创建是非常快的</li>
+</ul>
+</li>
+<li>服务器中的处理器采用调度算法不断地调度每个线程进行执行</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>线程又被称为轻量级进程（Light Weight Process：LWP）</p>
+</li>
+<li><p>每个线程也是具有 ++标识符++ 的</p>
+</li>
+<li><p>[每个线程都是不可以直接向操作系统申请资源的，只能够通过进程申请资源]{.red}</p>
+</li>
+</ul>
+</li>
+<li><p>+++danger 问题：为什么每个线程的程序计数器，堆栈，寄存器是独立的？</p>
+<p>  解释：[每个线程执行的任务是不一样的，如果共用上述资源，那么利用上下文切换恢复之前执行的线程时就不可能知道之前的线程执行到哪里了]{.red}</p>
+<p>  +++</p>
+</li>
+</ul>
+
+        <h2 id="线程实现"   >
+          <a href="#线程实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程实现" class="headerlink" title="线程实现"></a>线程实现</h2>
+      <ul>
+<li>用户级线程（User Thread）</li>
+<li>内核级线程（Kernal-Level Thread）</li>
+<li>混合实现</li>
+</ul>
+
+        <h3 id="用户级线程"   >
+          <a href="#用户级线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#用户级线程" class="headerlink" title="用户级线程"></a>用户级线程</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li><p>进程使用用户空间中提供的线程库</p>
+</li>
+<li><p>进程中的线程和操作系统中的线程是 {1:N} 实现的</p>
+<p>  :::info</p>
+<p>  注：使用用户空间中的线程库意味着操作系统只会将多线程视为单线程，因为没有深入到内核中去，操作系统感知不到</p>
+<p>  :::</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/用户级线程.49olyk0bgmw0.png" alt="用户级线程" style="zoom:80%;" /></li>
+<li><p>特点：</p>
+<ul>
+<li><p>[每个进程都需要维护相应的线程表，用于追踪该进程中的所有线程]{.red}</p>
+</li>
+<li><p>[内核无法得知多线程的存在也就无法管理，进程需要管理线程的创建、析构、调度操作]{.red}</p>
+<p>  :::info</p>
+<p>  注：这就意味着用户级线程无论是在线程库的实现，还是在线程库的使用上都会比较复杂</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>优点：</p>
+<ul>
+<li>用户级线程实现的进程可移植性高，适用于任何不同的操作系统<ul>
+<li>Java 早期就是采用的这种方案，称为绿色线程（Green Threads）</li>
+<li>Golang 等新兴语言也是采用的这种方案</li>
+</ul>
+</li>
+<li>[用户级线程效率非常高]{.red}<ul>
+<li>每次执行线程相关的操作只需要依靠用户空间中的线程库，不需要借助系统调用</li>
+</ul>
+</li>
+<li>用户级线程具有非常好的扩展性</li>
+<li>用户级线程允许每个进程定义自己的调度算法</li>
+</ul>
+</li>
+<li><p>缺点：[用户级线程实现的进程使用阻塞式系统调用时会阻塞当前进程]{.green}</p>
+<ul>
+<li>因为并没有在内核中实现多线程，内核仍然认为进程都是单线程的，相当于调度的基本单位是进程</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="内核级线程"   >
+          <a href="#内核级线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#内核级线程" class="headerlink" title="内核级线程"></a>内核级线程</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li><p>进程 [直接使用]{.blue} 操作系统（内核）提供的线程库</p>
+</li>
+<li><p>进程中的线程和操作系统中的线程是 [1:1]{.red} 实现的</p>
+<p>  :::info</p>
+<p>  ① 进程实际上直接使用的是操作系统提供的内核线程接口：LWP(Light Weight Process)</p>
+<p>  ② 每个 LWP 都会对应一个具体的内核线程</p>
+<p>  :::</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/内核级线程.7kbhi35xtt80.png" alt="内核级线程" style="zoom:80%;" /></li>
+<li><p>特点：</p>
+<ul>
+<li>[内核管理所有线程的创建、析构、调度等操作，每个进程无法干预线程的行为]{.red}<ul>
+<li>每个进程最多向操作系统给出建议，但是操作系统不一定会采纳</li>
+</ul>
+</li>
+<li>[内核维护所线程组成的线程表，每个进程不需要单独维护线程表]{.red}</li>
+</ul>
+</li>
+<li><p>优点：[采用内核级线程实现不会造成进程阻塞]{.red}</p>
+<ul>
+<li>因为每个进程拥有的每个线程都对应一个内核线程，即使一个线程堵塞，其余线程依旧可以执行</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>[内核级线程效率相对低下]{.green}<ul>
+<li>线程每次执行操作都需要使用 [系统调用]{.red}，操作系统就会从用户态陷入内核态，非常浪费时间</li>
+</ul>
+</li>
+<li>[系统支持的内核线程数量是有限的]{.green}<ul>
+<li>每个线程都会占用操作系统的资源，显然能够提供的数量是有限的</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="混合实现"   >
+          <a href="#混合实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#混合实现" class="headerlink" title="混合实现"></a>混合实现</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li>[用户级线程和内核级线程进行结合]{.blue}</li>
+<li>进程中的线程和操作系统中的线程是 [M:N]{.red} 实现的</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/混合实现.2ls1ul18jge0.png" alt="混合实现" style="zoom:80%;" /></li>
+<li><p>细节：Solaris、HP-UX 等类 UNIX 操作系统采用这种实现方式</p>
+</li>
+</ul>
+
+        <h2 id="线程与进程"   >
+          <a href="#线程与进程" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程与进程" class="headerlink" title="线程与进程"></a>线程与进程</h2>
+      <ul>
+<li>对比：<ul>
+<li>[创建线程的开销非常小 &lt;-&gt; 创建进程的开销非常大]{.red}</li>
+<li>[线程是调度的最小单位 &lt;-&gt; 进程是资源分配的最小单位]{.red}</li>
+<li>[每个线程之间的访问没有限制 &lt;-&gt; 每个进程之间通常是不可以相互访问的]{.red}</li>
+<li>每个线程不可以直接向操作系统申请资源 &lt;-&gt; 每个进程可以向操作系统直接申请资源</li>
+<li>线程上下文切换的速度更快 &lt;-&gt; 进程上下文切换的速度更慢</li>
+</ul>
+</li>
+<li>联系：<ul>
+<li>每个进程可以容纳多个线程</li>
+<li>进程和线程都是可以并发执行的</li>
+<li>[所有线程都共享其所属进程的所有资源 -&gt; 所有线程的物理地址和虚拟地址都是相同的]{.red}</li>
+<li>[子进程通常只会继承创建它的那个线程，不会继承父进程的其他子进程]{.red}</li>
+</ul>
+</li>
+</ul>
+<p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34175509/article/details/85095578" >进程、线程和上下文切换</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+
+        <h2 id="线程其他"   >
+          <a href="#线程其他" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程其他" class="headerlink" title="线程其他"></a>线程其他</h2>
+      <ul>
+<li><p>并发 &amp; 并行</p>
+<ul>
+<li><p>并发：多个线程被 [快速切换]{.red} 执行 （两个或多个事件在同一时间间隔发生）</p>
+<p>  :::info</p>
+<p>  ① 处理器规定每个线程执行的时间，线程执行完规定时间后即被切换；从宏观角度看似所有线程是同时执行的，从微观角度看却不是这样</p>
+<p>  ② 并发也可以看做是 “伪” 并行</p>
+<p>  :::</p>
+</li>
+<li><p>并行：多个线程 [同时]{.red} 执行</p>
+<p>  :::info</p>
+<p>  [注：并行只可以在多处理器系统中实现；单核处理器不可能真正实现并行]{.red}</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>线程库（线程包）</p>
+<ul>
+<li><p>定义：用户创建和管理线程的 API</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>Pthread：可提供用户级或者内核级的线程库</p>
+</li>
+<li><p>Windows：仅提供内核级的线程库</p>
+</li>
+<li><p>Java Thread：Java 线程的实现依托于宿主操作系统</p>
+<p>  :::info</p>
+<p>  Java Thread 中的大多数方法都是本地方法（Native Method），不同的操作系统实现是不同的</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>:::primary</p>
+<p>参考博客</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/why15732625998/article/details/79625556" >[Java 多线程技术]（一）线程和进程以及并行和并发的概念</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27825451/article/details/78850336" >详解并发和并行意义</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/13/os/process/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/">http://example.com/2021/09/13/os/process/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/13/os/process/%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">调度算法</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/12/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"><span class="paginator-prev__text">面向对象</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">
+          线程概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">
+          线程概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.</span> <span class="toc-text">
+          线程实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          用户级线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E7%BA%A7%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          内核级线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">
+          混合实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">
+          线程与进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%85%B6%E4%BB%96"><span class="toc-number">1.4.</span> <span class="toc-text">
+          线程其他</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

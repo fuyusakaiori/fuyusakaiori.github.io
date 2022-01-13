@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="CAS 机制                           为什么需要 CAS 机制？       [回忆确保线程安全的方式]{.label .danger} [此前了解到的确保线程安全的方式，都是采用一致的锁定协议来协调对共享变量的访问，也就是对共享变量上锁]{.pink}  synchronized ReentrantLock ReentrantR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="非阻塞同步机制-CAS 机制">
+<meta property="og:url" content="http://example.com/2021/10/19/juc/juc-utils/%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6-CAS/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="CAS 机制                           为什么需要 CAS 机制？       [回忆确保线程安全的方式]{.label .danger} [此前了解到的确保线程安全的方式，都是采用一致的锁定协议来协调对共享变量的访问，也就是对共享变量上锁]{.pink}  synchronized ReentrantLock ReentrantR">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-19T12:19:44.308Z">
+<meta property="article:modified_time" content="2021-11-12T12:44:48.121Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary"><title>非阻塞同步机制-CAS 机制 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/10/19/juc/juc-utils/%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6-CAS/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">非阻塞同步机制-CAS 机制</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-10-19</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-11-12</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="CAS-机制"   >
+          <a href="#CAS-机制" class="heading-link"><i class="fas fa-link"></i></a><a href="#CAS-机制" class="headerlink" title="CAS 机制"></a>CAS 机制</h1>
+      
+        <h2 id="为什么需要-CAS-机制？"   >
+          <a href="#为什么需要-CAS-机制？" class="heading-link"><i class="fas fa-link"></i></a><a href="#为什么需要-CAS-机制？" class="headerlink" title="为什么需要 CAS 机制？"></a>为什么需要 CAS 机制？</h2>
+      <p>[回忆确保线程安全的方式]{.label .danger}</p>
+<p>[此前了解到的确保线程安全的方式，<strong>都是采用一致的锁定协议来协调对共享变量的访问</strong>，也就是对共享变量上锁]{.pink}</p>
+<ul>
+<li>synchronized</li>
+<li>ReentrantLock</li>
+<li>ReentrantReadWriteLock</li>
+</ul>
+<p>[<strong>可以确保无论哪个线程持有共享变量的锁，都可以采用独占式的方式来访问共享变量，并且对共享变量的任何修改对随后访问这个共享变量的线程都是可见的</strong>]{.pink}</p>
+<p>[锁定协议的性能分析]{.label .primary}</p>
+<p>[存在多个线程同时竞争共享变量时，锁的独占性会让其余没能成功获得锁的线程全部进入阻塞队列中等待，而 <strong>线程进入阻塞队列需要发生上下文切换，内核级线程的上下文切换需要操作系统从用户态陷入内核态</strong>，这个过程会造成非常大的开销]{.purple}</p>
+<p>[上下文切换造成的开销有好几种变体方式，比如 ① 线程持有锁的时间非常短暂，而其余线程在这短暂的时间里突然请求锁的使用权，那么就会出现线程才刚刚因为上下文切换陷入阻塞，又因为锁的释放而被唤醒，这就会造成很高的开销 ② 线程的竞争不够激烈的情况下，这里的不够激烈意思是持有锁的线程在执行过程中没有太多的线程来竞争锁的使用，那么这时候依然让线程阻塞挂起就会]{.purple}</p>
+<p>[如果在临界区中 <strong>对共享变量的操作较少</strong>，也就是持有锁的时间非常短，那么就会出现频繁竞争锁、释放锁的过程，也就是 <strong>会频繁出现上下文切换</strong> 的过程，会造成非常大的开销]{.purple}</p>
+<p>[为了减少锁定协议带来的开销，JDK 6 之后添加非常多对 synchronized 锁的优化措施，从而 <strong>减少在没有线程竞争下的开销</strong>，但是在 <strong>中低程度的竞争下开销依然无法避免</strong>]{.purple}</p>
+<ul>
+<li>轻量级锁、偏向锁（批量重偏向、批量撤销）</li>
+<li>自旋锁、锁消除、锁同步、锁粗化</li>
+</ul>
+<p>[锁定协议存在的其他问题]{.label .warning}</p>
+<ul>
+<li><p>阻塞式调用</p>
+<p>  [持有锁的线程调用阻塞式的方法，<strong>导致线程长时间持有锁但却什么也不做</strong>，其余想要获得锁的线程依然处于阻塞，造成系统的整体执行效率降低]{.orange}</p>
+</li>
+<li><p>优先级反转</p>
+<p>  [优先级较低的线程抢到锁的使用权，<strong>优先级高的线程必须等待优先级较低的线程释放锁才能够执行</strong>，如果频繁出现这种情况，那么优先级高的线程实质上已经变成了低优先级线程，这就是优先级反转问题]{.orange}</p>
+</li>
+<li><p>产生死锁、饥饿、活跃性问题（这部分问题会单独讲述）</p>
+</li>
+</ul>
+<p>:::info</p>
+<p>上述的阻塞式调用和死锁问题实际都有相应的方式解决，但是无法避免这些问题是实际存在的</p>
+<p>:::</p>
+<p>[volatile 关键字]{.label .info}</p>
+<p>[volatile 是轻量级的同步机制，可以确保可见性和有序性，不会让线程发生上下文切换，但是它是无法保证线程操作的原子性的，这个缺陷就导致 volatile 无法替代锁的存在]{.blue}</p>
+<p>[总结]{.label}</p>
+<p>锁定协议在中低程度的竞争下的开销和工作开销的比值相对较大，并且难以通过优化措施去避免上下文切换的开销；其次锁定协议还会造成非常经典（严重）的死锁、饥饿等问题，以及优先级反转问题。所以我们开始考虑是否存在一种方式能够避免这些开销的同时还能够确保原子性，这个问题的答案就是 CAS 机制</p>
+
+        <h2 id="什么是-CAS-机制？"   >
+          <a href="#什么是-CAS-机制？" class="heading-link"><i class="fas fa-link"></i></a><a href="#什么是-CAS-机制？" class="headerlink" title="什么是 CAS 机制？"></a>什么是 CAS 机制？</h2>
+      <p>[基本内容]{.label .primary}</p>
+<p>[使用方式]{.label .primary}</p>
+<p>[性能对比]{.label .primary}</p>
+<p>[本质]{.label .primary}</p>
+
+        <h2 id="CAS-机制的应用场景"   >
+          <a href="#CAS-机制的应用场景" class="heading-link"><i class="fas fa-link"></i></a><a href="#CAS-机制的应用场景" class="headerlink" title="CAS 机制的应用场景"></a>CAS 机制的应用场景</h2>
+      
+        <h3 id="原子类"   >
+          <a href="#原子类" class="heading-link"><i class="fas fa-link"></i></a><a href="#原子类" class="headerlink" title="原子类"></a>原子类</h3>
+      
+        <h3 id="同步锁"   >
+          <a href="#同步锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#同步锁" class="headerlink" title="同步锁"></a>同步锁</h3>
+      
+        <h2 id="CAS-机制存在的缺陷"   >
+          <a href="#CAS-机制存在的缺陷" class="heading-link"><i class="fas fa-link"></i></a><a href="#CAS-机制存在的缺陷" class="headerlink" title="CAS 机制存在的缺陷"></a>CAS 机制存在的缺陷</h2>
+      
+        <h3 id="ABA-问题"   >
+          <a href="#ABA-问题" class="heading-link"><i class="fas fa-link"></i></a><a href="#ABA-问题" class="headerlink" title="ABA 问题"></a>ABA 问题</h3>
+      <p>[什么是 ABA 问题]{.label .primary}</p>
+<ul>
+<li>定义：[变量在当前线程不知情的情况下被其余线程修改后又变回原本的值，而当前线程依旧认为没有发生变化]{.purple}<ul>
+<li>也就是说存在某个线程想要利用 CAS 更新将共享变量的值从 A 更新为 B</li>
+<li>但是中途被其余线程从 B 更新为 C，又从 C 更新为 B，此时这个线程依旧会认为共享变量的值没有变化</li>
+</ul>
+</li>
+<li>核心：[共享变量的状态值产生环形转换]{.red}</li>
+<li>细节：[虽然 ABA 问题存在线程安全隐患，但是通常都不会造成很严重的问题]{.pink}</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> AtomicReference&lt;String&gt; ref = <span class="keyword">new</span> AtomicReference&lt;&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line">    modify();</span><br><span class="line">    TimeUnit.SECONDS.sleep(<span class="number">2</span>);</span><br><span class="line">    log.debug(String.valueOf(ref.compareAndSet(<span class="string">&quot;A&quot;</span>, <span class="string">&quot;C&quot;</span>)));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line">    <span class="comment">// 线程-1 先将共享变量修改一次</span></span><br><span class="line">    <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">        log.debug(ref.get());</span><br><span class="line">        log.debug(String.valueOf(ref.compareAndSet(<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>)));</span><br><span class="line">    &#125;).start();</span><br><span class="line">    TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 线程-2 再将变量修改回去</span></span><br><span class="line">    <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">        log.debug(ref.get());</span><br><span class="line">        log.debug(String.valueOf(ref.compareAndSet(<span class="string">&quot;B&quot;</span>, <span class="string">&quot;A&quot;</span>)));</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>[如何解决 ABA 问题]{.label .success}</p>
+<ul>
+<li>核心：[避免共享变量的状态值产生环形转换]{.red}</li>
+<li>方式：[版本号机制]{.red}<ul>
+<li>原理：<ul>
+<li>[每次更新会同时更新共享变量和版本号两个值，共享变量可以产生环形转换，但是版本号始终递增]{.pink}</li>
+<li>[每次更新的时候不仅检查共享变量是否符合期望值，同时还会检查版本号是否符合期望值]{.pink}</li>
+</ul>
+</li>
+<li>工具类：[AtomicStampedReference、AtomicMarkableReference]{.pink}</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 利用工具类解决 ABA 问题</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 版本号</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> version = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 原子引用类</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> AtomicStampedReference&lt;String&gt; ref =</span><br><span class="line">    <span class="keyword">new</span> AtomicStampedReference&lt;&gt;(<span class="string">&quot;A&quot;</span>, version);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 版本号只要发生变化, 就知道有其他的线程修改了共享变量</span></span><br><span class="line">    <span class="keyword">int</span> tempVersion = ref.getStamp();</span><br><span class="line">    modify();</span><br><span class="line">    <span class="comment">// 主线程等待修改</span></span><br><span class="line">    TimeUnit.SECONDS.sleep(<span class="number">2</span>);</span><br><span class="line">    log.debug(String.valueOf(ref.compareAndSet(</span><br><span class="line">        ref.getReference(), <span class="string">&quot;C&quot;</span>, tempVersion, ++tempVersion)));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">modify</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 线程-1 修改共享变量</span></span><br><span class="line">    <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">        log.debug(String.valueOf(ref.compareAndSet(</span><br><span class="line">            ref.getReference(), <span class="string">&quot;B&quot;</span>, ref.getStamp(), ++version)));</span><br><span class="line">    &#125;).start();</span><br><span class="line">    TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 线程-2 再将变量修改回去</span></span><br><span class="line">    <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">        log.debug(String.valueOf(ref.compareAndSet(</span><br><span class="line">            ref.getReference(), <span class="string">&quot;A&quot;</span>, ref.getStamp(), ++version)));</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="饥饿-活跃性问题"   >
+          <a href="#饥饿-活跃性问题" class="heading-link"><i class="fas fa-link"></i></a><a href="#饥饿-活跃性问题" class="headerlink" title="饥饿 / 活跃性问题"></a>饥饿 / 活跃性问题</h3>
+      </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/10/19/juc/juc-utils/%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6-CAS/">http://example.com/2021/10/19/juc/juc-utils/%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6-CAS/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/10/19/juc/juc-utils/juc-atomic/%E5%8E%9F%E5%AD%90%E7%B1%BB-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">原子类-基础使用</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/10/19/juc/juc-basic/%E5%9F%BA%E7%A1%80%E6%96%B9%E6%B3%95/"><span class="paginator-prev__text">线程-常用方法</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CAS-%E6%9C%BA%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">
+          CAS 机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-CAS-%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">
+          为什么需要 CAS 机制？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-CAS-%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">
+          什么是 CAS 机制？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS-%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.</span> <span class="toc-text">
+          CAS 机制的应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%AD%90%E7%B1%BB"><span class="toc-number">1.3.1.</span> <span class="toc-text">
+          原子类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E9%94%81"><span class="toc-number">1.3.2.</span> <span class="toc-text">
+          同步锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS-%E6%9C%BA%E5%88%B6%E5%AD%98%E5%9C%A8%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="toc-number">1.4.</span> <span class="toc-text">
+          CAS 机制存在的缺陷</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ABA-%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.1.</span> <span class="toc-text">
+          ABA 问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A5%A5%E9%A5%BF-%E6%B4%BB%E8%B7%83%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.2.</span> <span class="toc-text">
+          饥饿 &#x2F; 活跃性问题</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

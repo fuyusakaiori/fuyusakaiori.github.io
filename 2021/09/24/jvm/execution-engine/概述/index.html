@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="概述        什么是执行引擎?   定义：[采用 软件模拟 的物理机处理器就是执行引擎]{.red}  物理机中的计算核心是处理器（CPU） 虚拟机作为对物理机的模拟，执行引擎显然就是对计算核心的模拟，也就是处理器   作用：[将（前端）编译器生成的字节码 翻译&#x2F;编译 成本地机器指令]{.red}  执行引擎每次都取出一条字节码指令并执行 但是无论执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="执行引擎-概述">
+<meta property="og:url" content="http://example.com/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="概述        什么是执行引擎?   定义：[采用 软件模拟 的物理机处理器就是执行引擎]{.red}  物理机中的计算核心是处理器（CPU） 虚拟机作为对物理机的模拟，执行引擎显然就是对计算核心的模拟，也就是处理器   作用：[将（前端）编译器生成的字节码 翻译&#x2F;编译 成本地机器指令]{.red}  执行引擎每次都取出一条字节码指令并执行 但是无论执行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/执行引擎.2jibqu41fte0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/编译器流程.1fexxdsd40gw.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释器.k8qxml3ekz4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/执行引擎执行大致流程.2cwfqncr4dwk.png">
+<meta property="article:published_time" content="2021-09-24T12:25:54.843Z">
+<meta property="article:modified_time" content="2021-09-25T01:42:11.716Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/执行引擎.2jibqu41fte0.png"><title>执行引擎-概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">执行引擎-概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-25</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
+      <blockquote>
+<p><strong>什么是执行引擎?</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：[采用 <strong>软件模拟</strong> 的物理机处理器就是执行引擎]{.red}</p>
+<ul>
+<li>物理机中的计算核心是处理器（CPU）</li>
+<li>虚拟机作为对物理机的模拟，执行引擎显然就是对计算核心的模拟，也就是处理器</li>
+</ul>
+</li>
+<li><p>作用：[将（前端）编译器生成的字节码 <strong>翻译/编译</strong> 成本地机器指令]{.red}</p>
+<ul>
+<li>执行引擎每次都取出一条字节码指令并执行</li>
+<li>但是无论执行任何指令，最终都要依靠物理机，所以需要向物理机解释</li>
+<li>执行引擎需要将字节码指令翻译/编译成处理器能够识别的机器指令</li>
+</ul>
+<p>:::info</p>
+<p>① 前端编译器是什么之后将会提到，可以暂时先认为前端编译器就是 Javac</p>
+<p>② 前端编译器并不是执行引擎的其中一部分，特别注意</p>
+<p>:::</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p>[执行引擎作为对于处理的模拟：具有相应的指令集和缓存结构]{.red}</p>
+<ul>
+<li>执行引擎的指令集：[字节码指令]{.blue}</li>
+<li>执行引擎的缓存结构：[即时编译器产生的本地代码就缓存再方法区中]{.blue}</li>
+</ul>
+</li>
+<li><p>执行引擎处理指令集的方式：</p>
+<ul>
+<li>解释执行：初代 Java 虚拟机——Classic 虚拟机就只拥有解释器，仅能够解释执行</li>
+<li>即时编译：BEA 开发的 JRockit 虚拟机就仅具有即时编译器，只能够编译执行</li>
+<li>[解释执行 + 即时编译：HotSpot 虚拟机既具有即时编译器和解释器，两者可以协调合作]{.red}</li>
+</ul>
+<p>  :::info</p>
+<p>  注：什么是解释执行，什么是即时编译之后会详细提到</p>
+<p>  :::</p>
+</li>
+<li><p>[Java 虚拟机执行引擎是基于栈执行的，现代计算机基本都是基于寄存器执行的]{.red}</p>
+<p>  :::primary</p>
+<p>  想要了解什么是基于栈执行的执行引擎，参考 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/JVM/Runtime/StackSpace/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/" >运行时数据区-栈空间-操作数栈</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 部分</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>执行引擎是由哪些部分组成的?</strong></p>
+</blockquote>
+<p>:::warning</p>
+<p>① 仅针对 HotSpot 虚拟机的执行引擎，而不针对其他虚拟机的执行引擎</p>
+<p>② 下面的图示是将执行引擎的大多数细节都填充进去了，目前你只需要知道个大致组成就行，之后会详细介绍</p>
+<p>:::</p>
+<ul>
+<li><p>图示</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/执行引擎.2jibqu41fte0.png" alt="执行引擎" style="zoom:80%;" /></li>
+<li><p>组成：[解释器 + 即时编译器 + 垃圾回收器]{.red}</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>解释器(解释执行)与编译器(编译执行)到底是什么?</strong></p>
+</blockquote>
+<p>:::warning</p>
+<p>① 如果想要详细了解编译器，建议阅读《编译原理》（俗称龙书）</p>
+<p>② 如果想要了解机器指令和汇编语言，建议阅读《深入理解计算机系统》和《数字设计和计算机体系结构》</p>
+<p>:::</p>
+<ul>
+<li><p>编译器（编译执行）：</p>
+<ul>
+<li><p>定义：[编译器将高级语言编译成处理器能够识别的机器指令]{.red}</p>
+</li>
+<li><p>主要语言：C、C++ 都是编译执行的语言</p>
+</li>
+<li><p>流程（任何类型的编译器基本都遵照以下流程）：</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/编译器流程.1fexxdsd40gw.png" alt="编译器流程" style="zoom:80%;" /></li>
+<li><p>分类（仅限于 Java）：</p>
+<ul>
+<li><p>前端编译器：</p>
+<ul>
+<li>定义：[负责将源代码编译成 <strong>字节码指令</strong>]{.red}</li>
+<li>常见编译器：JDK 自带的 Javac 编译器，Eclipse JDT 提供的 ECJ（增量式编译器）<ul>
+<li>[Javac 编译器完全采用 Java 实现]{.blue}</li>
+<li>Eclipse 编辑器中使用的就是 ECJ 编译器</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>即时编译器（后端编译器）</p>
+<ul>
+<li><p>定义：[负责在进程运行时将经常调用的方法编译成 <strong>机器指令</strong>]{.red}</p>
+<ul>
+<li>[编译生成的本地代码将会被缓存再方法区中（JIT 代码缓存）]{.red}</li>
+</ul>
+</li>
+<li><p>常见编译器：HotSpot 提供的C1（客户端编译器）、C2（服务器端编译器），Graal 虚拟机提供的 Graal 编译器</p>
+<p>  Graal 目前还只是实验性质的虚拟机，并没有发布正式的版本</p>
+</li>
+</ul>
+</li>
+<li><p>提前编译器（后端编译器）</p>
+<ul>
+<li>定义：[<strong>直接</strong> 将源代码编译成机器指令]{.red}<ul>
+<li>类似于 C/C++ 使用的 GCC 编译器</li>
+</ul>
+</li>
+<li>常见编译器：JDK 自带的 Jaotc 编译器，GNU 计划中的 GCJ 编译器，Excelsior JET 编译器</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>解释器（解释执行）：</p>
+<ul>
+<li><p>定义：[解释器每次都会向处理器解释源代码的含义]{.red}</p>
+</li>
+<li><p>主要语言：Python、JavaScript、PHP 都是解释执行的语言</p>
+</li>
+<li><p>流程</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释器.k8qxml3ekz4.png" alt="解释器" style="zoom:80%;" />
+  </li>
+<li><p>分类（仅限于 Java）：</p>
+<ul>
+<li>[字节码解释器：采用纯软件模拟的方式执行字节码 -&gt; 效率非常低下]{.red}</li>
+<li>[模板解释器：每条字节码都和一个模板函数关联，模板函数能够直接生成字节码对应的本地代码 -&gt; 效率相对较高]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>区别：</p>
+<ul>
+<li>[编译器对源代码进行编译之后会生成可执行文件，解释器不会生成任何可执行文件]{.red}</li>
+<li>[编译器在编译过程中会对源代码采用各种优化技术进行优化（诸如逃逸分析），解释器不会对源代码进行任何优化]{.red}</li>
+<li>源代码再次执行时：<ul>
+<li>编译器生成的可执行文件就可以直接使用不需要再编译，[所以编译执行效率非常高]{.blue}</li>
+<li>解释器则需要再次向处理器解释源代码的含义，[所以解释执行的效率就低]{.blue}</li>
+</ul>
+</li>
+<li>[编译器需要对源代码进行编译：程序的启动速度慢；解释器不需要任何编译过程直接向处理器解释：启动速度快]{.red}</li>
+</ul>
+</li>
+</ul>
+<p>+++danger Java 到底是解释执行还是编译执行的语言呢？</p>
+<p>① 远古时代的 Java 确实是纯解释执行的语言，就和 Python 一样</p>
+<p>② 如今的 Java 既不是纯解释执行也不是纯编译执行的语言，而是半解释半编译的语言</p>
+<p>③ 如今的 Java 程序在运行过程会交替使用解释器和编译器，使得运行效率大幅提升（至于如何交替使用，会在后端编译器部分中详细介绍） </p>
+<p>+++</p>
+<blockquote>
+<p><strong>执行引擎如何使用解释器和即时编译器呢?</strong></p>
+</blockquote>
+<ul>
+<li><p>[前端编译器将源代码编译成字节码]{.red}</p>
+<ul>
+<li>提前编译器通常会给即时编译器作为缓存加速，改善程序的启动时间</li>
+</ul>
+</li>
+<li><p>执行引擎获取程序计数器提供的指令地址</p>
+</li>
+<li><p>执行引擎从方法区中获取相应的字节码指令</p>
+</li>
+<li><p>[执行引擎开始协调解释器和即时编译器执行：]{.red}</p>
+<ul>
+<li><p>[使用 <strong>热点探测技术</strong> 判断字节码指令是否要编译成本地代码]{.blue}</p>
+<ul>
+<li><p>如果执行引擎决定将其编译为本地代码，那么即时编译器将开始执行编译过程</p>
+<p>  编译期间，[解释器会和即时编译器 <strong>异步执行</strong>]{.blue}，避免浪费用户线程的执行时间</p>
+</li>
+<li><p>如果执行引擎不认为要将其编译为本地代码，那么就采用解释执行</p>
+</li>
+</ul>
+</li>
+<li><p>查看调用的方法是否存在编译好的本地代码</p>
+<ul>
+<li>如果被调用的方法没有被编译成本地代码，那么将会解释执行</li>
+<li>如果被调用的方法已经有相应的本地代码，那么将会直接执行本地代码</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/执行引擎执行大致流程.2cwfqncr4dwk.png" alt="执行引擎执行大致流程" style="zoom:80%;" />
+
+<p>+++danger 最后抛出一个问题，为什么要使用字节码文件呢？明明虚拟机已经实现跨平台了啊？</p>
+<p>+++</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/">http://example.com/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">概述</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/24/jvm/execution-engine/%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/"><span class="paginator-prev__text">执行引擎-后端编译器</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">
+          概述</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

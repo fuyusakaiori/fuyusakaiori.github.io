@@ -1,0 +1,1619 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="啥也不会的大三狗">
+<meta property="og:type" content="website">
+<meta property="og:title" content="天鹅绒房间">
+<meta property="og:url" content="http://example.com/page/8/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="啥也不会的大三狗">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary"><title>天鹅绒房间</title><link ref="canonical" href="http://example.com/page/8/index.html"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">系统调用</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="系统调用"   >
+          <a href="#系统调用" class="heading-link"><i class="fas fa-link"></i></a><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h1>
+      <ul>
+<li><p>定义：<a style="color:red;">系统调用是进程调用操作系统提供的服务的接口</a></p>
+<p>  <a style="color:red;">注：系统调用的实现通常使用 汇编语言 或者 C/C++ 编写</a></p>
+</li>
+<li><p>类型：(1) 进程管理 (2) 文件管理 (3) I/O 管理 (4) 信息维护 (5) 进程通信 (6) 保护</p>
+</li>
+<li><p>执行过程：</p>
+<ul>
+<li>进程 <strong>传递</strong> 系统调用需要的 <strong>参数</strong></li>
+<li>进程执行陷入指令从用户态切换到内核态</li>
+<li>操作系统根据 <strong>系统调用接口</strong> 查找相应的系统调用</li>
+<li>操作系统执行系统调用的实现（操作系统提供的服务）</li>
+<li>系统调用执行完毕后提供给进程返回值 (<a style="color:red;">中断处理程序将处理器从操作系统交付给进程</a>)</li>
+</ul>
+</li>
+<li><p>传递参数：</p>
+<ul>
+<li><p>“值传递”：参数 <strong>较少</strong> 时可以直接存放在 ==寄存器==中</p>
+</li>
+<li><p>“引用传递”：参数 <strong>非常多</strong> 时 ==内存== 中开辟空间(栈空间)存放参数，寄存器中仅存放这块 <strong>空间的地址</strong></p>
+<p>  注：Linux &amp; UNIX 采用的就是引用传递</p>
+</li>
+<li><p>栈传递：<strong>不限制</strong> 参数的数量每次需要参数时都执行 ==出栈== 操作，填充参数时执行 ==压栈== 操作</p>
+<p>  注：Java 虚拟机采用的就是栈结构</p>
+</li>
+</ul>
+</li>
+<li><p>系统调用接口</p>
+<ul>
+<li><p>定义：系统调用接口使用表结构索引具体的系统调用</p>
+<p>  <a style="color:red;">表结构以 数字编号 + 系统调用 进行构建</a></p>
+</li>
+<li><p>执行过程：</p>
+<ol>
+<li>用户程序需要使用系统调用</li>
+<li>==系统调用接口== 根据表结构 ==索引== 当前需要使用的 ==系统调用的编号==</li>
+<li>系统调用使用操作系统提供的服务完成任务</li>
+<li>==系统调用接口== 最后 ==返回== 给用户程序系统调用的 ==返回值和状态==</li>
+</ol>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/14/0b3f495bf0efb637ad324e08b8f757fa.png" alt="0b3f495bf0efb637ad324e08b8f757fa.png" style="zoom:80%;" /></li>
+<li><p>库函数(API)</p>
+<ul>
+<li><p>引入目的：</p>
+<ol>
+<li>系统调用通常涉及的参数实在太多，并不方便应用程序员的使用</li>
+<li>通常一个简单的程序也需要使用非常多的系统的调用，对于应用程序员来说也是非常难以使用的</li>
+</ol>
+</li>
+<li><p>定义：操作系统提供的函数，供用户程序直接使用，简化程序的编写，直接使用操作系统已经实现的功能</p>
+<p>  <a style="color:red;">(1) 库函数运行在用户态中，系统调用运行在内核态中 (2) 库函数可能使用系统调用也可能不使用</a></p>
+</li>
+<li><p>API 类型：(1) Win32 API (2) POSIX API (3) Java API</p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/14/425e0c07d210a2d991496432557eb2ed.png" alt="425e0c07d210a2d991496432557eb2ed.png" style="zoom:80%;" />
+
+</li>
+</ul>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/18/os/overview/%E7%BB%93%E6%9E%84/">操作系统-操作系统结构</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h2 id="操作系统结构"   >
+          <a href="#操作系统结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h2>
+      
+        <h3 id="简单结构"   >
+          <a href="#简单结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#简单结构" class="headerlink" title="简单结构"></a>简单结构</h3>
+      <ul>
+<li>定义：没有 ==模块化== 的设计，利用最小的空间尽可能提供操作系统所有功能</li>
+<li>优点 &amp; 缺点：<ul>
+<li>优点：操作系统所有功能之间可以 ==任意== 通信 -&gt; 效率相对较高</li>
+<li>缺点：(1) 操作系统理解维护非常困难 (2) 单个功能的崩溃会影响整个操作系统</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>早期的 MS-DOS 操作系统就是采用 ==简单结构== -&gt; 没有明确的区分功能的接口和层次</li>
+<li>早期的 MS-DOS 操作系统允许应用程序 ==直接访问== 底层硬件的驱动 -&gt; 对于操作系统来说是非常危险的<ul>
+<li>原因(1)：设计之初确实没有想过采用分层的思想</li>
+<li>原因(2)：Intel 提供的处理器不支持双模式的切换和硬件保护</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/ef1890dc51c4b642bb635f990f2bb33f.png" alt="ef1890dc51c4b642bb635f990f2bb33f.png" style="zoom:80%;" />
+
+
+        <h3 id="分层结构"   >
+          <a href="#分层结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#分层结构" class="headerlink" title="分层结构"></a>分层结构</h3>
+      <ul>
+<li><p>定义：将操作系统的所有功能分为若干层；最高层为用户接口；最低层为硬件设备</p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：(1) 构造调试每层的功能是非常容易的 (2) 向上可以屏蔽底层具体实现</p>
+</li>
+<li><p>缺点：(1) 精确定义每层功能非常困难 (2) 分层越细致会导致操作系统性能越低</p>
+<p>  <a style="color:red;">Windows NT 最初就采用分层结构导致操作系统的性能非常低；Windows XP 采用的就是简单的单片结构</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>现代操作系统通常采用的是 ==简单的单片结构==（分层结构 + 简单结构）</p>
+<p>  <a style="color:red;">简单分层结构：用户层 + 系统程序 + 内核 + 底层硬件 / 系统程序 + 内核</a></p>
+<p>  <em>现代操作系统大多数仍然采用这种简单的分层结构</em></p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/803771918db7acc1e75351a686904ac6.png" alt="803771918db7acc1e75351a686904ac6.png" style="zoom:80%;" />
+
+
+        <h3 id="微内核"   >
+          <a href="#微内核" class="heading-link"><i class="fas fa-link"></i></a><a href="#微内核" class="headerlink" title="微内核"></a>微内核</h3>
+      <ul>
+<li><p>定义：删除内核中所有不必要的功能，将其当做 ==系统级== 或者说 ==用户级== 的功能实现</p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：</p>
+<ol>
+<li><p>操作系统易于扩展</p>
+</li>
+<li><p>操作系统可以非常轻易的实现跨平台</p>
+<p> 解释：删除了内核中非常多的不必要的功能之后导致内核是非常小的</p>
+</li>
+<li><p>操作系统具有很好的 ==可靠性== 和 ==安全性==</p>
+<p> 解释：原来的运行在内核中的功能现在被迁移到内核之外运行，即使发生故障也不会影响操作系统</p>
+</li>
+</ol>
+</li>
+<li><p>缺点：<a style="color:red;">操作系统效率相对较低</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>保留的必要功能：==进程管理== + ==内存管理== + ==通信功能==</p>
+</li>
+<li><p><a style="color:red;">客户端程序是不会直接访问用户级的操作系统功能，仍然需要借助内核；用户级的功能也是不可以直接访问底层硬件的</a></p>
+</li>
+<li><p>客户端程序和用户级的功能之间的通信采用的是 ==消息传递== 的方式</p>
+<p>  <em>MacOS 部分采用微内核设计实现</em></p>
+</li>
+</ul>
+</li>
+<li><p>运行过程：</p>
+<ol>
+<li>应用程序需要使用 I/O 设备 -&gt; 应用程序发送系统调用</li>
+<li>系统找到相应的驱动程序然后通知驱动程序完成指令</li>
+<li>驱动程序找到相应的控制器 -&gt; 控制器操控相应的设备完成指令</li>
+<li>微内核最后将结果返回给应用程序</li>
+</ol>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/bc0b601e584f9af9f666ae094fa56f89.png" alt="bc0b601e584f9af9f666ae094fa56f89.png" style="zoom:80%;" />
+
+
+        <h3 id="虚拟机"   >
+          <a href="#虚拟机" class="heading-link"><i class="fas fa-link"></i></a><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h3>
+      <ul>
+<li><p>定义：运行在 ==操作系统之上== 的具有真实计算机拥有的 ==全部硬件功能== 的计算机</p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：</p>
+<ol>
+<li><p>虚拟机系统故障不会影响到 ==宿主操作系统== 和 ==真实的底层硬件==</p>
+</li>
+<li><p>虚拟机为开发人员提供了非常大的便利</p>
+</li>
+</ol>
+<pre><code>&lt;a style=&quot;color:red;&quot;&gt;虚拟机具备真实计算机拥有的全部硬件功能，虚拟机可以安装任何操作系统&lt;/a&gt; -&gt; 程序员可以利用虚拟机安装各式各样的操作系统进行使用
+</code></pre>
+</li>
+<li><p>缺点：虚拟化技术相对比较难以实现</p>
+<p>  常用虚拟机：Virtual Box &amp; VMware</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><a style="color:red;">可以认为虚拟机将 操作系统 + 底层硬件 都做为硬件看待</a></p>
+</li>
+<li><p><a style="color:red;">宿主操作系统上可以运行多个不同的虚拟机</a> -&gt; 类似于多道程序系统</p>
+<p>  宿主操作系统：真实计算机所运行的操作系统</p>
+</li>
+<li><p><a style="color:red;">多个虚拟共享真实计算机提供的所有资源</a></p>
+</li>
+<li><p>虚拟机系统调用的执行：</p>
+<ul>
+<li>虚拟机中的应用程序发出系统调用 -&gt; 系统调用陷入虚拟机中</li>
+<li>虚拟机再发出普通的硬件指令到宿主操作系统中</li>
+<li>宿主操作系统再调用真实的硬件</li>
+</ul>
+</li>
+<li><p>虚拟化：</p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/ac3a1f73524eabcaae4797f20a718493.png" alt="ac3a1f73524eabcaae4797f20a718493.png" style="zoom:80%;" /></div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/18/os/overview/%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/">中断机制</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="中断机制"   >
+          <a href="#中断机制" class="heading-link"><i class="fas fa-link"></i></a><a href="#中断机制" class="headerlink" title="中断机制"></a>中断机制</h1>
+      <ul>
+<li><p>中断定义：[处理器暂停当前正在执行的进程，并将当前进程保存在上下文中，转而恢复其他新的进程的并执行的过程]{.red}</p>
+<p>  [注：上下文采用进程控制块实现]{.red}</p>
+</li>
+<li><p>中断处理程序：用于处理各种中断的程序</p>
+<p>  [注：中断处理程序都是存放在内存中的]{.red}</p>
+</li>
+<li><p>中断向量：各种设备的中断处理程序的地址数组</p>
+</li>
+<li><p>中断过程：</p>
+<ol>
+<li>进程使用 [系统调用]{.blue} 获取操作系统提供的服务 ([进程发出指令中断]{.red})</li>
+<li>进程传递 系统调用 [需要使用的参数]{.blue} </li>
+<li>进程使用 [陷入指令]{.blue} 切换用户态到内核态</li>
+<li>操作系统查找 [硬件驱动程序]{.blue} 用于处理进程的请求</li>
+<li>硬件驱动程序查找相应的 [硬件控制器]{.blue} 去控制硬件设备 </li>
+<li>硬件设备完成 I/O 操作后由 [硬件控制器发出中断]{.blue}</li>
+<li>[处理器]{.blue} 响应中断：根据 [中断号]{.blue} 在 [中断向量]{.blue} 中查找 [中断处理程序]{.blue} 并执行</li>
+<li>中断处理程序开始处理中断：保存程序状态字寄存器和部分通用寄存器的内容</li>
+<li>中断执行结束后由 [中断处理程序]{.blue} 重新恢复之前进程执行的指令</li>
+</ol>
+</li>
+<li><p>中断分类：</p>
+<ul>
+<li><p>外中断：处理器以外的事件的发生称为外中断</p>
+<ul>
+<li>I/O 中断：[硬件设备 完成 I/O 操作后发出的中断]{.blue}</li>
+<li>时钟中断：[定时器 在进程执行时间到了之后发出的中断]{.blue}</li>
+</ul>
+</li>
+<li><p>内中断：处理器内部执行指令产生异常称为内中断 ([也称为异常]{.red})</p>
+<ul>
+<li><p>指令中断：系统调用发出的中断</p>
+</li>
+<li><p>强制中断：(1) 硬件故障中断（<a href="#%E9%A1%B5%E9%94%99">缺页中断</a>）(2) 软件中断 （整数除0）</p>
+<p>  [注：指令中断 和 强制中断 最终都会使用 <strong>陷入指令</strong> 从用户态切换到内核态]{.red}</p>
+</li>
+</ul>
+</li>
+<li><p>可屏蔽中断：处理器可以 <strong>延后处理</strong> 的中断 </p>
+<p>  :::info</p>
+<p>  [处理器可以设置 <strong>程序状态字寄存器</strong> 来设置是否延后处理可屏蔽中断]{.red}</p>
+<p>  :::</p>
+</li>
+<li><p>不可屏蔽中断：处理器 <strong>必须立刻执行</strong> 的中断</p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8">系统调用</a></p>
+</li>
+<li><p>源语定义：[实现某一功能的指令的集合 （类似于事务）]{.red}</p>
+<ul>
+<li>[指令集合中的指令要么全部执行，要么全部不执行]{.red}</li>
+<li>[中断机制不可以打断源语的执行]{.red}</li>
+</ul>
+</li>
+<li><p>陷入指令：</p>
+<ul>
+<li>定义：操作系统出现故障或者进程需要使用操作系统提供的服务时，从用户态切换为内核态使用的指令</li>
+<li>细节：<ul>
+<li>[<strong>系统调用</strong> 和 <strong>硬件故障</strong> 最终都会使用到陷入指令用于陷入操作系统]{.red}</li>
+<li>[陷入指令又称为访管指令，不是特权指令并且在用户态使用]{.red}：本质就是将处理器的使用权从进程交付给操作系统</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>特权指令：</p>
+<ul>
+<li>定义：[操作系统调用计算机底层硬件资源或者内部算法所发出的具有特殊权限的，使用不当可能对计算机产生危险的指令]{.red}</li>
+<li>主要指令：<ul>
+<li>控制中断禁止屏蔽位 </li>
+<li>切换进程 </li>
+<li>存取用于主存保护的寄存器 </li>
+<li>执行I/O操作 </li>
+<li>清理内存 </li>
+<li>设置时钟 </li>
+<li>加载程序状态字寄存器</li>
+</ul>
+</li>
+<li>细节：[系统调用最终都会使用到特权指令]{.red}：换言之系统调用的实现都是特权指令</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ol>
+<li>[处理器正在执行的中断程序是不可以被新产生的中断所打断的]{.red}</li>
+<li>多个中断同时发生时，处理器根据每个中断的 [优先级]{.blue} 决定优先执行哪个中断程序</li>
+<li>[所有的中断都会引发用户态到内核态的切换]{.red}</li>
+<li>[操作系统可以认为是中断驱动的]{.red}</li>
+</ol>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/13/ba5ebb00071d15087ee9bd6fe7200f17.png" alt="ba5ebb00071d15087ee9bd6fe7200f17.png" style="zoom:80%;" /></div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/13/os/process/%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/">调度算法</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="调度算法"   >
+          <a href="#调度算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h1>
+      <ul>
+<li><p>调度算法：调度程序针对不同的应用场景（操作系统）采用不同的调度算法去调度进程</p>
+<p>  <a style="color:red;">调度算法并不影响进程在处理器中的执行时间，仅影响进程在队列中的等待时间</a></p>
+</li>
+<li><p>调度单位：线程是最小的调度单位；但是为了方便起见仍然使用进程的概念来描述调度的过程</p>
+</li>
+</ul>
+
+        <h2 id="调度时机-amp-方式"   >
+          <a href="#调度时机-amp-方式" class="heading-link"><i class="fas fa-link"></i></a><a href="#调度时机-amp-方式" class="headerlink" title="调度时机 &amp; 方式"></a>调度时机 &amp; 方式</h2>
+      <ul>
+<li><p>调度时机：</p>
+<ul>
+<li><p>初始态 -&gt; 就绪态：</p>
+<ul>
+<li>条件：进程获得相应的资源</li>
+<li>描述：调度程序将进程从 ==作业队列==（磁盘）中调度进入 ==就绪队列== （内存）中</li>
+</ul>
+</li>
+<li><p>运行态 -&gt; 阻塞态：</p>
+<ul>
+<li><p>条件：(1) 进程需要相应的 I/O 资源 (2) 父进程创建子进程后需要等待（使用 <code>wait()</code> 函数）</p>
+</li>
+<li><p>描述：调度程序剥夺进程对处理器的控制权，调度到设备队列</p>
+<p>  问题：父进程在哪里等待子进程结束？磁盘等待队列 / 交换空间</p>
+</li>
+</ul>
+</li>
+<li><p>运行态 -&gt; 就绪态：</p>
+<ul>
+<li>条件：时间中断发生</li>
+<li>描述：进程主动放弃处理的控制权，被调度程序调度到就绪队列</li>
+</ul>
+</li>
+<li><p>阻塞态 -&gt; 就绪态：</p>
+<ul>
+<li>条件：(1)进程得到相应的 I/O 资源 (2) 子进程结束</li>
+<li>描述：调度程序将进程调度到就绪队列中</li>
+</ul>
+</li>
+<li><p>运行态 -&gt; 终止态</p>
+</li>
+</ul>
+</li>
+<li><p>调度方式：</p>
+<ul>
+<li><p>抢占式定义：==允许== 新的进程 ==抢占== 当前进程的处理器 ==使用权==</p>
+<p>  <a style="color:red;">调度算法：最短时间优先算法，优先权算法，时间片轮转法</a></p>
+</li>
+<li><p>非抢占式定义：允许当前进程 ==持续使用== 处理器直到当前进程 ==主动放弃== 处理器使用权</p>
+<p>  <a style="color:red;">调度算法：先来先服务算法，最短作业优先算法</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="调度规则"   >
+          <a href="#调度规则" class="heading-link"><i class="fas fa-link"></i></a><a href="#调度规则" class="headerlink" title="调度规则"></a>调度规则</h2>
+      <ul>
+<li><p>衡量指标：</p>
+<ul>
+<li><p>处理器利用率：处理器计算的时间 ÷ 处理器运行的时间</p>
+<p>  <a style="color:red;">尽可能使处理器处于繁忙的状态</a>：如果处理器利用率较低长期调度程序会调入新的程序进入内存</p>
+</li>
+<li><p>吞吐量：==单位时间内进程完成的数量==</p>
+<p>  注：长进程数量越多系统的吞吐量显然越低，短进程数量越多系统的吞吐量显然越高</p>
+</li>
+<li><p>周转时间：进程运行的总时间</p>
+<p>  <a style="color:red;">1. 运行时间 = 等待时间（在队列中的等待时间） + 执行时间（使用处理器的时间）</a></p>
+<p>  2 周转时间和吞吐量没有必然的联系；高吞吐量的调度算法可能造成较长的周转时间</p>
+</li>
+<li><p>等待时间：进程在各个队列中的等待时间之和</p>
+</li>
+<li><p>响应时间：提交第一个请求到输出第一个结果花费的时间</p>
+<p>  <a style="color:red;">响应时间非常适合用于作为交互式系统中调度算法的衡量指标</a></p>
+<p>  注：批处理操作系统就是等待处理器所有的计算完成才会使用 I/O 设备进行输出 -&gt; 不是处理器边计算边输出 -&gt; 没有交互性</p>
+</li>
+</ul>
+</li>
+<li><p>调度规则：</p>
+<ul>
+<li><a style="color:red;">最大化</a> 处理器利用率</li>
+<li><a style="color:red;">最大化</a> 吞吐量</li>
+<li><a style="color:skyblue;">最小化</a> 周转时间</li>
+<li><a style="color:skyblue;">最小化</a> 等待时间</li>
+<li><a style="color:skyblue;">最小化</a> 相应时间</li>
+</ul>
+<p>  注：通常对周转时间，等待时间，相应时间的平均值进行优化；也可以使用最大值，最小值，方差等计算方式进行优化</p>
+</li>
+<li><p>应用场景：</p>
+<ul>
+<li><p>批处理系统：==吞吐量 + 周转时间 + 处理器利用率==</p>
+<p>  解释：批处理系统主要是使用 CPU 进行计算任务，不需要和用户进行交互，没有用户会烦躁地去等待</p>
+</li>
+<li><p>交互式系统：==响应时间==</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="批处理系统调度算法"   >
+          <a href="#批处理系统调度算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#批处理系统调度算法" class="headerlink" title="批处理系统调度算法"></a>批处理系统调度算法</h2>
+      
+        <h3 id="先来先服务算法-FCFS"   >
+          <a href="#先来先服务算法-FCFS" class="heading-link"><i class="fas fa-link"></i></a><a href="#先来先服务算法-FCFS" class="headerlink" title="先来先服务算法(FCFS)"></a>先来先服务算法(FCFS)</h3>
+      <ul>
+<li><p>内容：</p>
+<ul>
+<li>每个新进程被调度进入就绪队列中时都被链接到 ==链表队列的尾部==</li>
+<li>调度程序每次从 ==链表队列的首部== 调度进程进入处理器中</li>
+</ul>
+</li>
+<li><p>实现：<a style="color:red;">采用链表队列实现</a></p>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li><p>优点：每个进程获得处理器使用权的机会是 ==公平== 的</p>
+</li>
+<li><p>缺点：<a style="color:red;">等待时间平均值是所有算法中 <strong>最长</strong> 的</a></p>
+<p>  解释：短进程必须等待长进程执行结束才可以获得处理器的使用权</p>
+</li>
+</ul>
+</li>
+<li><p>时间片：每个进程的时间片都是 ==不相同== 的</p>
+<p>  <a style="color:red;">先来先服务算法是 <strong>非抢占式</strong> 的算法</a></p>
+<p>  解释：因为每个进程都执行到它们主动放弃为止，而每个进程的执行时间显然是不一样的</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>护航效果：其余所有进程等待当前进程释放处理器的使用权</p>
+</li>
+<li><p><a style="color:red;">等待时间的平均值的变化受到进程进入就绪队列的 <strong>先后顺序</strong> 的影响</a></p>
+</li>
+<li><p>先来先服务算法 ==不适用于分时系统和实时系统==</p>
+<p>  解释：分时系统需要频繁地切换处理器执行的进程，不会等待进程完全执行结束</p>
+</li>
+</ul>
+</li>
+<li><p>例子：</p>
+</li>
+</ul>
+
+        <h3 id="最短作业优先算法-SJF"   >
+          <a href="#最短作业优先算法-SJF" class="heading-link"><i class="fas fa-link"></i></a><a href="#最短作业优先算法-SJF" class="headerlink" title="最短作业优先算法(SJF)"></a>最短作业优先算法(SJF)</h3>
+      <ul>
+<li><p>内容：</p>
+<ul>
+<li>调度程序选择就绪队列中 ==执行时间最短== 的进程，将处理器的控制权交付给该进程</li>
+<li>新的进程进入就绪队列时，如果执行时间 ==小于== 当前进程剩余的执行时间 -&gt; 可以选择抢占当前进程的处理器使用权，也可以选择不抢占</li>
+</ul>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>抢占式算法：新的进程进入就绪队列中且执行时间小于当前进程的执行时间 -&gt; 抢占当前进程的处理器使用权</p>
+<p>  <a style="color:red;">1. 抢占式的最短作业优先也被称为 <strong>最短时间优先算法</strong></a></p>
+<p>  <a style="color:red;">2. 抢占的方式就是调度程序执行上下文切换</a></p>
+<p>  <a style="color:red;">3. 被抢占的进程只能够等待下一次调度 -&gt; 如果始终存在比该进程用时短的进程 -&gt; 可能永远不执行</a></p>
+</li>
+<li><p>非抢占式算法：新的进程进入就绪队列中，无论执行时间和当前进程的执行时间关系如何 -&gt; 不允许抢占当前进程处理器使用权</p>
+</li>
+</ul>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li><p>优点：<a style="color:red;">等待时间的平均值是所有算法中 <strong>最短</strong> 的</a></p>
+</li>
+<li><p>缺点：(1) 调度程序 ==无法得知== 下个进程执行时间，难以选择执行时间最短的进程 (2) 容易出现 ==饥饿== 现象</p>
+<p>  解释：每个进程只有使用处理器执行结束后才可能知道到底执行了多久，进程是不会提前告诉操作系统需要执行多久的</p>
+</li>
+</ul>
+</li>
+<li><p>时间片：每个进程的时间片都是 ==不相同== 的</p>
+</li>
+<li><p>执行时间预测：</p>
+<ul>
+<li><p>引入：虽然没有办法提前精确预知每个进程的执行时间，但是可以通过之前进程的执行时间来预测下一个进程可能的执行时间</p>
+</li>
+<li><p>方式：==指数平均==</p>
+</li>
+<li><p>公式：==τ<del>n+1</del> = $\alpha$ t<del>n</del> + (1 - $\alpha$) τ<del>n</del>==</p>
+</li>
+<li><p>参数：</p>
+<ul>
+<li>τ<del>n+1</del> ：表示下一个进程的可能执行时间</li>
+<li>t<del>n</del>：表示上一个进程的实际执行时间</li>
+<li>τ<del>n</del>：表示上一个进程的预估执行时间</li>
+<li>$\alpha$：权重</li>
+</ul>
+<p>  <a style="color:red;">注：权重 α 的值通常为 1/2 </a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">最短作业优先是优先权算法的一种特例</a>：仅以进程的执行时间作为计算优先级的标准</li>
+<li>最短作业优先算法更 ==适合长期调度== 的过程，==不适合短期调度== 过程</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="交互式系统调度算法"   >
+          <a href="#交互式系统调度算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#交互式系统调度算法" class="headerlink" title="交互式系统调度算法"></a>交互式系统调度算法</h2>
+      
+        <h3 id="优先权算法"   >
+          <a href="#优先权算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#优先权算法" class="headerlink" title="优先权算法"></a>优先权算法</h3>
+      <ul>
+<li><p>内容：</p>
+<ul>
+<li>调度程序选择就绪队列中 ==优先级最高== 的进程，将处理器的控制权交付给该进程</li>
+<li>新的进程进入就绪队列时，如果优先级 ==高于== 当前进程优先级 -&gt; 可以选择抢占当前进程的处理器使用权，也可以选择不抢占</li>
+</ul>
+</li>
+<li><p>分类：</p>
+<ul>
+<li>抢占式算法：新的进程进入就绪队列中且优先级高于当前进程的优先级 -&gt; 抢占当前进程的处理器使用权</li>
+<li>非抢占式算法：新的进程进入就绪队列中，无论优先级的关系如何 -&gt; 不允许抢占当前进程处理器使用权</li>
+</ul>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li>优点：等待时间的平均值也是相对较短的</li>
+<li>缺点：<a style="color:red;">优先权算法可能造成饥荒（无穷堵塞）问题</a></li>
+</ul>
+</li>
+<li><p>优先级设置：(1) 静态优先级：在进程被创建的时候就设置优先级以后不再修改 (2) 动态优先级：进程在运行过程中可以动态修改其优先级</p>
+</li>
+<li><p>优先级决定因素</p>
+<ul>
+<li>内部优先级：时限，内存要求，打开文件数量，平均 I/O 执行时间和平均 CPU 执行时间 -&gt; 都可以用于计算进程的优先级</li>
+<li>外部优先级：进程的重要性，操作系统和计算机的成本，赞助部门，其他因素 -&gt; 也可以用于计算进程的优先级</li>
+</ul>
+</li>
+<li><p>饥荒：</p>
+<ul>
+<li>描述：稳定的高优先级 ==进程流== 能够阻止 ==某个== 低优先级的进程执行，导致低优先级的进程始终无法获取或者长时间无法获取处理器使用权</li>
+<li>方式：==老化==</li>
+<li>定义：不断 ==增加== 长时间等待的进程的 ==优先级==</li>
+</ul>
+<p>  注：老化是解决饥荒的一种 ==方式==</p>
+</li>
+<li><p>细节：(1) 系统进程优先级 &gt; 用户进程优先级 (2) 交互式进程优先级 &gt; 非交互性进程优先级 (3) I/O 密集型进程优先级 &gt; CPU  密集型进程优先级</p>
+</li>
+</ul>
+
+        <h3 id="时间片轮转法-RR"   >
+          <a href="#时间片轮转法-RR" class="heading-link"><i class="fas fa-link"></i></a><a href="#时间片轮转法-RR" class="headerlink" title="时间片轮转法(RR)"></a>时间片轮转法(RR)</h3>
+      <ul>
+<li><p>内容：</p>
+<ul>
+<li><p>调度程序为每个进程分配 ==固定== 的时间片</p>
+</li>
+<li><p>如果进程在时间片结束时仍在运行，调度程序会 ==剥夺== 当前进程的处理器使用权</p>
+<p>  <a style="color:red;">时间片轮转法是 <strong>抢占式</strong> 的算法</a></p>
+</li>
+</ul>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li>优点：</li>
+<li>缺点：<ul>
+<li><a style="color:red;">时间片轮转法的等待时间平均值相对较长</a></li>
+<li>时间片的长度难以设置得非常合适</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>时间片</p>
+<ul>
+<li>如果时间片长度设置过长 -&gt; <a style="color:red;">时间片轮转法会退化为先来先服务算法</a></li>
+<li>如果时间片长度设置过短 -&gt; <a style="color:red;">调度程序会频繁执行上下文切换，会降低处理器的利用率</a></li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>每个进程的执行时间都是相同的</li>
+<li>进程的执行时间 ≤ 时间片的长度</li>
+<li>进程 ==最长的等待时间 (n - 1) * 时间片==</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="多级队列调度"   >
+          <a href="#多级队列调度" class="heading-link"><i class="fas fa-link"></i></a><a href="#多级队列调度" class="headerlink" title="多级队列调度"></a>多级队列调度</h3>
+      <ul>
+<li><p>引入：</p>
+</li>
+<li><p>内容：</p>
+</li>
+<li></li>
+</ul>
+
+        <h3 id="多级队列反馈调度"   >
+          <a href="#多级队列反馈调度" class="heading-link"><i class="fas fa-link"></i></a><a href="#多级队列反馈调度" class="headerlink" title="多级队列反馈调度"></a>多级队列反馈调度</h3>
+      <ul>
+<li>内容：</li>
+</ul>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/13/os/process/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/">线程概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="线程概述"   >
+          <a href="#线程概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程概述" class="headerlink" title="线程概述"></a>线程概述</h1>
+      <p>[牢记：单个处理器仅可以运行一个单线程进程或者一个线程]{.red}</p>
+
+        <h2 id="线程概念"   >
+          <a href="#线程概念" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程概念" class="headerlink" title="线程概念"></a>线程概念</h2>
+      <ul>
+<li><p>线程引入：</p>
+<ul>
+<li><p>问题：多个用户向网站的服务器发出请求，仅具有单个处理请求的程序的服务器效率显然是非常低的</p>
+</li>
+<li><p>改善方案 V1：</p>
+<ul>
+<li>服务器在接收到多个用户的请求时 [创建多个进程]{.blue} 用于处理多个用户的需求</li>
+<li>并利用 [上下文切换]{.blue} 交替执行多个进程</li>
+</ul>
+</li>
+<li><p>方案问题：</p>
+<ul>
+<li>进程的 [创建]{.red} 非常消耗处理器的资源而且效率非常低</li>
+<li>进程的 [上下文切换]{.red} 效率非常低</li>
+</ul>
+</li>
+<li><p>解释：</p>
+<ul>
+<li>创建的多个程序都是完成相同的工作使用相同的资源，但是每个进程都具有自己独立的物理内存，这显然是非常浪费的</li>
+<li>所以考虑是否可以将多个完成相同任务的 “进程” 合并在一起，多个 “进程” 共享相同的物理内存</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>线程定义：</p>
+<ul>
+<li>线程是包含 [程序计数器、寄存器、堆栈]{.red} </li>
+<li>并且拥有所属进程的 [代码段、数据段、硬件资源]{.red} 的处理器的 [基本单元]{.red}</li>
+</ul>
+</li>
+<li><p>线程特点：</p>
+<ul>
+<li><p>[线程是处理器调度的最小单位，进程是资源分配的最小单位]{.red}</p>
+<p>  :::danger</p>
+<p>  核心：线程的引入将进程的资源分配和调度执行完全分开，各个线程可以共享进程提供的资源又可以独立调度</p>
+<p>  :::</p>
+</li>
+<li><p>[每个线程都具有自己 <strong>独立</strong> 的程序计数器、寄存器、堆栈]{.red}（与执行过程相关）</p>
+</li>
+<li><p>所有线程共享进程提供的代码段、数据段、硬件资源（与硬件资源相关）</p>
+</li>
+<li><p>进程拥有的所有线程的虚拟地址和物理地址都是完全相同的</p>
+</li>
+<li><p>所有线程自身拥有的所有资源是不受保护的：每个线程都可以访问其他线程的拥有的资源</p>
+<p>  :::info</p>
+<p>  注：线程自身拥有的资源主要是程序计数器、寄存器、堆栈</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>线程优点：</p>
+<ul>
+<li>改善响应性：与用户交互的线程堵塞 -&gt; 可切换其他线程继续执行</li>
+<li>节省资源：创建线程消耗的资源相对较少</li>
+<li>共享资源：进程的资源共享都需要使用相应的机制；线程与生俱来就是资源共享的</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/21/df207dd35f71f5ca67e484f439d6f856.png" alt="df207dd35f71f5ca67e484f439d6f856.png" style="zoom:80%;" /></li>
+<li><p>状态：(1) 初始态 (2) 就绪态 (3) 阻塞态(++blocked++) (4) 运行态 (5) 终止态</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/21/c232dbe2c08e6fb3983d087ff3676c2f.png" alt="c232dbe2c08e6fb3983d087ff3676c2f.png" style="zoom:80%;" /></li>
+<li><p>线程池：</p>
+<ul>
+<li>引入：<ul>
+<li>每次进程都会执行 [创建线程 -&gt; 线程执行任务 -&gt; 线程被销毁]{.blue} 这个流程</li>
+<li>每次进程都会执行创建线程的操作，如果创建的线程数量过多，可能导致耗尽操作系统所有资源</li>
+</ul>
+</li>
+<li>定义：进程在被创建之后立刻创建 [固定数量]{.red} 的线程等待请求的到来</li>
+<li>执行过程：<ul>
+<li>进程接收到用户请求后立刻 [唤醒]{.red} 线程池中的 [某个线程]{.red} 用于处理当前的用户请求</li>
+<li>线程结束用户请求的处理之后 [不会被立刻销毁]{.red} 而是被重新放回线程池中等待下一次用户请求的处理</li>
+</ul>
+</li>
+<li>优点：<ul>
+<li>[节省时间]{.red}：线程的创建只在进程创建的时候，接收并处理用户请求时并不会花费时间去创建线程</li>
+<li>[限制线程的数量]{.red}：对于不支持高并发的系统来说是有好处的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>改善方案 V2：</p>
+<ul>
+<li>服务器创建分派线程：分派线程用于接收请求并创建和指定工作线程处理请求</li>
+<li>服务器接收多个用户请求就相应地创建多个工作线程<ul>
+<li>每个工作线程由于只需要程序计数器，寄存器，堆栈较小的资源，所以创建是非常快的</li>
+</ul>
+</li>
+<li>服务器中的处理器采用调度算法不断地调度每个线程进行执行</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>线程又被称为轻量级进程（Light Weight Process：LWP）</p>
+</li>
+<li><p>每个线程也是具有 ++标识符++ 的</p>
+</li>
+<li><p>[每个线程都是不可以直接向操作系统申请资源的，只能够通过进程申请资源]{.red}</p>
+</li>
+</ul>
+</li>
+<li><p>+++danger 问题：为什么每个线程的程序计数器，堆栈，寄存器是独立的？</p>
+<p>  解释：[每个线程执行的任务是不一样的，如果共用上述资源，那么利用上下文切换恢复之前执行的线程时就不可能知道之前的线程执行到哪里了]{.red}</p>
+<p>  +++</p>
+</li>
+</ul>
+
+        <h2 id="线程实现"   >
+          <a href="#线程实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程实现" class="headerlink" title="线程实现"></a>线程实现</h2>
+      <ul>
+<li>用户级线程（User Thread）</li>
+<li>内核级线程（Kernal-Level Thread）</li>
+<li>混合实现</li>
+</ul>
+
+        <h3 id="用户级线程"   >
+          <a href="#用户级线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#用户级线程" class="headerlink" title="用户级线程"></a>用户级线程</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li><p>进程使用用户空间中提供的线程库</p>
+</li>
+<li><p>进程中的线程和操作系统中的线程是 {1:N} 实现的</p>
+<p>  :::info</p>
+<p>  注：使用用户空间中的线程库意味着操作系统只会将多线程视为单线程，因为没有深入到内核中去，操作系统感知不到</p>
+<p>  :::</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/用户级线程.49olyk0bgmw0.png" alt="用户级线程" style="zoom:80%;" /></li>
+<li><p>特点：</p>
+<ul>
+<li><p>[每个进程都需要维护相应的线程表，用于追踪该进程中的所有线程]{.red}</p>
+</li>
+<li><p>[内核无法得知多线程的存在也就无法管理，进程需要管理线程的创建、析构、调度操作]{.red}</p>
+<p>  :::info</p>
+<p>  注：这就意味着用户级线程无论是在线程库的实现，还是在线程库的使用上都会比较复杂</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>优点：</p>
+<ul>
+<li>用户级线程实现的进程可移植性高，适用于任何不同的操作系统<ul>
+<li>Java 早期就是采用的这种方案，称为绿色线程（Green Threads）</li>
+<li>Golang 等新兴语言也是采用的这种方案</li>
+</ul>
+</li>
+<li>[用户级线程效率非常高]{.red}<ul>
+<li>每次执行线程相关的操作只需要依靠用户空间中的线程库，不需要借助系统调用</li>
+</ul>
+</li>
+<li>用户级线程具有非常好的扩展性</li>
+<li>用户级线程允许每个进程定义自己的调度算法</li>
+</ul>
+</li>
+<li><p>缺点：[用户级线程实现的进程使用阻塞式系统调用时会阻塞当前进程]{.green}</p>
+<ul>
+<li>因为并没有在内核中实现多线程，内核仍然认为进程都是单线程的，相当于调度的基本单位是进程</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="内核级线程"   >
+          <a href="#内核级线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#内核级线程" class="headerlink" title="内核级线程"></a>内核级线程</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li><p>进程 [直接使用]{.blue} 操作系统（内核）提供的线程库</p>
+</li>
+<li><p>进程中的线程和操作系统中的线程是 [1:1]{.red} 实现的</p>
+<p>  :::info</p>
+<p>  ① 进程实际上直接使用的是操作系统提供的内核线程接口：LWP(Light Weight Process)</p>
+<p>  ② 每个 LWP 都会对应一个具体的内核线程</p>
+<p>  :::</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/内核级线程.7kbhi35xtt80.png" alt="内核级线程" style="zoom:80%;" /></li>
+<li><p>特点：</p>
+<ul>
+<li>[内核管理所有线程的创建、析构、调度等操作，每个进程无法干预线程的行为]{.red}<ul>
+<li>每个进程最多向操作系统给出建议，但是操作系统不一定会采纳</li>
+</ul>
+</li>
+<li>[内核维护所线程组成的线程表，每个进程不需要单独维护线程表]{.red}</li>
+</ul>
+</li>
+<li><p>优点：[采用内核级线程实现不会造成进程阻塞]{.red}</p>
+<ul>
+<li>因为每个进程拥有的每个线程都对应一个内核线程，即使一个线程堵塞，其余线程依旧可以执行</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>[内核级线程效率相对低下]{.green}<ul>
+<li>线程每次执行操作都需要使用 [系统调用]{.red}，操作系统就会从用户态陷入内核态，非常浪费时间</li>
+</ul>
+</li>
+<li>[系统支持的内核线程数量是有限的]{.green}<ul>
+<li>每个线程都会占用操作系统的资源，显然能够提供的数量是有限的</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="混合实现"   >
+          <a href="#混合实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#混合实现" class="headerlink" title="混合实现"></a>混合实现</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li>[用户级线程和内核级线程进行结合]{.blue}</li>
+<li>进程中的线程和操作系统中的线程是 [M:N]{.red} 实现的</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/混合实现.2ls1ul18jge0.png" alt="混合实现" style="zoom:80%;" /></li>
+<li><p>细节：Solaris、HP-UX 等类 UNIX 操作系统采用这种实现方式</p>
+</li>
+</ul>
+
+        <h2 id="线程与进程"   >
+          <a href="#线程与进程" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程与进程" class="headerlink" title="线程与进程"></a>线程与进程</h2>
+      <ul>
+<li>对比：<ul>
+<li>[创建线程的开销非常小 &lt;-&gt; 创建进程的开销非常大]{.red}</li>
+<li>[线程是调度的最小单位 &lt;-&gt; 进程是资源分配的最小单位]{.red}</li>
+<li>[每个线程之间的访问没有限制 &lt;-&gt; 每个进程之间通常是不可以相互访问的]{.red}</li>
+<li>每个线程不可以直接向操作系统申请资源 &lt;-&gt; 每个进程可以向操作系统直接申请资源</li>
+<li>线程上下文切换的速度更快 &lt;-&gt; 进程上下文切换的速度更慢</li>
+</ul>
+</li>
+<li>联系：<ul>
+<li>每个进程可以容纳多个线程</li>
+<li>进程和线程都是可以并发执行的</li>
+<li>[所有线程都共享其所属进程的所有资源 -&gt; 所有线程的物理地址和虚拟地址都是相同的]{.red}</li>
+<li>[子进程通常只会继承创建它的那个线程，不会继承父进程的其他子进程]{.red}</li>
+</ul>
+</li>
+</ul>
+<p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34175509/article/details/85095578" >进程、线程和上下文切换</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+
+        <h2 id="线程其他"   >
+          <a href="#线程其他" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程其他" class="headerlink" title="线程其他"></a>线程其他</h2>
+      <ul>
+<li><p>并发 &amp; 并行</p>
+<ul>
+<li><p>并发：多个线程被 [快速切换]{.red} 执行 （两个或多个事件在同一时间间隔发生）</p>
+<p>  :::info</p>
+<p>  ① 处理器规定每个线程执行的时间，线程执行完规定时间后即被切换；从宏观角度看似所有线程是同时执行的，从微观角度看却不是这样</p>
+<p>  ② 并发也可以看做是 “伪” 并行</p>
+<p>  :::</p>
+</li>
+<li><p>并行：多个线程 [同时]{.red} 执行</p>
+<p>  :::info</p>
+<p>  [注：并行只可以在多处理器系统中实现；单核处理器不可能真正实现并行]{.red}</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>线程库（线程包）</p>
+<ul>
+<li><p>定义：用户创建和管理线程的 API</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>Pthread：可提供用户级或者内核级的线程库</p>
+</li>
+<li><p>Windows：仅提供内核级的线程库</p>
+</li>
+<li><p>Java Thread：Java 线程的实现依托于宿主操作系统</p>
+<p>  :::info</p>
+<p>  Java Thread 中的大多数方法都是本地方法（Native Method），不同的操作系统实现是不同的</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>:::primary</p>
+<p>参考博客</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/why15732625998/article/details/79625556" >[Java 多线程技术]（一）线程和进程以及并行和并发的概念</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27825451/article/details/78850336" >详解并发和并行意义</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/12/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-12</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-12</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="面向对象"   >
+          <a href="#面向对象" class="heading-link"><i class="fas fa-link"></i></a><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h1>
+      
+        <h2 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      <ul>
+<li><p>历史：</p>
+<ul>
+<li><p><strong>面向对象编程</strong>（<code>object-oriented *programming: oop</code>）取代 <strong>面向过程编程</strong>（结构化）</p>
+<p>  <a style=color:red;>注：面向对象是一种思想而不是技术</a>：<code>Java</code> 是面向对象的语言但是不代表不能按照面向过程的思想写代码，<code>C</code> 是面向过程的语言同样不代表不能按照面向对象的思想写代码</p>
+</li>
+<li><p>==程序 = 算法 + 数据结构==（<code>Pascal</code> 语言的设计者 <code>Niklaus Wirth</code> 提出）</p>
+<p>  (1) 面向过程的编程思想中认为 <strong>算法</strong> 是优先级最高的元素：程序员需要先明确如何操作数据之后才去定义具体的数据结构</p>
+<p>  (2) 面向对象的编程思想中认为 <strong>数据结构</strong> 是优先级最高的元素</p>
+</li>
+<li><p>面向对象编程更利于大型项目的开发，面向过程编程相对于适合小型项目的开发</p>
+</li>
+</ul>
+</li>
+<li><p>类</p>
+<ul>
+<li>定义：用于创建具体实例或者对象的 <strong>模板</strong></li>
+<li>基本组成：(1) 类变量 (<code>static</code> 修饰的成员变量) (2) 成员变量（实例变量）(3) 构造方法 (4) 方法 </li>
+<li>特性：(1) ==封装== (2) ==继承== (3) ==多态==</li>
+<li>关系：(1) <strong>泛化</strong> (2) <strong>实现</strong> (3) <strong>依赖</strong> (4) <strong>组合</strong> (5) <strong>关联</strong> (6) <strong>聚合</strong></li>
+</ul>
+</li>
+<li><p>对象</p>
+<ul>
+<li>定义：利用类模板创建多个具有 <strong>相同行为</strong> 的实例</li>
+<li>特点：<ul>
+<li><a style="color:red;">每个对象都在虚拟机的堆区中 <strong>占有相应的空间</strong> 并且 <strong>具有相应的地址</strong></a></li>
+<li>对象的比较：(1) <code>==</code> 比较对象比较的是每个对象在堆区中的地址 (2) <code>equals()</code> 方法只有在 <strong>重写</strong> 之后才比较的是对象包含内容</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="类"   >
+          <a href="#类" class="heading-link"><i class="fas fa-link"></i></a><a href="#类" class="headerlink" title="类"></a>类</h2>
+      
+        <h3 id="组成"   >
+          <a href="#组成" class="heading-link"><i class="fas fa-link"></i></a><a href="#组成" class="headerlink" title="组成"></a>组成</h3>
+      <ul>
+<li><p>成员变量：</p>
+<ul>
+<li><p>定义：属于每个对象实例的变量</p>
+</li>
+<li><p>特点：</p>
+</li>
+<li><p>细节：<a style="color:red;">每个对象中都隐含一个 “成员变量” </a>：<code>this</code> 表示当前对象的 <strong>引用</strong></p>
+<p>  (1) 方法的形式参数和成员变量名字相同时可以调用 <code>this</code> 加以区分</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MyObject</span> <span class="params">(<span class="keyword">int</span> count)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.count = count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>  (2) <a style="color:red;">每个对象在初始化完成时第一个变量一定是 <strong>对象的引用</strong> </a>(<code>this</code>)</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> MyObject <span class="keyword">this</span> = referrence; <span class="comment">// 模仿变量的声明，实际情况不是这样的</span></span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>类变量：</p>
+<ul>
+<li>定义：<code>static</code> 关键字修饰的成员变量</li>
+<li>特点：<ul>
+<li><a style="color:red;">类变量只属于类而不属于任何一个对象</a>：只能使用 <strong>类名调用类变量</strong> 不可以使用对象调用</li>
+<li><a style="color:red;">类变量在 <strong>连接过程的准备阶段</strong> 中被 <strong>分配空间</strong> 并且设置为 <strong>默认值</strong>，在初始化过程中赋予指定的值</a> （<code>JVM</code> 相关）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>构造方法</p>
+<ul>
+<li><p>定义：创建对象实例时默认调用用于初始化成员变量的方法</p>
+</li>
+<li><p>特点：构造器默认是静态的 （<code>static</code>）</p>
+</li>
+<li><p>==数量==：<a style="color:red;">每个类都拥有 至少一个 构造器，可以利用方法 重载 拥有多个不同的构造器</a></p>
+<p>  注：如果程序员没有显式地提供任何构造器，那么编译器会默认生成一个无参构造器；如果程序员编写了相应的构造器，那么这个无参构造器就会被 <strong>覆盖</strong>，需要自己手动编写无参构造器</p>
+</li>
+<li><p>==相互调用==：每个构造器之间可以利用 <code>this</code> 关键字 <strong>相互调用</strong></p>
+<ul>
+<li><a style="color:red;">避免代码的重复编写</a></li>
+<li><a style="color:red;">调用其他构造器时必须将其放在 <strong>第一行</strong> 否则编译器报错</a></li>
+</ul>
+</li>
+<li><p>==访问权限==：</p>
+<ul>
+<li><a style="color:red;">编译器自动提供的构造器的访问权限取决于类的访问权限</a></li>
+<li><a style="color:red;">构造器访问权限为包可见性</a>：该类只可以在隶属于同一个包下的类中创建对象</li>
+<li><a style="color:red;">构造器访问权限为私有的</a>：该类不可以被在其他类中 <strong>直接创建</strong> 对象（单例模式）</li>
+<li><a style="color:red;">构造器访问权限为受保护的</a>：该类只可以在隶属于同一个包下的类创建对象，子类是不可以创建父类对象的，仅可以借助 <code>super</code> 调用</li>
+</ul>
+</li>
+<li><p>==初始化顺序==</p>
+</li>
+</ul>
+</li>
+<li><p>方法</p>
+</li>
+</ul>
+
+        <h3 id="特性"   >
+          <a href="#特性" class="heading-link"><i class="fas fa-link"></i></a><a href="#特性" class="headerlink" title="特性"></a>特性</h3>
+      
+        <h4 id="封装"   >
+          <a href="#封装" class="heading-link"><i class="fas fa-link"></i></a><a href="#封装" class="headerlink" title="封装"></a>封装</h4>
+      <ul>
+<li>定义：合并数据和行为并创建新的数据类型，将接口和实现分离，实现细节隐藏</li>
+</ul>
+
+        <h4 id="继承"   >
+          <a href="#继承" class="heading-link"><i class="fas fa-link"></i></a><a href="#继承" class="headerlink" title="继承"></a>继承</h4>
+      <ul>
+<li><p>定义：采用关键字 <code>extends</code> 实现的类与类之间的关系</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p><a style="color:red;">Java 不支持多重继承；C++支持多重继承</a></p>
+</li>
+<li><p><a style="color:red;">不可变类不可以被继承，但是可以继承其他类</a></p>
+</li>
+<li><p><a style="color:red;">子类不可以重写父类的 <strong>私有方法和不可变方法</strong></a></p>
+</li>
+<li><p><a style="color:red;">无论访问权限如何，子类可以继承父类 <strong>所有成员变量和方法</strong>（包括构造方法）</a>：私有变量和方法可以称为隐式继承，非私有变量和方法可以称为显示继承</p>
+<ul>
+<li><p>实质：</p>
+<p>  (1) 虚拟机会 ==默认 <strong>调用父类的构造方法</strong> 对父类的所有成员变量进行初始化== 并且分配到 ==子类的内存空间==</p>
+<p>  (2) 虚拟机继续调用子类自身的构造方法并将所有的成员变量初始化添加到子类的内存空间中</p>
+</li>
+<li><p>==调用构造方法 ≠ 创建对象==：调用构造方法仅仅只是初始化成员变量，<code>new</code> 关键字才是真正在内存中开辟空间创建对象</p>
+</li>
+<li><p>==继承 ≠ 可访问==：</p>
+<p>  (1) 子类虽然继承了父类的成员变量和方法，但是访问权限可能是私有的，所以子类无法访问</p>
+<p>  (2) 子类无法访问到父类私有的成员变量和方法，也就无法对其进行覆盖，相当于子类内存区域中存在两个方法名一样的方法</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>this &amp; super</code></p>
+<ul>
+<li><p>定义：<a style="color:red;">两者都指向子类对象内存区域，前者用于引用子类的属性，后者用于引用父类的属性</a></p>
+<blockquote>
+<p>《<code>Java</code> 核心技术 卷一》：“<code>super</code> 不是一个对象的引用，例如，不能将值 <code>super</code> 赋给另一个对象变量，它只是一个指示编译器调用超类方法的特殊关键字”</p>
+</blockquote>
+<p>  注：从核心技术这句话中也可以看出，子类创建时并没有在内存中创建父类对象，也证明两个引用确实都是指向的子类的内存区域</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>两者都无法在静态代码块、静态方法中使用</li>
+<li>两者都无法调用静态变量、静态方法 </li>
+<li><code>super()</code> 调用父类构造器方法会被虚拟机 ==默认调用==</li>
+<li><code>super()</code> 调用父类构造器方法 ==只能够放在子类构造器中第一行==，不可以放在其他任何方法中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="向上转型-amp-向下转型"   >
+          <a href="#向上转型-amp-向下转型" class="heading-link"><i class="fas fa-link"></i></a><a href="#向上转型-amp-向下转型" class="headerlink" title="向上转型 &amp; 向下转型"></a>向上转型 &amp; 向下转型</h5>
+      <ul>
+<li><p>向上转型</p>
+<ul>
+<li><p>定义：子类引用向父类引用进行转换被称为向上转型</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Father father = <span class="keyword">new</span> Son();</span><br></pre></td></tr></table></div></figure></li>
+<li><p>特点：</p>
+<p>  (1) <a style="color:red;">子类向上转型后只可以调用父类拥有的成员变量和方法，无法调用子类自身的成员变量和方法</a>，但是仍然拥有自身的成员变量</p>
+<p>  (2) <a style="color:red;">向上转型可以通过隐式的强制转换就可以执行</a>：意味着向上转型始终都是安全的</p>
+<p>  ​     解释：子类一定拥有父类的所有属性，所以即使转换成父类也是依然可以正常调用的</p>
+</li>
+</ul>
+</li>
+<li><p>向下转型</p>
+<ul>
+<li><p>定义：父类引用向子类引用进行转换被称为向下转型</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Son son = (Father) <span class="keyword">new</span> Father</span><br></pre></td></tr></table></div></figure></li>
+<li><p>特点：</p>
+<p>  (1) <a style="color:red;">向下转型只能够通过显式的强制转换才可以执行</a></p>
+<p>  (2) <a style="color:red;">向下转型可以通过编译器检查但是无法调用任何成员变量和方法</a>：会直接抛出 <code>java.lang.ClassCastException</code> 异常</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="重写-amp-重载"   >
+          <a href="#重写-amp-重载" class="heading-link"><i class="fas fa-link"></i></a><a href="#重写-amp-重载" class="headerlink" title="重写 &amp; 重载"></a>重写 &amp; 重载</h5>
+      <ul>
+<li><p>重写（<code>Override</code>）</p>
+<ul>
+<li><p>定义：<a style="color:red;">子类对从父类继承而来的方法进行 <strong>重新定义</strong></a>：子类重新实现一个方法，这个方法和父类的 <strong>方法声明完全相同</strong>，实现不同</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* LinkedHashMap 继承 HashMap 并且重写了 newNode 方法 */</span></span><br><span class="line"><span class="comment">// HashMap 中创建节点的方法</span></span><br><span class="line"><span class="function">Node&lt;K,V&gt; <span class="title">newNode</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; next)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Node&lt;&gt;(hash, key, value, next);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// LinkedHashMap 中创建节点的方法</span></span><br><span class="line"><span class="function">Node&lt;K,V&gt; <span class="title">newNode</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; e)</span> </span>&#123;</span><br><span class="line">    LinkedHashMap.Entry&lt;K,V&gt; p =</span><br><span class="line">        <span class="keyword">new</span> LinkedHashMap.Entry&lt;K,V&gt;(hash, key, value, e);</span><br><span class="line">    linkNodeLast(p);</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>规则：</p>
+<ul>
+<li><a style="color:red;">子类重写的方法的访问权限必须 <strong>大于等于</strong> 父类的访问权限</a></li>
+<li><a style="color:red;">子类重写的方法的返回值必须是父类方法的返回值的子类或者其本身</a>：如果子类重写方法的返回值是父类方法返回值的子类，则称这两个方法拥有可协变的返回类型</li>
+<li><a style="color:red;">子类重写的方法的抛出的异常不能比父类更加宽泛，也不能够抛出新的异常</a></li>
+<li>可以采用注解 <code>@Override</code> 检查是否符合其规范</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p> <a style="color:red;">体现类的多态性</a></p>
+</li>
+<li><p>如果子类只是想要在父类的方法上进行扩展，那么就需要调用父类的方法，由于两者名称相同，不能直接调用，使用关键字 <code>super</code></p>
+<p>  解释：<code>super</code> 和 <code>this</code> 类似，都是指向对象的引用</p>
+</li>
+<li><p>真正的实现原理见虚拟机</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>重载（<code>Overload</code>）</p>
+<ul>
+<li><p>定义：类中多个 <strong>具有相同方法名</strong> 但是 <strong>具有不同参数列表</strong> 的方法同时存在</p>
+</li>
+<li><p>规则：</p>
+<ul>
+<li><a style="color:red;">必须确保不同的参数列表：参数数量不同、参数类型不同、参数顺序不同</a></li>
+<li><a style="color:red;">抛出的异常类型，返回值的类型，访问权限都不做任何具体限制</a></li>
+</ul>
+</li>
+<li><p>解析过程：（==重载解析==）</p>
+<ul>
+<li><p>编译器查看对象的声明类型以及需要调用的方法名：列出所有方法名相同但是参数列表不同的方法（==方法是子类和父类中可访问的==）</p>
+</li>
+<li><p>编译器根据调用方法提供的参数列表进行查找：在所有可能的方法中匹配参数列表相同的方法</p>
+<p>  (1) 如果子类中没有匹配到相应的方法，那么将会在父类中继续匹配</p>
+<p>  (2) 如果父类中依然没有匹配到相应的方法，则继续重复上述过程，直到找到为止</p>
+</li>
+<li><p><a style="color:red;">每次都匹配搜索实际需要调用的方法显然是非常低效的：虚拟机为每个类计算得到了 <strong>方法表</strong>，每次调用方法只需要查看方法表就行</a></p>
+<p>  注：方法表 = 方法签名 + 实际调用方法 （方法签名 = 方法名 + 参数列表）</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">体现方法的多态性</a></li>
+<li><a style="color:red;">仅有返回值不同的方法不会被编译器视为重载，但是虚拟机中仍然认为是方法重载</a>：仅有返回值不同是无法通过编译器检查的，即使在虚拟机中可行</li>
+<li>真正的实现原理见虚拟机</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="多态"   >
+          <a href="#多态" class="heading-link"><i class="fas fa-link"></i></a><a href="#多态" class="headerlink" title="多态"></a>多态</h4>
+      <ul>
+<li><p>定义：某个对象引用可以指向多种不同的实际类型的现象（==多态又被称为后期绑定、动态绑定、运行时绑定==）</p>
+</li>
+<li><p>体现：重载可以体现方法的多态性 、重写和向上转型可以体现类的多态性；成员变量无法体现多态性</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*向上转型体现多态*/</span></span><br><span class="line">Father father = <span class="keyword">new</span> Son();</span><br><span class="line"><span class="comment">/*方法重写*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;						<span class="comment">// 父类中的方法</span></span><br><span class="line">    System.out.println(<span class="string">&quot;Father Play...&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Son Play...&quot;</span>);		<span class="comment">// 子类中的方法：重写</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(Father father)</span></span>&#123;</span><br><span class="line">    father.play();						<span class="comment">// 最后调用的一定是子类重写的方法而不是父类的方法，重写就在这里体现了多态性：编译器是如何知道最后调用的是子类的实现呢？明明这里是父类的引用</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    test(<span class="keyword">new</span> Son());					<span class="comment">// 方法参数给定的类型是父类，但是传入的参数却是子类：发生向上转型</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*方法重载*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*成员变量无法体现多态性*/</span></span><br><span class="line">Father father = <span class="keyword">new</span> Son(); 			<span class="comment">// 假定父类和子类中都存在变量 field</span></span><br><span class="line">System.out.println(father.field); 	<span class="comment">// 调用的一定是父类自身的那个变量而一定不会是子类</span></span><br></pre></td></tr></table></div></figure></li>
+<li><p>解释：</p>
+<ul>
+<li><p><a style="color:red;">编译器在编译器的确不知道最后父类引用的实际指向类型究竟是什么，需要等到方法 <strong>真正被调用执行的时候</strong> 才会将父类引用替换成实际类型的引用</a></p>
+<p>  所以被称为动态绑定或者运行时绑定</p>
+</li>
+<li><p>编译器仅仅负责在编译期间就能够确定的东西，剩下无法确定的东西全部交付给虚拟机在运行期间来判断，虚拟机就采用 ==动态分派== 来完成</p>
+</li>
+</ul>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>消除类型之间的耦合关系</li>
+<li><code>static</code>、<code>final</code>、<code>private</code> 修饰的方法没有多态性</li>
+<li><a style="color:red;"><strong>继承</strong> 不是实现多态的唯一手段，可以采用 <strong>接口实现</strong>同样可以实现多态</a></li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="关系"   >
+          <a href="#关系" class="heading-link"><i class="fas fa-link"></i></a><a href="#关系" class="headerlink" title="关系"></a>关系</h3>
+      <ul>
+<li><p>泛化（<code>Generalization</code>）</p>
+<ul>
+<li><p>定义：从特殊到一般抽象出更加通用的类</p>
+</li>
+<li><p>细节：</p>
+<p>  (1) 泛化和继承是从 <strong>不同的角度描述的同一种关系</strong>：泛化是从特殊到一般，继承是从一般到特殊</p>
+<p>  (2) 实际实现时通常 <strong>不推荐使用</strong> 泛化/继承 这种高耦合的关系</p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/fd91eda2fa5279281a7ccb866d9b95c6.png" alt="fd91eda2fa5279281a7ccb866d9b95c6.png" style="zoom:80%;" /></li>
+<li><p>实现（<code>Realization</code>）</p>
+<ul>
+<li><p>定义：类实现接口、抽象类中的抽象方法</p>
+</li>
+<li><p>细节：接口中的所有方法都必须实现，抽象类中则只需要实现抽象类方法</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/d22a707d17c9b052e4232c89bce66b4e.png" alt="d22a707d17c9b052e4232c89bce66b4e.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>聚合（<code>Aggregation</code>）</p>
+<ul>
+<li><p>定义：整体由部分组成，<a style="color:red;">部分和整体不是 <strong>强依赖</strong></a>，整体不存在但是部分依然存在</p>
+</li>
+<li><p>细节：</p>
+<p>  (1) 实际实现时不会在构造器中创建部分的引用而是借助方法创建</p>
+<p>  (2) <a style="color:red;">整体对象生命周期结束 <strong>不代表</strong> 部分对象的生命周期也结束</a></p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Computer computer;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 不会在构造器中创建</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setComputer</span><span class="params">(Computer computer)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.computer = computer; <span class="comment">// 等待外界的传入</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/140db6ac15eb6921869dfdad40512a52.png" alt="140db6ac15eb6921869dfdad40512a52.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>组合（<code>Composition</code>）</p>
+<ul>
+<li><p>定义：整体由部分组成，<a style="color:red;">部分和整体是 <strong>强依赖</strong></a>，整体不存在部分也不存在</p>
+</li>
+<li><p>细节：</p>
+<p>  (1) 实际实现时借助构造器创建部分的引用</p>
+<p>  (2) <a style="color:red;">整体对象生命周期结束 <strong>代表</strong> 部分对象的生命周期也结束</a></p>
+<p>  (3) <a style="color:red;">实际实现是更加推荐使用组合、聚合的方式来建立类与类之间的联系</a></p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Hand hand;</span><br><span class="line">    <span class="keyword">private</span> Foot foot;</span><br><span class="line">    <span class="keyword">private</span> Head head;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(Hand hand, Foot foot, Head head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.hand = hand;</span><br><span class="line">        <span class="keyword">this</span>.foot = foot;</span><br><span class="line">        <span class="keyword">this</span>.head = head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/f5bd7b3bc5170cbdc0bed4d57978ec4d.png" alt="f5bd7b3bc5170cbdc0bed4d57978ec4d.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>关联（<code>Association</code>）</p>
+<ul>
+<li>定义：类与类之间的联系，联系是强依赖的，具有长期性的</li>
+<li>分类：<ul>
+<li>按照方向分类：(1) 双向关联 (2) 单向关联 (3) 自关联</li>
+<li>按照联系重数分类：(1) 一对一 (2) 一对多 (3) 多对多</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>实际实现只要其他类出现在当前类中都算作是关联关系</li>
+<li>关联关系可以和其他的关系叠加</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>依赖（<code>Dependency</code>）</p>
+<ul>
+<li><p>定义：类与类之间的联系，联系是偶然性的，非常弱</p>
+</li>
+<li><p>细节：实际实现时在方法的参数中使用到另外一个类的引用</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassA</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(ClassB classb)</span></span>&#123;	<span class="comment">// 仅仅只是在方法中使用到其他类的引用不是长期性的</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/bc309d4393a01b790e5774fde51189e2.png" alt="bc309d4393a01b790e5774fde51189e2.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="访问权限"   >
+          <a href="#访问权限" class="heading-link"><i class="fas fa-link"></i></a><a href="#访问权限" class="headerlink" title="访问权限"></a>访问权限</h2>
+      
+        <h3 id="包可见性"   >
+          <a href="#包可见性" class="heading-link"><i class="fas fa-link"></i></a><a href="#包可见性" class="headerlink" title="包可见性"></a>包可见性</h3>
+      <ul>
+<li>定义：被修饰的属性只有处于 ==同一个包== 下的类才可以直接访问</li>
+<li>特点：<a style="color:red;">属性不添加任何访问权限关键字修饰，默认就是包可见性</a></li>
+<li>细节：<ul>
+<li>阅读源码过程中可以发现，不少类的内部成员变量都是采用包可见性：<a style="color:red;">目的在于简化类之间的访问</a></li>
+<li><a style="color:red;">编译器自动提供的构造器的访问权限取决于类的访问权限</a></li>
+<li><a style="color:red;">构造器访问权限为包可见性</a>：该类只可以在隶属于同一个包下的类中创建对象</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="public"   >
+          <a href="#public" class="heading-link"><i class="fas fa-link"></i></a><a href="#public" class="headerlink" title="public"></a>public</h3>
+      <ul>
+<li>定义：被修饰的属性可以被 ==任何类== 直接访问</li>
+<li>特点：<ul>
+<li><a style="color:red;">被修饰的属性都是向外提供的接口</a></li>
+<li><a style="color:red;">每个编译单元中仅可以存在一个被 <code>public</code> 修饰的类</a></li>
+</ul>
+</li>
+<li>细节：接口中默认所有方法都是公共的</li>
+</ul>
+
+        <h3 id="private"   >
+          <a href="#private" class="heading-link"><i class="fas fa-link"></i></a><a href="#private" class="headerlink" title="private"></a>private</h3>
+      <ul>
+<li><p>定义：被修饰的属性只有在 ==类的内部== 可以直接访问</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p><a style="color:red;">所有的私有成员变量和私有方法都是可以被继承的</a></p>
+</li>
+<li><p><a style="color:red;">私有属性可以借助别名机制或者公共方法对其进行访问</a></p>
+<p>  别名机制：多个引用指向堆中同一个对象，私有的引用不可以被直接访问，但是公共的引用可以直接访问，并且操作对象</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><code>private</code> 不可以修饰普通类；可以修饰内部类</li>
+<li><code>private</code> 修饰的方法默认是 <code>final</code> ：不可以被重写也不可以被继承</li>
+<li><a style="color:red;">构造器访问权限为私有的</a>：该类不可以被在其他类中 <strong>直接创建</strong> 对象（单例模式）</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="protected"   >
+          <a href="#protected" class="heading-link"><i class="fas fa-link"></i></a><a href="#protected" class="headerlink" title="protected"></a>protected</h3>
+      <ul>
+<li>定义：被修饰的属性可以被 ==子类== 或者 ==同一个包== 下的类直接访问</li>
+<li>细节：<ul>
+<li><code>protected</code> 不可以修饰普通类；可以修饰内部类</li>
+<li><a style="color:red;">构造器访问权限为受保护的</a>：该类只可以在隶属于同一个包下的类创建对象，子类是不可以创建父类对象的，仅可以借助 <code>super</code> 调用</li>
+</ul>
+</li>
+</ul>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th></th>
+<th><code>private</code></th>
+<th><code>protected</code></th>
+<th><code>friendly</code></th>
+<th><code>public</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>范围</td>
+<td>==类内部可访问==</td>
+<td>==子类及其同一个包下的类==</td>
+<td>==同一个包下的类==</td>
+<td>==任何类==</td>
+</tr>
+<tr>
+<td>修饰</td>
+<td>变量、方法、内部类</td>
+<td>变量、方法、内部类</td>
+<td>变量、方法、任何类</td>
+<td>变量、方法、任何类(唯一)</td>
+</tr>
+<tr>
+<td>继承</td>
+<td><strong>可以</strong></td>
+<td>可以</td>
+<td>可以</td>
+<td>可以</td>
+</tr>
+<tr>
+<td>构造器</td>
+<td>不可以直接创建（单例模式）</td>
+<td>同一个包中类可以直接创建</td>
+<td>同一个包中类可以直接创建</td>
+<td>可以随意创建</td>
+</tr>
+</tbody></table></div>
+
+        <h2 id="关键字"   >
+          <a href="#关键字" class="heading-link"><i class="fas fa-link"></i></a><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h2>
+      <ul>
+<li>前提：仅列出和类相关的常用关键字，并发和其他相关的关键字不在此列出</li>
+</ul>
+
+        <h4 id="static"   >
+          <a href="#static" class="heading-link"><i class="fas fa-link"></i></a><a href="#static" class="headerlink" title="static"></a>static</h4>
+      
+        <h4 id="静态变量"   >
+          <a href="#静态变量" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h4>
+      <ul>
+<li><p>定义：采用关键字 <code>static</code> 修饰的变量 （静态变量又被称为类变量）</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><a style="color:red;">被修饰的变量被类的所有实例对象共享 / 被修饰的变量仅有一份且属于类</a>：直接通过类名调用而不能够创建对象调用；类的内部不可以使用 <code>this</code> 调用</li>
+<li><a style="color:red;">被修饰的变量仅会在 <strong>类加载阶段</strong> 被初始化并赋值 / 仅会进行一次初始化和赋值</a>：类仅加载一次，所以静态变量也只会被初始化一次</li>
+<li><a style="color:red;">被修饰的变量不会被垃圾回收机制回收</a>：将会永久存在于虚拟机的内存中</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><code>static</code> 关键字仅可以 <strong>修饰成员变量</strong>，不可以 <strong>修饰方法内的局部变量</strong></p>
+</li>
+<li><p><code>static</code> 关键字修饰的变量是可以修改的（不要和 <code>final</code> 关键字搞混）</p>
+</li>
+<li><p><code>System.out</code> 是 <strong>静态常量</strong>：<strong>理论上</strong> 是不可以对静态常量进行修改的，实际 <code>Java</code> 中存在 <code>setOut</code> 方法可以更换输出流</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setOut</span><span class="params">(PrintStream out)</span> </span>&#123;</span><br><span class="line">    checkIO();</span><br><span class="line">    setOut0(out);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">setOut0</span><span class="params">(PrintStream out)</span></span>; <span class="comment">// 可以修改静态常量的原因是因为该方法是本地方法，采用 C++ 编写的</span></span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="静态方法"   >
+          <a href="#静态方法" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h4>
+      <ul>
+<li>定义：采用关键字 <code>static</code> 修饰的方法</li>
+<li>特点：<ul>
+<li><a style="color:red;">被修饰的方法被类的所有实例对象共享 / 被修饰的方法仅有一份且属于类</a>：直接通过类名调用也可以创建对象调用；类的内部不可以使用 <code>this</code> 调用</li>
+<li><a style="color:red;">被修饰的方法仅可以调用静态方法、静态变量</a>：不可以调用非静态的变量、非静态的方法</li>
+<li><a style="color:red;">被修饰的方法不会被垃圾回收机制回收</a>：将会永久存在于虚拟机的内存中</li>
+<li><a style="color:red;">被修饰的方法不可以是抽象方法</a>：静态方法不依赖于任何对象，所以必须有实现，因此不可以是抽象方法</li>
+<li>实例方法既可以访问静态变量、静态方法，也可访问实例方法、实例变量</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="静态代码块"   >
+          <a href="#静态代码块" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h4>
+      <ul>
+<li><p>定义：采用关键字 <code>static</code> 修饰的代码块</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    InputStream in = JDBCUtils.class.getClassLoader().getResourceAsStream(<span class="string">&quot;db.properties&quot;</span>);</span><br><span class="line">    Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>特点：</p>
+<ul>
+<li>代码块是不可以被调用的</li>
+<li><a style="color:red;">被修饰的代码块仅会在类加载阶段执行且仅执行一次</a>：类仅加载一次，所以静态代码块也只会执行一次</li>
+<li><a style="color:red;">被修饰的代码块仅可以调用静态方法，静态变量</a>：不可以调用非静态的变量、非静态的方法</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>提高程序性能</p>
+<p>  解释：多次调用方法中反复初始化内容不变的对象，可以把对象的初始化过程放入静态代码块中减少反复初始的过程</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isBornBoomer</span><span class="params">()</span> </span>&#123;														<span class="comment">// 每次调用这个方法都会创建对象</span></span><br><span class="line">    Date startDate = Date.valueOf(<span class="string">&quot;1946&quot;</span>);										 <span class="comment">// 创建的对象具有内容还完全一样 </span></span><br><span class="line">    Date endDate = Date.valueOf(<span class="string">&quot;1964&quot;</span>);										 <span class="comment">// 最好抽取出来成为静态代码块 </span></span><br><span class="line">    <span class="keyword">return</span> birthDate.compareTo(startDate)&gt;=<span class="number">0</span> &amp;&amp; birthDate.compareTo(endDate) &lt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>多个静态代码块的执行顺序是按照 ==从上至下== 的顺序执行的：包括 <code>main</code> 方法在内</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;test static 1&quot;</span>);			<span class="comment">// 第一个执行的静态代码块</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">													<span class="comment">// 第二个执行的静态代码块：虽然什么内容都没有但是依然会执行</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;test static 2&quot;</span>);			<span class="comment">// 第三个执行的静态代码块</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="静态内部类"   >
+          <a href="#静态内部类" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4>
+      <ul>
+<li><p>定义：采用关键字 <code>static</code> 修饰的内部类</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p><a style="color:red;">静态内部类可以直接在外部通过 <code>new</code> 创建对象</a>：内部类只能够借助外部类后再利用 <code>new</code> 创建对象</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    MyTest myTest = <span class="keyword">new</span> MyTest();											<span class="comment">// 外部类</span></span><br><span class="line">    InnerClass innerClass = myTest.<span class="function">new <span class="title">InnerClass</span><span class="params">()</span></span>;						<span class="comment">// 内部类只能够借助外部类创建对象</span></span><br><span class="line">    StaticInnerClass staticInnerClass = <span class="keyword">new</span> StaticInnerClass();				<span class="comment">// 静态内部类直接创建对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="静态导包"   >
+          <a href="#静态导包" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态导包" class="headerlink" title="静态导包"></a>静态导包</h4>
+      <ul>
+<li><p>定义：采用关键字 <code>static</code> 进行导包</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.lang.System.*; <span class="comment">// 静态导包</span></span><br></pre></td></tr></table></div></figure></li>
+<li><p>特点：</p>
+<ul>
+<li><a style="color:red;">采用静态导包之后，该类中的所有静态变量、静态方法都可以直接使用</a>，不需要再使用类名调用了</li>
+</ul>
+</li>
+<li><p>细节：通常不会这样做，因为代码可读性非常低</p>
+</li>
+</ul>
+
+        <h4 id="初始化顺序"   >
+          <a href="#初始化顺序" class="heading-link"><i class="fas fa-link"></i></a><a href="#初始化顺序" class="headerlink" title="初始化顺序"></a>初始化顺序</h4>
+      <ul>
+<li><p>初始化优先级排序：</p>
+<ul>
+<li>父类静态代码块、静态变量</li>
+<li>子类静态代码块、静态变量</li>
+<li>父类实例变量、普通代码块</li>
+<li>父类构造方法</li>
+<li>子类实例变量、普通代码块</li>
+<li>子类构造方法</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>静态修饰的内容的初始化顺序取决于声明的顺序；实例变量和普通代码初始化顺序也取决于声明的顺讯</li>
+<li>如果静态变量是引用类型：那么将会 <strong>完整地初始化</strong> 引用的对象，而不是仅执行静态代码块、静态变量</li>
+</ul>
+</li>
+<li><p>例子：尝试判断一下下面所有的语句执行顺序</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Father</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Brother</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Brother</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;兄弟类被初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Brother brother = <span class="keyword">new</span> Brother();</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类代码块初始化&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Son</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+</li>
+</ul>
+
+        <h3 id="final"   >
+          <a href="#final" class="heading-link"><i class="fas fa-link"></i></a><a href="#final" class="headerlink" title="final"></a>final</h3>
+      <ul>
+<li><a style="color:red;">提高程序性能</a>：<code>JVM</code> 会将所有常量值存放在运行时常量池中（缓存）</li>
+<li><a style="color:red;">可以在多线程并发状态向安全地共享，不需要额外的同步机制</a>：?</li>
+<li><a style="color:red;">所有匿名内部类 、Lambda 表达式中的变量必须是常量</a>：？</li>
+</ul>
+
+        <h4 id="不可变变量"   >
+          <a href="#不可变变量" class="heading-link"><i class="fas fa-link"></i></a><a href="#不可变变量" class="headerlink" title="不可变变量"></a>不可变变量</h4>
+      <ul>
+<li><p>定义：采用关键字 <code>final</code> 修饰的变量</p>
+</li>
+<li><p>特点：<a style="color:red;">不可以对被修饰的变量进行 <strong>任何的修改</strong></a>（常量值）</p>
+<ul>
+<li><p>如果不可变变量是 ==基本数据类型==：不可以进行任何修改</p>
+</li>
+<li><p>如果不可变变量是 ==引用类型==：引用不可以再指向其他的对象，<a style="color:red;">对象本身是可以修改的</a></p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> constant = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">final</span> MyObject constantRef = <span class="keyword">new</span> MyObject();<span class="comment">/* constantRef 不可以指向其他对象了，但是依然可以调用类中的方法对对象进行修改  */</span></span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>分类：  根据常量赋值的不同时期进行区分</p>
+<ul>
+<li><p>编译时常量：定义常量时赋予其固定值</p>
+<p>  <a style="color:red;">注：编译时常量在 <strong>编译阶段设置默认值</strong>，在<strong>连接过程的准备阶段赋值</strong></a> （<code>JVM</code> 相关）</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> constant = <span class="number">0</span>; <span class="comment">// 编译时常量</span></span><br></pre></td></tr></table></div></figure></li>
+<li><p>运行时常量：定义常量时 <strong>调用方法赋值</strong> 或者 <strong>构造方法</strong> 中赋值</p>
+<p>  (1) <a style="color:red;">等待方法被调用或者对象被初始化时才可以赋值</a></p>
+<p>  (2) 利用构造器初始化常量值，该常量也被称为空白 <code>final</code></p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> number = <span class="keyword">new</span> Random().nextInt(); <span class="comment">// 等待随机方法被调用时才会真正为常量赋值：不会在类加载阶段就赋值，而是等到运行时才会</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> constant;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">		constant = <span class="number">120</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>细节：</p>
+<p>  (1) 无论常量在什么时候赋值，在使用常量之前 <strong>必须被初始化并且赋值</strong>，否则编译报错</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> consVal; <span class="comment">// 这种情况是不被编译器允许的：必须赋值</span></span><br></pre></td></tr></table></div></figure>
+
+<p>  (2) <a style="color:red;">常量值既不属于 <strong>当前</strong> 类也不属于对象，属于运行该类方法的主类</a> （<code>JVM</code> 相关）</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConstantClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 注意：这里是公共属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> constantValue = <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitializationClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 引用类的常量值</span></span><br><span class="line">        System.out.println(Constant.constantValue);</span><br><span class="line">        <span class="comment">// 编译阶段通过常量传播优化，常量值并没有存储在 ConstantClass 的常量池中，而是存储在 NotInitializationClass 类中</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>静态常量：</p>
+<ul>
+<li><p>定义：<code>static final</code> 共同修饰的变量</p>
+</li>
+<li><p>特点：<a style="color:red;">普通常量值属于每个对象，静态常量仅属于类</a> / 每个对象的普通常量值都可以不同，每个对象的静态常量值一定相同</p>
+<p>  原因：静态变量在类加载阶段就已经被初始化完成了，但是对象还没有初始化所以所有的对象的拥有的静态常量一定相同（即使采用 <code>random()</code> 方法）</p>
+</li>
+</ul>
+</li>
+<li><p>访问权限：</p>
+<ul>
+<li><code>private</code> 修饰的常量：仅可以在类的内部使用或者外部利用公共方法调用</li>
+<li><code>public</code> 修饰的常量：这种常见于工具类中，便于其他的类使用（这种更加常见）</li>
+</ul>
+</li>
+<li><p>细节：编译时静态常量的命名方式必须采用 <strong>全部字母大写</strong> 和 <strong>下划线隔开</strong> 的方式</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> CONSTANT_VALUE = <span class="number">10</span>;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+
+        <h4 id="不可变方法"   >
+          <a href="#不可变方法" class="heading-link"><i class="fas fa-link"></i></a><a href="#不可变方法" class="headerlink" title="不可变方法"></a>不可变方法</h4>
+      <ul>
+<li><p>定义：采用关键字 <code>final</code> 修饰的方法</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><a style="color:red;">被修饰的方法不可以被 <strong>重写</strong></a></li>
+<li><a style="color:red;">被修饰的方法可以进行 <strong>重载</strong></a></li>
+<li>早期实现中 <code>final</code> 修饰的方法会允许编译器采用 <strong>内嵌调用</strong> 方式对其进行优化以提升效率（现在的实现中应该把优化交给 <strong>编译器和虚拟机</strong> 去执行）</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><code>private</code> 方法被隐式地指定为 <code>final</code> 方法</p>
+<p>  解释：子类中定义的方法和父类中的一个 <code>private</code> 方法签名相同，那么子类方法不是重写父类方法，而是在子类中定义了一个新的方法</p>
+</li>
+<li><p>方法中的形式参数也可以采用 <code>final</code> 修饰，相当于传入一个常量：<a style="color:red;">常用于向匿名内部类传递参数</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="不可变类"   >
+          <a href="#不可变类" class="heading-link"><i class="fas fa-link"></i></a><a href="#不可变类" class="headerlink" title="不可变类"></a>不可变类</h4>
+      <ul>
+<li>定义：采用关键字 <code>final</code> 修饰的类</li>
+<li>特点：<ul>
+<li><a style="color:red;">被修饰的类不可以被任何类继承</a>，但是自己可以继承其他类</li>
+<li><a style="color:red;">被修饰的类中的方法全部默认为 <code>final</code></a>，成员变量可以采用 <code>final</code> 修饰也可以不采用</li>
+</ul>
+</li>
+<li>细节：<code>String</code> 类就是 <code>final</code> 修饰的类</li>
+</ul>
+<blockquote>
+<p>如果某个类被 <code>fianl</code> 修饰，但是我们依然需要 <strong>使用</strong> 这个类中的所有方法，那么应该怎么实现？</p>
+</blockquote>
+
+        <h4 id="重排序"   >
+          <a href="#重排序" class="heading-link"><i class="fas fa-link"></i></a><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h4>
+      
+        <h2 id="Object"   >
+          <a href="#Object" class="heading-link"><i class="fas fa-link"></i></a><a href="#Object" class="headerlink" title="Object"></a>Object</h2>
+      <ul>
+<li><p>定义：==所有类的父类==：无论是自定义类还是库中提供的类都会继承它</p>
+</li>
+<li><p>工具类：<code>Objects</code></p>
+</li>
+<li><p>方法</p>
+<ul>
+<li><p><code>equals()</code></p>
+<p>  (1) <a style="color:red;">采用等号比较对象是否相同</a>：实际比较的是两个对象的地址是否相同，大多数情况都是不相同的，一般需要重写</p>
+<p>  (2) 调用方法的对象可能为空：<code>Objects</code> 中提供了 <code>equals</code> 方法用于比较两个对象，两个对象都可以为空</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*Objects 提供的方法 */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object a, Object b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (a == b) || (a != <span class="keyword">null</span> &amp;&amp; a.equals(b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p><code>hashCode</code></p>
+<p>  (1) <a style="color:red;">计算哈希值的方法是本地方法</a>：各种哈希表和类基本都是重写了这个方法</p>
+<p>  (2) 重写 <code>hashCode()</code> 方法时通常需要重写 <code>equals()</code>，否则很容易带来不一致的问题（详情见哈希表）</p>
+<p>  (3) 等价的两个对象散列值一定相同，但是散列值相同的两个对象不一定等价</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>; 		</span><br></pre></td></tr></table></div></figure></li>
+<li><p><code>notify() &amp; notifyAll() &amp; wait()</code></p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span></span>; 	<span class="comment">// 唤醒线程池中的某个线程</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span></span>; <span class="comment">// 唤醒线程池中的所有线程</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;		<span class="comment">// 让某个线程进入线程池等待</span></span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p><code>clone</code></p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">native</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span>;</span><br></pre></td></tr></table></div></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="枚举"   >
+          <a href="#枚举" class="heading-link"><i class="fas fa-link"></i></a><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2>
+      </div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/12/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E6%A8%A1%E5%9D%97%E5%8C%96%E7%B3%BB%E7%BB%9F/">类加载机制-模块化系统</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-12</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="模块化系统"   >
+          <a href="#模块化系统" class="heading-link"><i class="fas fa-link"></i></a><a href="#模块化系统" class="headerlink" title="模块化系统"></a>模块化系统</h1>
+      </div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/12/design/%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">适配器模式</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-12</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-12</span></span></div></header><div class="post-body"><div class="post-excerpt"></div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/12/design/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-12</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-12</span></span></div></header><div class="post-body"><div class="post-excerpt"></div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/12/design/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">工厂模式</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-12</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-12</span></span></div></header><div class="post-body"><div class="post-excerpt"></div></div></article></section><nav class="paginator"><div class="paginator-inner"><a class="extend prev" rel="prev" href="/page/7/"><i class="fas fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/"><i class="fas fa-angle-right"></i></a></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

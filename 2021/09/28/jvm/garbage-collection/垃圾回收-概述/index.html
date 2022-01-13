@@ -1,0 +1,692 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="概述                           垃圾回收机制简介                           什么是垃圾回收机制？        1. 先来聊聊有关垃圾回收机制的历史吧   历史①：垃圾回收机制也称为自动内存管理，旨在由虚拟机自动管理内存空间而不需要开发者的介入 历史②：Lisp 语言是世界第一门采用动态内存分配和垃圾收集技">
+<meta property="og:type" content="article">
+<meta property="og:title" content="垃圾回收-概述">
+<meta property="og:url" content="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="概述                           垃圾回收机制简介                           什么是垃圾回收机制？        1. 先来聊聊有关垃圾回收机制的历史吧   历史①：垃圾回收机制也称为自动内存管理，旨在由虚拟机自动管理内存空间而不需要开发者的介入 历史②：Lisp 语言是世界第一门采用动态内存分配和垃圾收集技">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/什么是垃圾.4ftyge19sly0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/引用类型图示.p069iddb3rk.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存泄漏例子.1dfunfqeku74.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存泄露.46zfc578yuw0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存泄露示意图.32lpbpj83a60.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/操作系统并行与并发.osvyf1lgpgg.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/%E5%AD%A6%E4%B9%A0%E5%9B%BE%E7%A4%BA/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%B9%B6%E8%A1%8C%E6%89%A7%E8%A1%8C.n5t4t801e3k.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收并发执行.6pwdax9p0o40.png">
+<meta property="article:published_time" content="2021-09-28T09:17:36.510Z">
+<meta property="article:modified_time" content="2021-10-03T06:17:58.676Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/什么是垃圾.4ftyge19sly0.png"><title>垃圾回收-概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">垃圾回收-概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-03</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
+      
+        <h2 id="垃圾回收机制简介"   >
+          <a href="#垃圾回收机制简介" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收机制简介" class="headerlink" title="垃圾回收机制简介"></a>垃圾回收机制简介</h2>
+      
+        <h3 id="什么是垃圾回收机制？"   >
+          <a href="#什么是垃圾回收机制？" class="heading-link"><i class="fas fa-link"></i></a><a href="#什么是垃圾回收机制？" class="headerlink" title="什么是垃圾回收机制？"></a>什么是垃圾回收机制？</h3>
+      <blockquote>
+<p><strong>1. 先来聊聊有关垃圾回收机制的历史吧</strong></p>
+</blockquote>
+<ul>
+<li>历史①：垃圾回收机制也称为自动内存管理，旨在由虚拟机自动管理内存空间而不需要开发者的介入</li>
+<li>历史②：Lisp 语言是世界第一门采用动态内存分配和垃圾收集技术的语言</li>
+<li>历史③：手动垃圾回收与自动垃圾回收<ul>
+<li>手动垃圾回收<ul>
+<li>代表语言：C/C++</li>
+<li>定义：[开发者必须手动调用方法去回收内存中的垃圾]{.blue}</li>
+<li>优点：[开发者能够直接对内存进行更加灵活的管理，更加清楚内存分配的细节]{.red}</li>
+<li>缺点：[频繁地手动进行内存分配和垃圾回收是十分麻烦的]{.green}</li>
+</ul>
+</li>
+<li>自动管理：<ul>
+<li>代表语言：Java、C#</li>
+<li>定义：[虚拟机自动回收堆空间中的垃圾，不再需要程序员关心]{.blue}</li>
+<li>优点：[虚拟机代替开发者对堆空间进行管理，开发者能够更加集中于应用开发]{.red}</li>
+<li>缺点：[堆空间出现溢出问题，开发者难以直接对其进行管理，只能够通过配置虚拟机参数间接管控]{.green}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>2. 了解历史之后，再来看看垃圾回收机制的主要任务吧</strong></p>
+</blockquote>
+<ul>
+<li>核心任务<ul>
+<li>[为新对象分配相应的内存空间]{.red}<ul>
+<li>[两种分配方式(<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://47.101.45.234/jvm/runtime/HeapSpace/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA/" >堆空间-对象创建</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 已经提到过)：① 指针碰撞 ② 空闲列表]{.red}</li>
+<li>[采用的对象的分配方式取决于回收堆空间的方式]{.red}</li>
+</ul>
+</li>
+<li>[标记内存空间的垃圾并对垃圾进行清除]{.red}<ul>
+<li>方式：两个阶段采用的不同算法<ul>
+<li>[标记算法：可达性分析]{.orange}</li>
+<li>[清除算法：引用计数法、标记-清除、标记-整理、标记-复制]{.orange}</li>
+</ul>
+</li>
+<li>区域：[频繁收集新生代，较少收集老年代，基本不动方法区]{.red}<ul>
+<li>[新生代：只针对新生代的收集称为 Minor GC / Young GC]{.orange}</li>
+<li>[老年代：只针对老年代的收集称为 Major GC]{.orange}</li>
+<li>[整堆：针对方法区和堆区的收集称为 Full GC]{.orange}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其余任务：负责堆的管理和布局、与解释器和编译的协作、与监控子系统协作等等职责</li>
+</ul>
+<blockquote>
+<p><strong>3. 垃圾回收的垃圾指的是什么?垃圾回收真的只回收垃圾吗?</strong></p>
+</blockquote>
+<ul>
+<li>核心：垃圾回收机制主要回收 [内存空间中的垃圾和非必要的对象]{.red}<ul>
+<li>垃圾（主要）：[不再被任何变量引用的对象就是垃圾]{.red}</li>
+<li>非必要的对象（次要）：[仅被软引用、弱引用、虚引用指向的对象]{.red}（<a href="#%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B">引用类型</a>）</li>
+</ul>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/什么是垃圾.4ftyge19sly0.png" alt="什么是垃圾" style="zoom:80%;" />
+
+
+        <h3 id="为什么需要垃圾回收机制？"   >
+          <a href="#为什么需要垃圾回收机制？" class="heading-link"><i class="fas fa-link"></i></a><a href="#为什么需要垃圾回收机制？" class="headerlink" title="为什么需要垃圾回收机制？"></a>为什么需要垃圾回收机制？</h3>
+      <ul>
+<li>核心：为了保证程序能够正常高效地运作<ul>
+<li>[没有垃圾回收将会使得内存空间被很快消耗殆尽，从而导致 OutOfMemoryError 异常]{.red}<ul>
+<li>消耗内存的原因①：<a href="#%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA">内存溢出</a></li>
+<li>消耗内存的原因②：<a href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F">内存泄漏</a></li>
+</ul>
+</li>
+<li>[没有垃圾回收将会使得内存空间产生大量的碎片，从而导致大对象无法被存放在堆空间中]{.red}<ul>
+<li>[Java 堆空间采用的是连续内存分配，只要对象被回收之后必定会产生碎片问题]{.orange}</li>
+<li>[大对象必须使用连续的内存空间，不能够拆分成几部分存储，原因是因为实现简单高效]{.orange}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>① 连续内存分配是操作系统中的概念，可以阅读我写的 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://47.101.45.234/operating-system/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/" >操作系统有关内存的笔记</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 进行了解</p>
+<p>② 内存碎片的概念也是操作系统中的，可以细分为内部碎片和外部碎片，也可以参考我的操作系统笔记进行了解</p>
+<p>:::</p>
+
+        <h3 id="什么时候执行垃圾回收？"   >
+          <a href="#什么时候执行垃圾回收？" class="heading-link"><i class="fas fa-link"></i></a><a href="#什么时候执行垃圾回收？" class="headerlink" title="什么时候执行垃圾回收？"></a>什么时候执行垃圾回收？</h3>
+      <ul>
+<li>主动发起：手动调用 <a href="#System.gc()">System.gc()</a> 等相关方法<ul>
+<li>虚拟机并不会立刻开始执行垃圾回收：<ul>
+<li>[① 垃圾回收线程优先级太低 ]{.red}</li>
+<li>[② 需要等待所有线程进入安全区域或者安全点才会开始回收]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>被动发起：[新生代中的伊甸园区或者老年代将要 <strong>用尽</strong> 的时候]{.red}<ul>
+<li>[新生代中的幸存者区不会触发垃圾回收机制的执行]{.red}</li>
+<li>分区算法</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="垃圾回收机制如何执行"   >
+          <a href="#垃圾回收机制如何执行" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收机制如何执行" class="headerlink" title="垃圾回收机制如何执行?"></a>垃圾回收机制如何执行?</h3>
+      <ul>
+<li><p>垃圾回收器：</p>
+<ul>
+<li><p>垃圾回收器是虚拟机中执行垃圾回收机制的部分</p>
+</li>
+<li><p>分类：[7 大经典垃圾回收器 + 3 大前沿的垃圾回收器]{.blue}</p>
+</li>
+<li><p>过程：</p>
+<ul>
+<li>[标记阶段：判断哪些对象不再被变量引用并标记为垃圾]{.red}</li>
+<li>[清理阶段：清除那些被标记为垃圾的对象]{.red}</li>
+</ul>
+</li>
+<li><p>细节：[所有垃圾回收器在执行的过程中的两个阶段都会造成用户线程暂停（<a href="#STW">STW</a>）]{.red}</p>
+<ul>
+<li>采用不同的设计方式的垃圾回收器带来的 STW 时延并不一致</li>
+<li>STW 将会在后面的细节中详细介绍</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="垃圾回收细节"   >
+          <a href="#垃圾回收细节" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收细节" class="headerlink" title="垃圾回收细节"></a>垃圾回收细节</h2>
+      
+        <h3 id="引用类型"   >
+          <a href="#引用类型" class="heading-link"><i class="fas fa-link"></i></a><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3>
+      <blockquote>
+<p><strong>为什么引用还需细分类型?</strong></p>
+</blockquote>
+<ul>
+<li>核心：[尽可能应对所有可能面临的应用场景]{.red}</li>
+<li>场景：[如果我们希望某些对象能够在内存充足的时候存活，而在内存紧张的时候被回收呢？（缓存）]{.blue}<ul>
+<li>普通的引用显然无法满足这个要求，普通的引用只要指向某个对象，那么这个对象就不可能被回收</li>
+<li>我们也不可能根据内存的情况，手动地解除引用，毕竟内存是由虚拟机维护的</li>
+<li>基于这些可能面临的场景，才会进一步提出细分引用的类型</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>五种引用类型</strong></p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/引用类型图示.p069iddb3rk.png" alt="引用类型图示" style="zoom:80%;" />
+
+<p>:::info</p>
+<p>① JDK 1.2 对引用的概念进行了扩充并且新增了四种引用类型：软引用、弱引用、虚引用、终结器引用</p>
+<p>② 新增的三种引用类型都归属于反射包下（java.lang.ref）</p>
+<p>:::</p>
+<ul>
+<li><p>前提：</p>
+<ul>
+<li>没有被引用指向的对象是一定会被回收的</li>
+<li>[被引用指向的对象也是有可能被对象回收的]{.blue}</li>
+</ul>
+</li>
+<li><p>强引用（Strong Referrence）</p>
+<ul>
+<li><p>定义：默认对象都是被强引用所指向的（采用常规创建对象的方式得到的变量都是强引用）</p>
+</li>
+<li><p>特点：[只要被强引用指向的对象绝对不会被垃圾回收器回收]{.red}</p>
+</li>
+<li><p>细节：99 % 的开发中都是使用的强引用</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 配置虚拟机参数 -XX:PrintGCDetails 年轻代没有任何变化</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 两个强引用同时指向一个实例对象</span></span><br><span class="line">    StringBuilder str1 = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;Hello, World&quot;</span>);</span><br><span class="line">    StringBuilder str2 = str1;</span><br><span class="line">    <span class="comment">// 解除其中一个引用</span></span><br><span class="line">    str1 = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 主动调用垃圾回收：对象显然不会被回收</span></span><br><span class="line">    System.gc();</span><br><span class="line">    <span class="comment">// 确保垃圾回收线程可以被执行</span></span><br><span class="line">    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">    <span class="comment">// 测试两者的内容: 前者为 null, 后者为 Hello World</span></span><br><span class="line">    System.out.println(str1);</span><br><span class="line">    System.out.println(str2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>软引用（Soft Referrence）</p>
+<ul>
+<li><p>定义：用于描述那些有用但是非必须的对象</p>
+</li>
+<li><p>特点：[软引用指向的对象只有内存空间非常紧张的情况下才会被垃圾回收器回收]{.red}</p>
+</li>
+<li><p>细节：[可以用于实现高速缓存（Spring、Mybatis 缓存底层就是采用这种引用实现的）]{.red}</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 测试：软引用指向的对象是否将会在内存紧张的情况下被回收</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SoftReferrenceTest</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="meta">@ToString</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class">    </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> id, String name)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.id = id;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            System.out.println(id + <span class="string">&quot;: 对象被回收...&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 注意: 软引用指向的对象当前是没有强引用指向的</span></span><br><span class="line">        SoftReference&lt;User&gt; object = <span class="keyword">new</span> SoftReference&lt;&gt;(<span class="keyword">new</span> User(<span class="number">1</span>,<span class="string">&quot;冬坂五百里&quot;</span>));</span><br><span class="line">        <span class="comment">// 强引用指向的对象</span></span><br><span class="line">        User user = <span class="keyword">new</span> User(<span class="number">2</span>,<span class="string">&quot;斧乃木余接&quot;</span>);</span><br><span class="line">        <span class="comment">// 主动调用垃圾回收</span></span><br><span class="line">        System.gc();</span><br><span class="line">        <span class="comment">// ① 查看对象是否被回收: 内存充足的情况没有被回收</span></span><br><span class="line">        System.out.println(object.get());</span><br><span class="line">        <span class="comment">// ② 采用大对象占用堆空间, 逼迫垃圾回收器开始回收弱引用对象</span></span><br><span class="line">        <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span> * <span class="number">7</span> - <span class="number">1024</span> * <span class="number">600</span>];</span><br><span class="line">        <span class="comment">// 测试结果有点意外，即使在老年代已经被占用 99% 的情况下依然没有被回收</span></span><br><span class="line">        <span class="comment">// 但是在发生溢出之后就被回收掉了，作为对比，那个强引用指向的对象至始至终没有被回收</span></span><br><span class="line">        System.out.println(object.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>弱引用（Weak Referrence）</p>
+<ul>
+<li><p>定义：用于描述那些非必须的对象，仅使用一次的对象</p>
+</li>
+<li><p>特点：[弱引用指向的对象在下次垃圾回收器开始回收时就会直接被回收掉]{.red}</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>[垃圾回收的线程优先级非常低，所以弱引用指向的对象也可以存活很长时间（可用于实现缓存）]{.red}</p>
+<p>  :::info</p>
+<p>  你可以尝试把下面代码中的输出和休眠代码交换顺序，你会发现弱引用指向的对象依然存活</p>
+<p>  :::</p>
+</li>
+<li><p>弱引用不需要通过标记算法确定是否回收，因为无论是否存活都会被回收，相比于软引用效率更高</p>
+</li>
+<li><p>集合框架中的工具类 <a href="">WeakHashMap</a> 就是采用弱引用实现的</p>
+</li>
+</ul>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 注意: 弱引用指向的对象当前是没有强引用指向的</span></span><br><span class="line">    WeakReference&lt;StringBuilder&gt; str = <span class="keyword">new</span> WeakReference&lt;&gt;(<span class="keyword">new</span> StringBuilder(<span class="string">&quot;Hello, World&quot;</span>));</span><br><span class="line">    <span class="comment">// 主动调用垃圾回收</span></span><br><span class="line">    System.gc();</span><br><span class="line">    <span class="comment">// 确保垃圾回收线程能够执行</span></span><br><span class="line">    Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">    <span class="comment">// 输出</span></span><br><span class="line">    System.out.println(str.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>虚引用（Phantom Referrence）</p>
+<ul>
+<li><p>定义：用于在垃圾回收对象时得到相应的通知（需要借助引用队列）</p>
+<ul>
+<li>引用队列（Referrence Queue）：所有被标记需要回收的对象都会被添加进入引用队列</li>
+<li>弱引用和软引用都可以使用引用队列用来获取对象被销毁的通知，是可选的</li>
+<li>虚引用必须借助引用队列来获取对象被销毁的通知</li>
+</ul>
+<p>  +++ 为什么虚引用必须要使用引用队列而弱引用和软引用不需要呢？</p>
+<p>  ① 因为虚引用无法获取对象的任何信息，还不借助引用队列，那就彻底没有价值了</p>
+<p>  ② 软引用和弱引用可以获取对象实例来确认对象是否已经被回收</p>
+<p>  +++</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>[虚引用指向的对象也会在下次垃圾回收器开始回收时就被回收]{.red}</li>
+<li>[虚引用指向的对象是无法通过虚引用来获得的]{.red}</li>
+</ul>
+</li>
+<li><p>细节：你可以认为这种引用基本没有什么卵用</p>
+</li>
+</ul>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhantomReferrenceTest</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 必须传入引用队列，最后需要借助引用队列来获取销毁对象的通知</span></span><br><span class="line">        ReferenceQueue&lt;StringBuilder&gt; queue = <span class="keyword">new</span> ReferenceQueue&lt;&gt;();</span><br><span class="line">        PhantomReference&lt;StringBuilder&gt; str = <span class="keyword">new</span> PhantomReference&lt;&gt;(<span class="keyword">new</span> StringBuilder(<span class="string">&quot;Hello, World&quot;</span>), queue);</span><br><span class="line">        <span class="comment">// 使用虚引用获得实例对象: 获取不到</span></span><br><span class="line">        System.out.println(str.get());</span><br><span class="line">        <span class="comment">// 主动调用垃圾回收</span></span><br><span class="line">        System.gc();</span><br><span class="line">        <span class="comment">// 引用队列中取出元素: 如果弱引用对象没有被销毁, 线程将会被阻塞, 如果被销毁将会返回对象</span></span><br><span class="line">        Reference&lt;StringBuilder&gt; msg = (Reference&lt;StringBuilder&gt;) queue.remove();</span><br><span class="line">        <span class="comment">// 测试虚引用指向的对象是否被回收</span></span><br><span class="line">        System.out.println(msg == <span class="keyword">null</span> ? <span class="string">&quot;对象没有被回收...&quot;</span> : <span class="string">&quot;对象被回收...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>终结器引用（Final Referrence）</p>
+<ul>
+<li>定义：没有强引用指向的对象虚拟机会为其默认添加的引用就是终结器引用</li>
+<li>特点：终结器引用的对象将会被添加的 F-Queue 队列中等待被回收</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>[同一个对象可以被多个不同的类型的引用所指向]{.red}</p>
+</li>
+<li><p>[只有强引用指向的对象才会导致内存溢出，其余引用类型指向的对象不可能导致溢出]{.red}</p>
+<blockquote>
+<p>因为其余引用类型指向的对象将会在内存发生溢出之前就会被回收掉</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="内存溢出"   >
+          <a href="#内存溢出" class="heading-link"><i class="fas fa-link"></i></a><a href="#内存溢出" class="headerlink" title="内存溢出"></a>内存溢出</h3>
+      <blockquote>
+<p><strong>什么是内存溢出</strong></p>
+</blockquote>
+<ul>
+<li>定义：[内存空间无法再容纳新的对象]{.red}</li>
+</ul>
+
+        <h3 id="内存泄漏"   >
+          <a href="#内存泄漏" class="heading-link"><i class="fas fa-link"></i></a><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h3>
+      <p>:::info</p>
+<p>参考博客：</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6470651/how-can-i-create-a-memory-leak-in-java" >How can I create a memory leak in Java?</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/baidu_32015283/article/details/87916080" >什么是内存泄漏，常见引起引起内存泄漏的原因,及解决办法</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32540739" >详解Java应用程序中的内存泄露是如何发生的</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是内存泄露?</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：</p>
+<ul>
+<li>[狭义：不再被使用的对象无法被垃圾回收器回收 / 对象使用完毕之后没有释放相应的空间]{.red}</li>
+<li>[广义：对象的生命周期被无限期延长导致垃圾回收器无法回收]{.red}</li>
+</ul>
+</li>
+<li><p>图示：</p>
+<ul>
+<li><p>举例：</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存泄漏例子.1dfunfqeku74.png" alt="内存泄漏例子" style="zoom:80%;" /></li>
+<li><p>抽象：</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存泄露.46zfc578yuw0.png" alt="内存泄露" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>造成内存泄露的原因是什么?</strong></p>
+</blockquote>
+<p>:::warning</p>
+<p>① 不少博客上的例子是存在一定问题的，你只要亲手实验了就会发现</p>
+<p>② 所以以下列举出的原因并不一定是准确的，即使在 StackOverFlow 上关于内存泄漏的情况都是有争议的</p>
+<p>:::</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存泄露示意图.32lpbpj83a60.png" alt="内存泄露示意图" style="zoom:80%;" />
+
+<ul>
+<li><p>原因：</p>
+<ul>
+<li><p>[静态变量：静态变量和类的生命周期一致，使用完成之后没有即时释放就非常容易造成内存泄露]{.red}</p>
+<ul>
+<li><p>单例模式</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryLeak</span></span>&#123;</span><br><span class="line">    <span class="comment">// 难以被回收的静态变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> MemoryLeak memoryLeak = <span class="keyword">null</span>;    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">MemoryLeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MemoryLeak <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> memoryLeak == <span class="keyword">null</span> ? <span class="keyword">new</span> MemoryLeak() : memoryLeak;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>类变量</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryLeak</span></span>&#123;</span><br><span class="line">    <span class="comment">// 声明了静态变量，但是你使用结束后又没有显示的释放空间，就非常容易造成内存溢出</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> MemoryLeak memoryLeak = <span class="keyword">new</span> MemoryLeak();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>[集合：不再使用的元素没有被移除就会导致集合长期持有对象的引用，无法被垃圾回收清除，导致内存泄漏]{.red}</p>
+<p>  无论集合是成员变量还是局部变量都有可能产生这个问题</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryLeak</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.finalize();</span><br><span class="line">        System.out.println(<span class="string">&quot;我被回收了...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line">        List&lt;MemoryLeak&gt; list = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="comment">// 集合中的第一个对象我不想再使用的了，但是我忘了移除这个元素</span></span><br><span class="line">        <span class="comment">// 垃圾回收器就无法对其进行回收</span></span><br><span class="line">        Collections.addAll(list, <span class="keyword">new</span> MemoryLeak(),</span><br><span class="line">                           <span class="keyword">new</span> MemoryLeak(),</span><br><span class="line">                           <span class="keyword">new</span> MemoryLeak(),</span><br><span class="line">                           <span class="keyword">new</span> MemoryLeak());</span><br><span class="line">        <span class="comment">// 主动调用垃圾回收机制，对象肯定无法被回收</span></span><br><span class="line">        System.gc();</span><br><span class="line">        Thread.sleep(<span class="number">1000000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>[非静态内部类：]{.red}</p>
+<ul>
+<li>[非静态内部类持有外部类的引用，即使外部类对象不再被引用了，内部类对象仍被引用，也无法被回收]{.red}</li>
+<li>IDEA 通常会建议你将非静态内部类变成内部类</li>
+</ul>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryLeak</span></span>&#123;</span><br><span class="line">    <span class="comment">// 即使外部类使用完毕，但是由于内部类还在使用，就会导致外部类无法被垃圾回收</span></span><br><span class="line">    <span class="keyword">private</span> InnerClass innerClass = <span class="keyword">new</span> InnerClass();</span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">InnerClass</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>[未关闭的流或者连接：数据库连接，网络连接，IO 流]{.red}</p>
+<ul>
+<li>StackOverFlow 上有部分人认为没有关闭的流或者连接不算做内存泄漏</li>
+<li>但是我觉得既然连接用完了，没有关闭的连接肯定是要占用资源的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>总结：[所有内存泄漏的原因归根究底都是你的代码写的有问题，所以要注意自己的代码质量]{.red}</p>
+</li>
+</ul>
+
+        <h3 id="并行与并发"   >
+          <a href="#并行与并发" class="heading-link"><i class="fas fa-link"></i></a><a href="#并行与并发" class="headerlink" title="并行与并发"></a>并行与并发</h3>
+      <p>:::danger</p>
+<p>① 如果你已经学习过操作系统中的并行与并发的话，请最好忘记这两个概念在操作系统中的含义</p>
+<p>② 垃圾回收机制中的并行与并发和操作系统中的定义完全不同，不要用操作系统中的并行与并发去看待垃圾回收中的</p>
+<p>③ 如果你实在无法忘记，我也会尽可能阐释这两者之间的联系和区别</p>
+<p>④ 此后提到的所有并行和并发都是指的垃圾回收层面的</p>
+<p>最好的参考资料：《垃圾回收算法手册》P257、P286 两页非常清楚地说明了垃圾回收层面的并行和并发</p>
+<p>:::</p>
+
+        <h4 id="操作系统角度（可以跳过）"   >
+          <a href="#操作系统角度（可以跳过）" class="heading-link"><i class="fas fa-link"></i></a><a href="#操作系统角度（可以跳过）" class="headerlink" title="操作系统角度（可以跳过）"></a>操作系统角度（可以跳过）</h4>
+      <ul>
+<li><p>前提：[每个计算核在某个时刻仅能够执行一个进程或者线程]{.blue}</p>
+</li>
+<li><p>操作系统层面：并行与并发</p>
+<ul>
+<li><p>并发（Concurrent）：</p>
+<ul>
+<li><p>定义：[多个进程或者线程交替执行，在某个时间段内可以认为同时执行]{.red}</p>
+</li>
+<li><p>特点：[单核处理器仅能够实现并发]{.red}</p>
+<ul>
+<li>单核处理器只具有单个计算核，所以只可以在 [同一时刻]{.red} 执行一个进程或者线程</li>
+<li>但是单核处理器可以在 [某个时间段内]{.red} 交替进程或者线程执行，看起来像是同时执行（伪并行）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>并行（Parallel）：</p>
+<ul>
+<li><p>定义：[多个进程同时执行]{.red}</p>
+</li>
+<li><p>特点：[仅有多核处理器能够实现并行]{.red}</p>
+<ul>
+<li>多核处理器具有多个计算核，所以可以在 [同一时刻]{.red} 同时执行多个进程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>[并行和并发不是相互矛盾的概念，两者和串行是矛盾的概念]{.red}<ul>
+<li>单核处理器：并发意味着可以交替线程执行，串行就只能按照顺序执行</li>
+<li>多核处理器：并行意味着可以同时执行多个线程，串行就只能够每次使用单个计算核按照顺序执行</li>
+</ul>
+</li>
+<li>[并行和并发既然不是矛盾的概念，意味着并行中允许实现并发]{.red}<ul>
+<li>多核处理器同时执行多个进程或者线程，但是进程或者线程的数量超过了计算核的数量</li>
+<li>那么每个处理器就需要交替执行不同的进程或者线程，也就实现了进程或者线程的并发性</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/操作系统并行与并发.osvyf1lgpgg.png" alt="操作系统并行与并发" style="zoom: 67%;" />
+
+
+        <h4 id="垃圾回收角度（重要）"   >
+          <a href="#垃圾回收角度（重要）" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收角度（重要）" class="headerlink" title="垃圾回收角度（重要）"></a>垃圾回收角度（重要）</h4>
+      <p>:::danger</p>
+<p>理解垃圾回收的并行与并发是非常关键的，因为具体的垃圾回收器就是从这两个方面着手改进的</p>
+<p>:::</p>
+<ul>
+<li><p>串行：</p>
+<ul>
+<li>定义：[GC 线程执行完成后才能够轮到用户线程执行]{.red}</li>
+<li>代表性垃圾回收器：Serial、Serial Old</li>
+</ul>
+</li>
+<li><p>并行：</p>
+<ul>
+<li>定义：[垃圾回收器启用多条 GC 线程同时执行，默认对用户线程使用 STW 机制]{.red}<ul>
+<li>只有多条 GC 线程同时执行：不符合操作系统中的并行概念，但是在垃圾回收中就是并行</li>
+<li>[并行中默认对用户线程使用 STW 机制，因为不采用 STW 机制就是并发了]{.red}</li>
+</ul>
+</li>
+<li>优点：提高了单次垃圾回收的效率，降低了单次垃圾回收造成的 STW 时延</li>
+<li>代表性垃圾回收器：Parallel Scavenge、ParNew、Parallel Old </li>
+</ul>
+<p>  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/%E5%AD%A6%E4%B9%A0%E5%9B%BE%E7%A4%BA/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%B9%B6%E8%A1%8C%E6%89%A7%E8%A1%8C.n5t4t801e3k.png" alt="垃圾回收并行执行"></p>
+</li>
+<li><p>并发：</p>
+<ul>
+<li>定义：[用户线程和 GC 线程同时执行，不对用户线程使用 STW 机制]{.red}<ul>
+<li>[多条用户线程和多条 GC 线程同时执行]{.red}<ul>
+<li>符合操作系统的并行概念，但在垃圾回收层面视为并发</li>
+<li>GC 线程数量超过自己拥有的处理器数量就会出现操作系统中的并发现象，需要交替执行</li>
+<li>用户线程数量超过自己拥有的处理器数量就会出现操作系统中的并发现象，也需要交替执行</li>
+<li>[两者并发执行不会相互干扰，即不会出现 GC 线程抢占用户线程执行的情况，能够继续保持并行]{.orange}</li>
+</ul>
+</li>
+<li>[不对用户线程使用 STW 机制不代表并发垃圾回收器没有延迟]{.red}<ul>
+<li>[垃圾回收器的执行是分阶段，部分阶段可以并发，部分阶段依然只能够并行]{.orange}</li>
+<li>[所以非即时垃圾回收器都是会有 STW 造成的时延的，不可能消除只能够避免]{.orange}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>总结：<ul>
+<li>[垃圾回收层面是并发包含并行，操作系统层面是并行包含并发]{.blue}</li>
+<li>在操作系统角度看来，垃圾回收器的并行与并发都可以是并行，线程都在同时执行</li>
+</ul>
+</li>
+<li>代表性垃圾回收器：CMS、G1 </li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收并发执行.6pwdax9p0o40.png" alt="垃圾回收并发执行" style="zoom:80%;" /></li>
+</ul>
+
+        <h3 id="STW"   >
+          <a href="#STW" class="heading-link"><i class="fas fa-link"></i></a><a href="#STW" class="headerlink" title="STW"></a>STW</h3>
+      <blockquote>
+<p><strong>什么是 STW</strong></p>
+</blockquote>
+<ul>
+<li>名称：Stop the World</li>
+<li>定义：[垃圾回收器开始工作时，会暂停用户线程执行的情况]{.red}<ul>
+<li>用户线程被暂停就会让用户明显感觉到“卡顿”，也就是时延</li>
+<li>垃圾回收器工作的时间越长，用户感觉“卡顿”的时间就久</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>[只有基于可达性分析的标记型算法才会出现 STW ，基于引用计数法的所有延伸算法是没有这个问题的]{.red}</li>
+<li>[Java 采用的就是可达性分析算法，所以 Java 虚拟机中的所有垃圾回收器都是无法避免 STW 带来的时延的]{.red}</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>① 先简单了解下可达性分析，它是一种标记存活对象的方式，用于确定哪些是可以回收的对象</p>
+<p>② 详细了解：<a href="">可达性分析</a></p>
+<p>:::</p>
+<blockquote>
+<p><strong>为什么需要 STW</strong></p>
+</blockquote>
+<ul>
+<li>核心：[<strong>确保可达性分析过程的一致性</strong>]{.red}<ul>
+<li>什么叫可达性分析的一致性<ul>
+<li>如果在可达性分析的过程中，用户线程和 GC 线程并发执行</li>
+<li>那么在分析的过程中对象间的引用不断随着用户线程的执行而变化</li>
+<li>最终导致 GC 线程无法精准识别哪些对象是垃圾，哪些对象是存活的</li>
+</ul>
+</li>
+<li>那么此前提到的并发式垃圾回收器是如何做到不采用 STW 呢？<ul>
+<li>并发式垃圾回收器并不是完全并发，只是在某些阶段是并发的，其余阶段依然并行，依然需要采用 STW</li>
+<li>并发式垃圾回收器在并发的阶段会采用某些手段来确保可达性分析的一致性<ul>
+<li>增量更新（CMS 垃圾回收器采用的方式）</li>
+<li>原始快照（G1 垃圾回收器采用的方式）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>如何降低 STW 带来的延迟影响呢?</strong></p>
+</blockquote>
+<ul>
+<li>增量算法：<ul>
+<li>定义：将 GC 线程的回收过程分成几个阶段执行</li>
+<li>优点：[减少单次 STW 造成的时延影响，实际上总的时延是增加了的]{.red}</li>
+<li>缺点：[会造成程序吞吐量的下降]{.green}</li>
+</ul>
+</li>
+<li>允许用户线程和 GC 线程并发执行<ul>
+<li>优点：<ul>
+<li>[有效降低 STW 造成的时延]{.red}</li>
+<li>[吞吐量下降的幅度相对较小]{.red}</li>
+</ul>
+</li>
+<li>缺点：[需要采用手段避免可达性分析的不一致性]{.green}</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>增量算法和增量更新是两个不一样的东西</p>
+<p>:::</p>
+
+        <h3 id="主动发起垃圾回收方法"   >
+          <a href="#主动发起垃圾回收方法" class="heading-link"><i class="fas fa-link"></i></a><a href="#主动发起垃圾回收方法" class="headerlink" title="主动发起垃圾回收方法"></a>主动发起垃圾回收方法</h3>
+      
+        <h4 id="System-gc"   >
+          <a href="#System-gc" class="heading-link"><i class="fas fa-link"></i></a><a href="#System-gc" class="headerlink" title="System.gc()"></a>System.gc()</h4>
+      <p>:::warning</p>
+<p>① 默认情况下，虚拟机都是自行决定什么时候执行垃圾回收的</p>
+<p>② 但是我们也可以调用相应的方法使得虚拟机执行垃圾回收</p>
+<p>:::</p>
+<p><code>System.gc() / Runtime.getRuntime.gc()</code></p>
+<ul>
+<li><p>作用：[<strong>建议或者提醒</strong> 虚拟机执行垃圾回收]{.red}</p>
+<ul>
+<li>意味着调用该方法之后虚拟机不一定立刻执行垃圾回收</li>
+<li>原因是虚拟机给垃圾回收线程（Finalizer 线程）设置的优先级非常低，不一定能够立即执行</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>调用 <code>System.gc()</code> 会直接触发 [Full GC]{.red} 对整个堆空间和方法区都进行回收</p>
+</li>
+<li><p>调用 <code>System.runFinalization()</code> 会强制要求虚拟机立刻执行垃圾回收</p>
+</li>
+<li><p><code>Runtime.getRuntime.gc()</code> 和 <code>System.gc()</code> 没有任何区别（从源码中可以看出）</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// System 类中的 gc 方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">gc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Runtime.getRuntime().gc();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>[调用 <code>System.gc()</code> 适用于使用堆外内存的时候，垃圾回收器难以直接对堆外内存进行回收，所以手动回收]{.red}</p>
+<p>  :::info</p>
+<p>  正因为方法区在 JDK 8 之后采用元空间实现，所以方法区变得更加难以收集了，所以 ZGC 干脆不支持收集方法区了</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>命令：</p>
+<ul>
+<li>[-XX:+DisableExplicitGC 禁止手动触发垃圾回收]{.blue}</li>
+<li>给虚拟机配置该参数之后，调用 <code>System.gc()</code> 是不会生效的</li>
+</ul>
+</li>
+<li><p>测试（测试结果可能会让你惊讶，也有可能不会）</p>
+<ul>
+<li><p>没有强制执行的垃圾回收的情况下，由于垃圾回收线程优先级较低，</p>
+<p>  所以你可能看不到相应的输出语句，但也有可能看得到</p>
+</li>
+<li><p>强制执行垃圾回收的情况下，你是一定能够看到输出语句的</p>
+</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 测试: System.gc() 是否能够立即执行</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SystemGCTest</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 注：这个对象没有被任何变量引用，所以是会被回收的</span></span><br><span class="line">        <span class="keyword">new</span> SystemGCTest();</span><br><span class="line">        <span class="comment">// 建议虚拟机执行垃圾回收</span></span><br><span class="line">        System.gc();</span><br><span class="line">        <span class="comment">// 强制执行垃圾回收</span></span><br><span class="line">        System.runFinalization();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对象被销毁之前虚拟机会调用该方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.finalize();</span><br><span class="line">        System.out.println(<span class="string">&quot;对象将要被销毁...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>例子</p>
+</li>
+</ul>
+
+        <h4 id="finalize"   >
+          <a href="#finalize" class="heading-link"><i class="fas fa-link"></i></a><a href="#finalize" class="headerlink" title="finalize()"></a>finalize()</h4>
+      <ul>
+<li><p>前提：</p>
+<ul>
+<li><p><code>finalize()</code> 方法是 Object 类中自带的没有任何实现的方法</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable</span>&#123; </span><br><span class="line">    <span class="comment">// 空的方法体</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p><code>finalize()</code> 方法必须被子类重写才会有作用，否则没有任何用</p>
+</li>
+</ul>
+</li>
+<li><p>作用：[对象被垃圾回收器回收之前自动调用的方法，使得开发者在对象消亡前 <strong>自定义逻辑</strong>]{.red}</p>
+<ul>
+<li><p>可以在对象消亡前释放连接，关闭文件等资源关闭操作</p>
+</li>
+<li><p>[可以将对象从死亡的边缘拉回来一次：复活对象]{.green}</p>
+<p>  :::info</p>
+<p>  至于对象复活的方式将在稍后提到</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>对象状态</p>
+<ul>
+<li>[可触及态：对象仍被变量引用的情况]{.red}</li>
+<li>[可复活态：对象没有被变量所引用，但是 finalize 方法没有被调用过]{.red}</li>
+<li>[不可触及态：对象已经被垃圾回收器回收完成了，不可能再复活了]{.red}</li>
+</ul>
+<p>  :::info</p>
+<p>  由于对象可能在 finalize 方法中被复活，所以对象具有三种状态</p>
+<p>  :::</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><code>finalize()</code> 方法在 JDK 9 中被废弃了</p>
+<p>+++ 为什么要在之后 JDK 版本中废弃这个方法呢？</p>
+<p>① finalize 方法中编写的逻辑太差会严重影响垃圾回收的性能（试了下递归，但是没有报错，很奇怪）</p>
+<p>② finalize 方法的执行依赖于垃圾回收发生的时间，里面执行的逻辑是没有任何保障的</p>
+<p>③ 总结：所以在编写程序的时候尽可能不要再去使用这个方法</p>
+<p>+++</p>
+</li>
+<li><p>[<code>finalize()</code> 方法仅会对象被调用一次]{.red}</p>
+</li>
+</ul>
+</li>
+<li><p>对象“复活”</p>
+<ul>
+<li><p>过程：</p>
+<ul>
+<li><p>对象被垃圾回收的条件就是没有变量引用对象</p>
+<p>  那么我们只要在对象死亡前让变量重新引用该对象，对象就不会消亡了</p>
+</li>
+<li><p>但是此前提到 <code>finalize()</code> 方法只会被执行一次，所以对象也只可以复活一次</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>对象重写该方法的方法没有被执行，那么该对象将会被GC线程添加到F-Queue队列中等待执行 <code>finalize()</code></li>
+<li>对象如果在执行 <code>finalize()</code> 的过程中被“复活”，那么将会被移出 F-Queue 队列</li>
+</ul>
+</li>
+</ul>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 测试: 对象“复活”</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SaveObject</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 类变量才可以作为 GC Roots, 实例变量是不可以作为 GC Roots 的</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SaveObject object;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 重写 finalize 方法</span></span><br><span class="line">        System.out.println(<span class="string">&quot;开始执行垃圾回收...&quot;</span>);</span><br><span class="line">        <span class="comment">// 让对象重新被 GC Roots 引用</span></span><br><span class="line">        object = <span class="keyword">this</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;对象复活...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// GC Roots 指向堆中的对象</span></span><br><span class="line">        object = <span class="keyword">new</span> SaveObject();</span><br><span class="line">        <span class="comment">// 取消 GC Roots 到对象的引用</span></span><br><span class="line">        object = <span class="keyword">null</span>;</span><br><span class="line">        <span class="comment">// 开始执行垃圾回收</span></span><br><span class="line">        System.gc();</span><br><span class="line">        <span class="comment">// 暂停主线程: Finalizer 优先级非常低, 有可能主线程执行结束了, 它还没有执行</span></span><br><span class="line">        Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        <span class="comment">// 测试对象是否死亡</span></span><br><span class="line">        System.out.println(object == <span class="keyword">null</span> ? <span class="string">&quot;对象死亡...&quot;</span> : <span class="string">&quot;对象没有死亡...&quot;</span>);</span><br><span class="line">        <span class="comment">// 可以继续进行后续的测试: 即对象第二次死亡还可以复活吗?</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+</li>
+</ul>
+<p>​        </p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/">http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">垃圾回收-垃圾回收算法</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/"><span class="paginator-prev__text">程序计数寄存器</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">
+          概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">
+          垃圾回收机制简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          什么是垃圾回收机制？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          为什么需要垃圾回收机制？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%89%A7%E8%A1%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%9F"><span class="toc-number">1.1.3.</span> <span class="toc-text">
+          什么时候执行垃圾回收？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C"><span class="toc-number">1.1.4.</span> <span class="toc-text">
+          垃圾回收机制如何执行?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%BB%86%E8%8A%82"><span class="toc-number">1.2.</span> <span class="toc-text">
+          垃圾回收细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          引用类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          内存溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">
+          内存泄漏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%B9%B6%E5%8F%91"><span class="toc-number">1.2.4.</span> <span class="toc-text">
+          并行与并发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%A7%92%E5%BA%A6%EF%BC%88%E5%8F%AF%E4%BB%A5%E8%B7%B3%E8%BF%87%EF%BC%89"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">
+          操作系统角度（可以跳过）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E8%A7%92%E5%BA%A6%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">
+          垃圾回收角度（重要）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STW"><span class="toc-number">1.2.5.</span> <span class="toc-text">
+          STW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%8A%A8%E5%8F%91%E8%B5%B7%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.6.</span> <span class="toc-text">
+          主动发起垃圾回收方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#System-gc"><span class="toc-number">1.2.6.1.</span> <span class="toc-text">
+          System.gc()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#finalize"><span class="toc-number">1.2.6.2.</span> <span class="toc-text">
+          finalize()</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

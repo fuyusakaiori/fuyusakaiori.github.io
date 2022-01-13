@@ -1,0 +1,865 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="垃圾回收算法                           概述        两类不同的垃圾回收算法   依据：[依据判断对象消亡的方式划分的两类垃圾回收算法]{.red} 分类： 引用计数式垃圾收集（Referrence Counting） 追踪式垃圾收集（Tracing GC）   细节：Java 虚拟机中采用的是追踪式垃圾收集，所有以下所有算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="垃圾回收-垃圾回收算法">
+<meta property="og:url" content="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="垃圾回收算法                           概述        两类不同的垃圾回收算法   依据：[依据判断对象消亡的方式划分的两类垃圾回收算法]{.red} 分类： 引用计数式垃圾收集（Referrence Counting） 追踪式垃圾收集（Tracing GC）   细节：Java 虚拟机中采用的是追踪式垃圾收集，所有以下所有算法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收算法.2w99m0uoabk0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/引用计数-STW.2n347vi0lc80.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/循环引用.wm033zi8pxs.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/可达.4j5e6janf9c0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/可达分析.7gsnx9hk3uo0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/三色标记.23ekizvhmmbk.webp">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/多标.1y2uzlcqy4u8.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/漏标.2vjnzlchmbk0.webp">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/标记-清除算法.6zne694tsgs0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/标记-复制算法.6f4ipp1elys0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/跨代引用.5w18ofsn7k80.png">
+<meta property="article:published_time" content="2021-09-28T09:17:52.577Z">
+<meta property="article:modified_time" content="2021-10-03T10:01:19.968Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收算法.2w99m0uoabk0.png"><title>垃圾回收-垃圾回收算法 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">垃圾回收-垃圾回收算法</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-03</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="垃圾回收算法"   >
+          <a href="#垃圾回收算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h1>
+      
+        <h2 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      <blockquote>
+<p><strong>两类不同的垃圾回收算法</strong></p>
+</blockquote>
+<ul>
+<li>依据：[依据判断对象消亡的方式划分的两类垃圾回收算法]{.red}</li>
+<li>分类：<ul>
+<li>引用计数式垃圾收集（Referrence Counting）</li>
+<li>追踪式垃圾收集（Tracing GC）</li>
+</ul>
+</li>
+<li>细节：Java 虚拟机中采用的是追踪式垃圾收集，所有以下所有算法都是基于追踪式垃圾收集</li>
+</ul>
+<p>:::info</p>
+<p>① 希望了解更多关于垃圾回收算法的相关内容可以阅读《垃圾回收算法手册》</p>
+<p>② 不建议全部读完，挑自己有一定疑惑的部分阅读是非常有帮助的</p>
+<p>:::</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收算法.2w99m0uoabk0.png" alt="垃圾回收算法" style="zoom:67%;" />
+
+
+        <h2 id="引用计数式垃圾收集"   >
+          <a href="#引用计数式垃圾收集" class="heading-link"><i class="fas fa-link"></i></a><a href="#引用计数式垃圾收集" class="headerlink" title="引用计数式垃圾收集"></a>引用计数式垃圾收集</h2>
+      
+        <h3 id="引用计数法"   >
+          <a href="#引用计数法" class="heading-link"><i class="fas fa-link"></i></a><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h3>
+      <ul>
+<li><p>名称：引用计数法（Referrence Counting）</p>
+</li>
+<li><p>代表语言：Python、JavaScript（[Java 采用的不是引用计数法]{.red}）</p>
+</li>
+<li><p>定义：</p>
+<ul>
+<li>[为每个对象都维护相应的引用计数器，对象的引用增加时，计数器增加；对象的引用减少时，计数器减少]{.blue}</li>
+<li>[如果引用计数器归零，那么该对象就会被回收，如果引用计数器不为零，那么对象就继续存活]{.blue}</li>
+</ul>
+</li>
+<li><p>特点：[每个对象拥有的计数器通常保存在自己的对象头中]{.orange}</p>
+<ul>
+<li>CPython 中将引用计数器保存在对象头中</li>
+<li>C++ 中的有些库将引用计数器保存在对象之外</li>
+</ul>
+</li>
+<li><p>优点：</p>
+<ul>
+<li>[对象在成为垃圾之后能够 <strong>立刻</strong> 被垃圾回收器回收]{.red}<ul>
+<li>[立刻回收垃圾不代表引用计数法不会造成 STW 延迟]{.red}</li>
+</ul>
+</li>
+<li>[引用计数器保存在对象头中，即使垃圾回收器部分出现故障，对象依然可以被回收]{.red}</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li><p>[每个对象的引用数量过多时会造成大量的空间开销]{.green}</p>
+</li>
+<li><p>[每次维护（增加/删除）对象的引用数量时具有的操作开销]{.green}</p>
+<ul>
+<li>[多线程环境下需要确保增加/删除操作的原子性，即需要对操作进行同步]{.aqua}</li>
+<li>[对象的引用变化十分频繁，相应的增加/删除的操作也非常的频繁]{.aqua}</li>
+</ul>
+</li>
+<li><p>[难以解决的循环引用问题]{.green}</p>
+</li>
+<li><p>[某些极端情况下会导致递归删除引用，造成比追踪式垃圾收集更长的延迟]{.green}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/引用计数-STW.2n347vi0lc80.png" alt="引用计数-STW" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="循环引用问题"   >
+          <a href="#循环引用问题" class="heading-link"><i class="fas fa-link"></i></a><a href="#循环引用问题" class="headerlink" title="循环引用问题"></a>循环引用问题</h3>
+      <ul>
+<li><p>问题描述</p>
+<ul>
+<li>变量 A 引用的对象实例引用了变量 B 引用的对象</li>
+<li>变量 B 引用的对象实例又引用了变量 A 引用的对象</li>
+</ul>
+</li>
+<li><p>问题图示：</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/循环引用.wm033zi8pxs.png" alt="循环引用" style="zoom: 67%;" /></li>
+<li><p>解决方式：</p>
+<ul>
+<li>手动去除两个对象实例之间的循环引用</li>
+<li>[采用引用计数+追踪式结合的方式回收]{.red}<ul>
+<li>引用计数收集大多数没有出现循环引用的对象</li>
+<li>追踪式垃圾收集处理偶尔发生的循环引用的对象</li>
+</ul>
+</li>
+<li>[引入弱引用的概念解决循环引用：所有可达对象均为强引用，强引用不产生环]{.red}<ul>
+<li>维护引用计数器的时候会更改引用的强弱程度，处于弱引用的对象就会被直接回收</li>
+<li>弱引用解决循环引用问题并不是特别的安全，会导致有些对象被提前回收（?）</li>
+</ul>
+</li>
+<li>实验删除算法（?）</li>
+</ul>
+</li>
+<li><p>测试：Java 是否采用引用计数法</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 测试: Java 是否采用引用计数算法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReferrenceCountingGC</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 成员变量:</span></span><br><span class="line">    <span class="keyword">private</span> Object referrence;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 占用内存的对象: 确保触发内存回收机制</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] bigSize = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 变量 A 引用对象实例</span></span><br><span class="line">        ReferrenceCountingGC objA = <span class="keyword">new</span> ReferrenceCountingGC();</span><br><span class="line">        <span class="comment">// 变量 B 引用对象实例</span></span><br><span class="line">        ReferrenceCountingGC objB = <span class="keyword">new</span> ReferrenceCountingGC();</span><br><span class="line">        <span class="comment">// A 引用的对象实例去引用 B 引用的对象实例</span></span><br><span class="line">        objA.referrence = objB;</span><br><span class="line">        <span class="comment">// B 引用的对象实例去引用 A 引用的对象实例</span></span><br><span class="line">        objB.referrence = objA;</span><br><span class="line">        <span class="comment">// 显示调用垃圾回收</span></span><br><span class="line">        System.gc();</span><br><span class="line">        <span class="comment">// 显式执行垃圾回收之后, 内存相比于没有执行垃圾回收发生了明显的变化:</span></span><br><span class="line">        <span class="comment">// 结论：Java 采用的不是引用计数</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+</li>
+</ul>
+
+        <h2 id="追踪式垃圾收集"   >
+          <a href="#追踪式垃圾收集" class="heading-link"><i class="fas fa-link"></i></a><a href="#追踪式垃圾收集" class="headerlink" title="追踪式垃圾收集"></a>追踪式垃圾收集</h2>
+      
+        <h3 id="可达性分析"   >
+          <a href="#可达性分析" class="heading-link"><i class="fas fa-link"></i></a><a href="#可达性分析" class="headerlink" title="可达性分析"></a>可达性分析</h3>
+      
+        <h4 id="基本内容"   >
+          <a href="#基本内容" class="heading-link"><i class="fas fa-link"></i></a><a href="#基本内容" class="headerlink" title="基本内容"></a>基本内容</h4>
+      <p>:::primary</p>
+<p>① 可达性分析本身不难理解，但是在关于 GC Roots 到底是对象还是引用存在疑问</p>
+<p>②《深入理解虚拟机》中提到 GC Roots 是一组对象，网络上大多数博客都是直接照抄的书所以也是对象</p>
+<p>③ 宋红康老师的视频中没有点明 GC Roots 到底是什么，黑马视频中认为 GC Roots 也是对象</p>
+<p>④ 最后找到一篇博客和 R大 的回答，他们认为 GC Roots 还是引用</p>
+<p>⑤ 这本身倒是一个无足轻重的概念，估计面试官大多数也分不清楚吧</p>
+<p>参考博客和回答</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/KyleYang2016/article/details/79459050" >Java GC 内存回收机制详解（二）GC Roots 和 可达链</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.zhihu.com/question/53613423/answer/135743258" >java的gc为什么要分代？</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<ul>
+<li><p>名称：可达性分析 （Reachability Analysis）</p>
+</li>
+<li><p>代表语言：Java、C#、Lisp</p>
+</li>
+<li><p>定义：</p>
+<ul>
+<li><p>[枚举根结点集合（GC Roots） 后开始根据引用关系向下遍历，沿着引用关系遍历过的路径称为引用链]{.blue}</p>
+</li>
+<li><p>[如果对象与根结点集合没有任何引用链相连，称为不可达对象；反之就是可达对象]{.blue}</p>
+</li>
+<li><p>[垃圾回收器会标记可达对象后 <strong>回收那些没有被标记的对象</strong>（不可达对象）]{.blue}</p>
+<p>:::info</p>
+<p>标记的是可达对象而不是不可达对象，但是垃圾回收的是不可达对象</p>
+<p>《深入理解虚拟机》中提到既可以标记可达对象也可以标记不可达对象，但是不可达对象显然没有办法标记到</p>
+<p>:::</p>
+</li>
+</ul>
+</li>
+<li><p>图示：</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/可达.4j5e6janf9c0.png" alt="可达" style="zoom:80%;" /></li>
+<li><p>优点：[避免循环引用造成内存泄漏问题]{.red}</p>
+</li>
+<li><p>缺点：[标记阶段必须确保可达性分析过程的一致性]{.green}</p>
+<ul>
+<li>串行/并行式垃圾回收器采用 STW 机制确保用户线程不会干扰可达性分析的过程</li>
+<li>并发式垃圾回收器避免对用户线程采用 STW 机制，所以需要采用增量更新/原始快照两种方式保证一致性</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>如果不了解什么是 STW 或者说不明白什么叫保证可达性分析的一致性，请参考我此前写的笔记 <a href="">垃圾回收概述-STW</a></p>
+<p>:::</p>
+
+        <h4 id="根结点枚举"   >
+          <a href="#根结点枚举" class="heading-link"><i class="fas fa-link"></i></a><a href="#根结点枚举" class="headerlink" title="根结点枚举"></a>根结点枚举</h4>
+      <p>:::primary</p>
+<p>① 这几个算法的实现细节是真的抽象，书上也没说清楚，网上讲清楚的人也少之又少，真的很难彻底弄明白</p>
+<p>② 借用《深入理解虚拟机》中的话，如果觉得看不明白或者很枯燥的话，建议直接先跳过，或者理解个大概吧</p>
+<p>参考博客：</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/plxx/p/4217812.html" >JVM-如何判断一段数据是真正的数据，还是对象的引用</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.pianshen.com/article/18882045496/" >我对OopMap,安全点，安全区域的理解</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是根结点?</strong></p>
+</blockquote>
+<ul>
+<li><p>名称：GC Roots</p>
+</li>
+<li><p>定义：[根结点集合是一组长期活跃的 <strong>引用</strong>]{.red}</p>
+</li>
+<li><p>固定的根结点集合：</p>
+<ul>
+<li>[虚拟机栈中的引用类型变量（指向堆中的对象）：局部变量、参数、临时变量都可以作为根结点]{.red}</li>
+<li>方法区中的变量（两种变量在 JDK 7 之后都被移动到堆空间中了）<ul>
+<li>[静态的引用类型变量]{.red}</li>
+<li>[引用类型的常量（字符串）]{.red}</li>
+</ul>
+</li>
+<li>[本地方法栈中的引用类型变量]{.red}</li>
+<li>[虚拟机内部的引用（指向 Class 对象、异常对象、类加载器对象）]{.red}</li>
+<li>[被同步锁持有的对象的引用]{.red}</li>
+<li>反映 Java 虚拟机内部情况的 JMXBean、JVMTI 中注册的回调和本地代码缓存等（不知道是啥）</li>
+</ul>
+</li>
+<li><p>非固定的根结点集合：[跨代引用：老年代的对象引用年轻代的对象]{.red}</p>
+<ul>
+<li>仅关注老年代的垃圾回收器，在回收年轻代的时候是不会关心老年代的</li>
+<li>但是老年代有可能对年轻代产生引用，所以说此时老年代的引用也可以认为是 GC Roots</li>
+</ul>
+<p>  :::info</p>
+<p>  ① 年轻代引用老年代其实也是跨代引用，但是由于这种跨代引用不会造成任何实质性的影响，所以就不在此解释</p>
+<p>  ② 想要了解为什么没有影响，可以参考《深入理解虚拟机》</p>
+<p>  :::</p>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/可达分析.7gsnx9hk3uo0.png" alt="可达分析" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>如何找到根结点?</strong></p>
+</blockquote>
+<ul>
+<li><p>引入：可达性分析的前提是必须获取根结点集合（GC Roots），那么根结点集合是怎么得到的呢？</p>
+</li>
+<li><p>方式：</p>
+<ul>
+<li><p>保守式垃圾回收</p>
+<ul>
+<li><p>历史：早期的 Classic 虚拟机就是采用这种方式</p>
+</li>
+<li><p>内容：[遍历所有可能存放 GC Roots 的区域进行寻找]{.green}</p>
+</li>
+<li><p>优点：实现简单便于嵌入没有实现自动垃圾回收机制的语言中（C/C++）</p>
+</li>
+<li><p>缺陷：</p>
+<ul>
+<li><p>[如果程序使用的内存空间非常大，那么遍历所有可能的区域就是非常消耗时间的]{.green}</p>
+</li>
+<li><p>疑似 GC Roots 的引用可能指向将要被回收的对象导致其无法被回收，导致内存泄漏</p>
+</li>
+<li><p>虚拟机无法对遍历过程中可能出现的疑似 GC Roots 做出判断，所以疑似 GC Roots 的引用都无法被修改</p>
+<p>  也就意味着对象无法移动，早期的 Classic 虚拟机采用句柄式访问解决了这个问题，但是效率很差</p>
+</li>
+<li><p>[无法采用需要移动对象的清除算法（标记整理、标记复制算法）]{.green}</p>
+</li>
+</ul>
+<p>  :::info</p>
+<p>  问题：这个疑似指针（GC Roots）是个什么东西？</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>半保守式垃圾回收（可以跳过）</p>
+<p>  :::warning</p>
+<p>  ① 半保守和保守式在寻找 GC Roots 上没有任何区别，只能够采用遍历的方式</p>
+<p>  ② 区别在于半保守在确定引用类型上会比保守式更快</p>
+<p>  :::</p>
+<ul>
+<li><p>历史：Android 操作系统中早期的 Dalvik 虚拟机采用的方式</p>
+</li>
+<li><p>内容：</p>
+<ul>
+<li>在每个对象中添加类型信息，在遍历到对象的时候就可以直接知道对象拥有的是什么引用了</li>
+<li>确定 GC Roots 仍然需要去遍历各个可能的区域</li>
+</ul>
+</li>
+<li><p>缺陷：</p>
+<ul>
+<li><p>半保守式垃圾回收也具有保守式垃圾回收的前两个缺点</p>
+</li>
+<li><p>半保守式垃圾回收对于直接扫描到的对象是不可以移动的，但是对象引用的对象是可以移动的</p>
+<p>  因为对象已经准确记录了引用的类型，不需要虚拟机再来判断了，只要移动对象后修改即可</p>
+</li>
+<li><p>[可以采用移动对象的算法（标记整理、标记复制算法）]{.green}</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[准确式垃圾回收]{.red}</p>
+<p>  :::warning</p>
+<p>  ① 前两者都是采用的最为常见的遍历去查找 GC Roots，显然是非常消耗时间的</p>
+<p>  ② 那么能不能采用某种方式减少这种时间开销呢？显然，空间换时间是非常自然的想法</p>
+<p>  :::</p>
+<ul>
+<li><p>历史：HotSpot、JRockit、J9等主流的虚拟机都是采用这种方式</p>
+</li>
+<li><p>内容：</p>
+<ul>
+<li>[采用映射表将对象的引用和对象使用的引用保存下来]{.red}</li>
+<li>[垃圾回收线程就根据对象的引用不断向上递归遍历，最后查找到 GC Roots]{.red}</li>
+</ul>
+<p>  :::info</p>
+<p>  ① 映射表中的并不会直接存储 GC Roots，而是存储的对象的引用</p>
+<p>  ② 每个对象都具有自己的映射表，也就是说映射表并不是全局唯一的</p>
+<p>  :::</p>
+</li>
+<li><p>映射表名称：HotSpot 中称为 Oopmap、JRockit 中称为 livemap、J9 称为 GC map</p>
+</li>
+<li><p>映射表如何得到：</p>
+<ul>
+<li>[类加载阶段就]{.red} 将每个对象的大小计算完成，能够明确知道对象的引用和对象成员变量的数据类型</li>
+<li>[即时编译阶段（JIT）也会生成相应的映射表]{.red}</li>
+</ul>
+</li>
+<li><p>映射表如何使用：</p>
+<ul>
+<li>[解释式使用（HotSpot采用）：每次都会遍历原始的映射表并且递归查找 GC Roots]{.blue}</li>
+<li>[编译式使用：为每个映射表都生成执行代码，每次只需要执行相应的代码就可以找到 GC Roots]{.blue}</li>
+</ul>
+</li>
+<li><p>优点：[避免对整个内存空间的遍历，减少枚举根结点的时间]{.red}</p>
+</li>
+<li><p>缺点：增加垃圾回收过程占用的内存空间</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>问题：我们是否真的需要将所有对象的引用都保存在 Oopmap 中?</strong></p>
+</blockquote>
+
+        <h4 id="安全点与安全区域"   >
+          <a href="#安全点与安全区域" class="heading-link"><i class="fas fa-link"></i></a><a href="#安全点与安全区域" class="headerlink" title="安全点与安全区域"></a>安全点与安全区域</h4>
+      
+        <h5 id="安全点"   >
+          <a href="#安全点" class="heading-link"><i class="fas fa-link"></i></a><a href="#安全点" class="headerlink" title="安全点"></a>安全点</h5>
+      <blockquote>
+<p><strong>什么是安全点?</strong></p>
+</blockquote>
+<ul>
+<li>定义：[虚拟机在特定的位置生成的映射表，这些特定的位置就称为安全点]{.red}</li>
+<li>特点：<ul>
+<li>[用户线程将会在安全点停止(STW)，垃圾回收线程开始根据映射表进行根结点枚举，最后执行可达性分析]{.red}</li>
+<li>所以垃圾回收线程无法想执行就执行其中之一的原因就是因为映射表不是到处都有，另外一个原因就是因为线程优先级太低</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>① 解释：没有安全点的位置也就没有映射表，没有映射表就无法进行根结点枚举，无法执行可达性分析</p>
+<p>② 至于为什么用户线程需要暂停，参考为什么需要采用 STW</p>
+<p>:::</p>
+<blockquote>
+<p><strong>为什么需要使用安全点</strong></p>
+</blockquote>
+<ul>
+<li>原因：<ul>
+<li>[堆空间中有非常多的对象，相应的引用数量也非常多，为每个对象都记录引用会占用巨大的内存空间]{.red}</li>
+<li>[对象的引用会随着程序的执行发生变化，每次变化都去修改大量的映射表，开销太大]{.red}</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>如何选取安全点?</strong></p>
+</blockquote>
+<ul>
+<li>核心：[指令序列可以复用的位置可以被选作安全点]{.red}<ul>
+<li>方法调用</li>
+<li>循环跳转</li>
+<li>异常跳转</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>虚拟机要进行垃圾回收的时候，没有在安全点的线程如何到达安全点?</strong></p>
+</blockquote>
+<ul>
+<li>抢先式中断（Preemptive Suspension）<ul>
+<li>定义：[没有到达安全点的线程尽快执行到距离最近的安全点，然后暂停执行]{.green}</li>
+<li>细节：没有任何虚拟机采用这种实现</li>
+</ul>
+</li>
+<li>主动式中断（Voluntary Suspension）<ul>
+<li>定义：<ul>
+<li>[每个安全点都设置相应的标志位，用户线程每次执行到安全点都判断标志位是否为真]{.red}</li>
+<li>[如果标志位为真就自行停止，反之就继续执行，垃圾回收线程就等待所有用户线程主动停止]{.red}</li>
+</ul>
+</li>
+<li>细节：虚拟机将询问暂停的操作交给操作系统完成了，仅采用一条汇编指令</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="安全区域"   >
+          <a href="#安全区域" class="heading-link"><i class="fas fa-link"></i></a><a href="#安全区域" class="headerlink" title="安全区域"></a>安全区域</h5>
+      <blockquote>
+<p><strong>什么是安全区域?</strong></p>
+</blockquote>
+<ul>
+<li>定义：[用户线程不会造成对象引用关系变化的代码区域称为安全区域]{.red}</li>
+</ul>
+<blockquote>
+<p><strong>为什么需要使用安全区域?</strong></p>
+</blockquote>
+<ul>
+<li>用户线程无论采用哪种方式都需要自己执行到最近的安全点区</li>
+<li>如果线程处于无限期等待状态或者阻塞态，那么显然是永远不可能移动到安全点去的</li>
+<li>那也就意味着垃圾回收线程永远无法执行了</li>
+<li>只要用户线程处于安全区域内，[对象的引用不会改变]{.red}，那么垃圾回收线程就可以开始工作</li>
+</ul>
+<blockquote>
+<p><strong>用户线程在安全区域中行为</strong></p>
+</blockquote>
+<ul>
+<li>[用户线程进入安全区域后会标识自己已经进入安全区域，并且通知垃圾回收线程]{.red}</li>
+<li>[只要所有线程都处于安全区域或者安全点中，垃圾回收线程就可以开始执行]{.red}</li>
+<li>[用户线程可以在安全区域中继续执行，在即将离开安全区域的时候询问垃圾回收线程]{.red}<ul>
+<li>如果垃圾回收线程已经完成所有工作，那么用户线程就可以离开安全区域</li>
+<li>如果垃圾回收线程还没有完成回收，那么用户线程只能够继续在安全区域中等待</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>垃圾回收线程开始执行的时候，线程可能处于安全区域外吗?</strong></p>
+</blockquote>
+<ul>
+<li>答案：[不可能]{.red}</li>
+<li>解释：<ul>
+<li>用户线程只要不进入安全区域或者安全点，垃圾回收线程就不可能开始执行</li>
+<li>因为用户线程还没有停止，垃圾回收线程与其并行显然会造成标记的不一致性</li>
+<li>只有等到所有用户线程进入安全区域或者安全点的时候，垃圾回收线程才会开始执行</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>这是我自己之前看视频的时候想到的一个问题，不知道有没有人又类似的迷惑</p>
+<p>:::</p>
+
+        <h4 id="并发可达性分析"   >
+          <a href="#并发可达性分析" class="heading-link"><i class="fas fa-link"></i></a><a href="#并发可达性分析" class="headerlink" title="并发可达性分析"></a>并发可达性分析</h4>
+      <p>:::info</p>
+<p>参考博客：</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.jianshu.com/p/12544c0ad5c1" >三色标记法与读写屏障</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是并发可达分析</strong></p>
+</blockquote>
+<ul>
+<li>定义：允许在标记阶段用户线程和 GC 线程并发执行，不再对用户线程采用 STW 机制</li>
+</ul>
+<blockquote>
+<p><strong>为什么需要采用并发可达性分析?</strong></p>
+</blockquote>
+<ul>
+<li>可达性分析时延<ul>
+<li>根结点枚举：[根结点枚举造成的时延相对固定：因为根结点的数量较少且比较固定（就那么几类）]{.red}</li>
+<li>遍历对象图：[遍历的时间和堆空间大小以及对象的数量成正比：对象数量越多，遍历的时延越长]{.red}</li>
+</ul>
+</li>
+<li>核心原因：[减少在可达性分析过程中用户线程暂停的时间]{.red}</li>
+</ul>
+<blockquote>
+<p><strong>并发可达性分析存在什么问题?如何解决?</strong></p>
+</blockquote>
+<ul>
+<li><p>问题描述：可达性分析前后不一致</p>
+</li>
+<li><p>三色标记：</p>
+<ul>
+<li><p>目的：利用三色标记推导并发情况下出现的可达性分析不一致的情况</p>
+</li>
+<li><p>颜色：</p>
+<ul>
+<li>白色：表示没有被标记的对象（不可达对象）</li>
+<li>黑色：表示被标记过的对象且该对象引用的其他对象也已经被标记过</li>
+<li>灰色：表示被标记过的对象但是该对象引用的其他对象还没有被全部标记</li>
+</ul>
+</li>
+<li><p>过程：</p>
+<ul>
+<li><p>[GC Roots 直接关联的对象全部灰色集合中]{.blue}</p>
+<ul>
+<li>因为没有后续的扫描，所以无法知道直接关联的对象是否有其他引用，所以不能直接放入黑色集合</li>
+</ul>
+</li>
+<li><p>[遍历对象图：扫描直接关联对象引用的对象]{.blue}</p>
+<ul>
+<li>如果直接关联对象没有引用其他对象，就可以直接放入黑色集合中</li>
+<li>如果直接关联对象引用的其他对象都已经被遍历完成，可以直接放入黑色集合中；反之，仍为灰色</li>
+</ul>
+</li>
+<li><p>[遍历结束后 <strong>仍为白色</strong> 的对象将被直接回收]{.blue}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/三色标记.23ekizvhmmbk.webp" alt="三色标记" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>问题：</p>
+<ul>
+<li><p>多标：</p>
+<ul>
+<li><p>定义：[垃圾回收器将本应该被回收的垃圾误标成存活对象，导致无法回收]{.red}</p>
+</li>
+<li><p>过程：（这并不是唯一导致多标的情况）</p>
+<ul>
+<li>用户线程在 GC 线程标记 E 对象结束之后立刻将引用断开</li>
+<li>GC 线程无法得知用户线程的操作依然认为 E 对象是可达的，沿着引用链遍历其余对象</li>
+<li>最后 E、F、G 三个对象都将被标记为黑色，成为当次无法被回收的浮动垃圾</li>
+<li>注：没有被红色框包含的的对象本身就是垃圾</li>
+</ul>
+</li>
+<li><p>后果：[不会对程序造成太大的影响（除非垃圾对象太大），只需要等待到下次垃圾回收时回收即可]{.green}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/多标.1y2uzlcqy4u8.jpg" alt="多标" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>漏标：</p>
+<ul>
+<li><p>定义：[垃圾回收器将本来存活的对象标记成垃圾，导致直接被回收]{.red}</p>
+</li>
+<li><p>过程：</p>
+<ul>
+<li>用户线程在 GC 线程标记对象之前立刻将引用断开</li>
+<li>在 GC 线程标记其他对象的同时，用户线程又将引用重新指向此前的对象</li>
+<li>GC 线程依然无法得知用户线程的操作，将会在标记结束的阶段回收这些垃圾</li>
+</ul>
+</li>
+<li><p>后果：[本应存活的对象被当成垃圾回收显然会对程序的运行造成非常严重的影响]{.green}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/漏标.2vjnzlchmbk0.webp" alt="漏标" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>解决方式：</p>
+<ul>
+<li>前提：解决方式主要针对的是漏标的情况<ul>
+<li>多标产生的后果非常容易解决，只需要等待下次垃圾回收发生就行</li>
+<li>漏标就没有办法依靠垃圾回收器自身解决了，需要为其设计一定的方式来解决</li>
+</ul>
+</li>
+<li>发生条件（下列条件同时满足）<ul>
+<li>[用户线程在 GC 过程中 <strong>新增黑色对象到白色对象的引用</strong>]{.red}</li>
+<li>[用户线程在 GC 过程中 <strong>删除灰色对象到白色对象的引用</strong>]{.red}</li>
+</ul>
+</li>
+<li>核心：破坏其中一个条件就可以避免出现漏标的情况<ul>
+<li>增量更新（Incremental Update）<ul>
+<li>定义：<ul>
+<li>[每次用户线程增加黑色对象到白色对象间引用时，将该引用记录下来]{.red}</li>
+<li>[并发标记结束之后，<strong>采用 STW 机制</strong> 以黑色对象为根重新扫描 <strong>记录</strong> 的引用关系]{.red}</li>
+</ul>
+</li>
+<li>细节：增量更新破坏第一个条件从而避免对象消失</li>
+</ul>
+</li>
+<li>原始快照（Snapshot At The Beginning SATB）<ul>
+<li>定义：<ul>
+<li>[每次用户线程删除灰色对象到白色对象的引用时，将其引用记录下来（相当于保留原始对象图）]{.red}</li>
+<li>[并发标记结束后，采用 STW 机制以 <strong>灰色对象</strong> 为根重新扫描记录的引用关系]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="回收算法"   >
+          <a href="#回收算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#回收算法" class="headerlink" title="回收算法"></a>回收算法</h3>
+      <p>:::warning</p>
+<p>① 在此前运行时数据区中关于堆空间的分代布局已经提到过了</p>
+<p>② 所有的清除算法理论上是既可以用于新生代，又用于老年代的</p>
+<p>③ 但是在分代算法提出之后，不同的清除算法就应用于不同的分代了</p>
+<p>④ [下列介绍的所有回收算法都是基于可达性分析算法而不是引用计数法]{.red}</p>
+<p>:::</p>
+
+        <h4 id="标记-清除算法"   >
+          <a href="#标记-清除算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h4>
+      <ul>
+<li><p>名称：标记-清除算法（Mark Sweep）</p>
+</li>
+<li><p>定义：[标记阶段结束后直接清除所有不可达对象]{.red}</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>[标记-清除算法主要应用于老年代的回收算法]{.red}</li>
+<li>[标记-清除算法需要搭配空闲列表的方式分配内存]{.red}</li>
+<li>标记-清除算法是其余所有回收算法的基础</li>
+</ul>
+</li>
+<li><p>优点：[不需要改变存活对象在内存中的位置，也就不需要改变存活对象的引用]{.red}</p>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>回收不可达对象的效率偏低</li>
+<li>[不可达对象被回收之后容易造成大量的内存碎片，需要连续内存空间的大对象无法存放]{.green}</li>
+</ul>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/标记-清除算法.6zne694tsgs0.png" alt="标记-清除算法" style="zoom:80%;" />
+
+
+        <h4 id="标记-复制算法"   >
+          <a href="#标记-复制算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#标记-复制算法" class="headerlink" title="标记-复制算法"></a>标记-复制算法</h4>
+      <ul>
+<li><p>名称：标记-复制算法（Mark Copying）</p>
+</li>
+<li><p>定义：</p>
+<ul>
+<li>[将内存区域划分为大小相等的两块，每次仅使用其中的一块]{.red}</li>
+<li>[标记阶段执行的同时就将所有存活的对象全部 <strong>复制</strong> 到另一块空的内存区域中]{.red}</li>
+<li>[复制的过程中会将对象在内存中 <strong>按照顺序</strong> 存放]{.red}</li>
+<li>[更新所有对象的引用指向的地址]{.red}</li>
+</ul>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>[标记-复制算法主要针对新生代的算法]{.red}</li>
+<li>[标记-复制算法搭配指针碰撞使用]{.red}<ul>
+<li>对象在被复制完成后是按照顺序规整存放的，所以可以直接使用指针碰撞</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>优点：</p>
+<ul>
+<li>[核心：避免碎片问题的产生，提高内存的利用率]{.red}</li>
+<li>[复制算法的执行过程中 “没有” 标记阶段，减少操作开销]{.red}<ul>
+<li>并不是真正意义上的没有标记过程，只是在标记不可达对象的同时就将对象复制到另一块区域中了</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>[浪费内存空间，内存空间将会有一半没有被使用]{.green}</li>
+<li>[每次都需要执行复制对象的操作，具有一定的操作开销]{.green}</li>
+</ul>
+</li>
+<li><p>问题：</p>
+<p>  +++danger 为什么标记-复制算法主要针对年轻代而不针对老年代呢?</p>
+<p>  ① 年轻代的存活对象相对较少，每次进行复制操作的开销较少</p>
+<p>  ② 老年代大多数对象都是存活的，对老年代采用复制算法无疑会产生大量对象的复制开销</p>
+<p>  ③ 老年代的内存空间相对于年轻代要大一倍，对老年代采用复制算法无疑会浪费更多的空间</p>
+<p>  +++</p>
+<p>  +++danger 标记-复制算法难道不会浪费年轻代的空间吗?</p>
+<p>  ① 大多数对象都是“朝生夕灭”的，生命周期非常短暂，也就意味着存活的对象非常少</p>
+<p>  ② 没有太大必要等比例划分新生代空间，将其中的一半用来存放少量的存活对象</p>
+<p>  ③ 所以此后采用了更加优化的半区复制策略，不是简单地将新生代 1:1 划分，而是采用 8:1:1 的比例划分为伊甸园区和幸存者区</p>
+<p>  ④ 只有两块幸存者区中会出现来回复制，这样即减少了内存的浪费，又避免了的内存碎片的问题</p>
+<p>  +++</p>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/标记-复制算法.6f4ipp1elys0.png" alt="标记-复制算法" style="zoom:80%;" />
+
+
+        <h4 id="标记-整理算法"   >
+          <a href="#标记-整理算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h4>
+      <ul>
+<li>名称：标记-整理算法（Mark Compact）</li>
+<li>定义：<ul>
+<li>标记阶段结束后清除所有不可达对象</li>
+<li>[将所有存活的对象全部向内存的一端移动，将其按照顺序紧密排列]{.red}</li>
+<li>[更新所有被移动对象的引用指向的地址]{.red}</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>[标记-整理算法主要针对老年代的算法]{.red}</li>
+<li>[标记-整理算法搭配指针碰撞分配内存]{.red}</li>
+</ul>
+</li>
+<li>优点：<ul>
+<li>[避免内存碎片的产生，提高内存空间的利用率]{.red}</li>
+<li>[消除标记-复制算法带来的内存减半的高额代价]{.red}</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>[每次都需要移动大量的对象和更改大量的引用地址，操作开销特别大]{.green}</li>
+<li>[造成用户线程暂停时间（STW）是三种算法中最长的]{.green}</li>
+<li>[效率相对较低]{.green}</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="分代算法"   >
+          <a href="#分代算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#分代算法" class="headerlink" title="分代算法"></a>分代算法</h4>
+      
+        <h5 id="基本内容-1"   >
+          <a href="#基本内容-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#基本内容-1" class="headerlink" title="基本内容"></a>基本内容</h5>
+      <ul>
+<li>前提：与其说分代收集是一种算法不如说是一种理论</li>
+<li>定义：<ul>
+<li>[堆空间划分为不同的区域（年轻代 + 老年代）]{.red}</li>
+<li>[不同的区域采用不同的算法，不同的垃圾回收器收集的区域也不同]{.red}</li>
+<li>[年轻代采用标记-复制算法，老年代采用标记-整理或者采用标记-清除算法]{.red}</li>
+</ul>
+</li>
+<li>优点：[避免垃圾回收器整堆收集，提升垃圾回收效率]{.red}（参考<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://47.101.45.234/jvm/runtime/HeapSpace/%E6%A6%82%E8%BF%B0/" >堆空间-概述</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>）</li>
+<li>缺点：[存在跨代引用问题]{.green}</li>
+<li>细节：现代几乎所有虚拟机/垃圾收集器都采用分代收集算法（ZGC、Shenandoah 默认不采用分代算法）</li>
+</ul>
+
+        <h5 id="卡表与记忆集"   >
+          <a href="#卡表与记忆集" class="heading-link"><i class="fas fa-link"></i></a><a href="#卡表与记忆集" class="headerlink" title="卡表与记忆集"></a>卡表与记忆集</h5>
+      <blockquote>
+<p><strong>什么是跨代引用</strong></p>
+</blockquote>
+<ul>
+<li>描述：<ul>
+<li>分代收集理论导致垃圾回收器可能仅对年轻代或者老年代进行收集</li>
+<li>[但是没有被收集的区域的对象可能引用了收集区域的对象 =&gt; 跨代引用]{.red}</li>
+</ul>
+</li>
+<li>带来的问题：<ul>
+<li>垃圾回收器如何才能够得知哪些收集区域的对象被非收集区域的对象所引用呢？</li>
+</ul>
+</li>
+<li>方式：<ul>
+<li>[遍历非收集区域的对象并将其加入 GC Roots 后进行可达性分析]{.green}<ul>
+<li>优点：实现简单</li>
+<li>缺点：[非收集区域空间太大或者对象数量太多的情况下会严重影响根结点枚举的时间]{.aqua}</li>
+</ul>
+</li>
+<li>[记忆集：直接记录存在跨代引用的内存区域，将其直接加入 GC Roots 后进行可达性分析]{.red}</li>
+</ul>
+</li>
+<li>细节：[只要采用分代收集算法或者分区算法的垃圾回收器都存在跨代引用问题]{.red}</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/跨代引用.5w18ofsn7k80.png" alt="跨代引用" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>为什么需要使用记忆集</strong></p>
+</blockquote>
+<ul>
+<li><p>直接原因：避免被跨代引用的对象被识别不可达对象，从而垃圾回收器回收</p>
+</li>
+<li><p>核心原因：[避免采用遍历的方式去搜索非收集区域中的 GC Roots，减少根结点枚举时的开销]{.red}</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>什么是记忆集?</strong></p>
+</blockquote>
+<ul>
+<li><p>名称：Remember Set</p>
+</li>
+<li><p>定义：[用于存储非收集区域对象引用收集区域对象的指针集合的 <strong>抽象数据结构</strong>]{.red}</p>
+</li>
+<li><p>具体实现：</p>
+<ul>
+<li>字长精度：记忆集保存记录了跨代引用的机器字长</li>
+<li>卡精度：[记忆集保存内存区域的地址，该内存区域中存在对象包含跨代指针]{.red}</li>
+<li>对象精度：[记忆集直接保存跨代引用收集区域的对象，对象中包含跨代指针]{.green}</li>
+</ul>
+<p>  +++ 为什么不使用对象精度的记忆集而是使用卡精度的记忆集呢？</p>
+<p>  ① 每个对象包含的数据非常多，记忆集只需要知道跨代引用在哪里就可以了，不需要关心其他的数据</p>
+<p>  ② 所有就不需要以对象为单位那么高的精度，只需要记录跨代引用可能存在的位置就行</p>
+<p>  +++</p>
+</li>
+<li><p>优点：[避免遍历非收集区域寻找 GC Roots，节省根结点枚举的时间]{.red}</p>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>[需要采用写屏障的技术维护记忆集]{.green}</li>
+<li>[记忆集需要占用一定的空间（Garbage First 垃圾回收器的记忆集占用空间特别大（20%左右））]{.green}</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>① 我们可以做个类比，大概就能够明白记忆集是个什么东西了</p>
+<p>② 此前我们为了确定哪些是 GC Roots 首先想到的方法就是遍历整个内存空间，但是为了避免遍历的开销采用了 Oopmap 优化这个过程</p>
+<p>③ 现在我们为了确定跨代引用的对象首先想到的依然是遍历整个非收集区域，但是为了避免遍历的开销采用了 Remember Set 优化</p>
+<p>④ 总结来说，记忆集就是为了确保被跨代引用的对象不会被错误识别成垃圾，同时优化根结点枚举过程的手段</p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是卡表?</strong></p>
+</blockquote>
+<ul>
+<li>定义：采用卡精度实现的记忆集就是卡表</li>
+<li>原理：<ul>
+<li>[采用 HashTable / HashMap 实现]{.red}</li>
+<li>每个 Card_Table（key）都对应一块 Card_Page（内存区域 value）</li>
+<li>如果 Card_Page 中存在对象包含跨代引用，那么该 Card_Page 就会被标记（Dirty）</li>
+<li>如果 Card_Page 中不存在对象包含跨代引用，那么该 Card_Page 就不会被标记</li>
+</ul>
+</li>
+<li>分类<ul>
+<li>单向卡表：[仅记录非收集区域对收集区域对象的引用]{.red}</li>
+<li>双向卡表：[]{.red}</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="写屏障"   >
+          <a href="#写屏障" class="heading-link"><i class="fas fa-link"></i></a><a href="#写屏障" class="headerlink" title="写屏障"></a>写屏障</h5>
+      <blockquote>
+<p><strong>问题：记忆集用于记录跨代引用，那么跨代引用是怎么被记录进去的呢?</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：</p>
+<ul>
+<li>写屏障会检查该引用是否为跨代引用</li>
+<li>如果是跨代引用，就会写入记忆集；如果不是跨代引用，就不会写入记忆集</li>
+</ul>
+</li>
+<li><p>触发条件：[每次对象的引用更新时触发写屏障操作]{.red}</p>
+</li>
+<li><p>特点：[无论是否为跨代引用都会产生写屏障的操作]{.red}</p>
+</li>
+<li><p>代码：</p>
+  <figure class="highlight c++"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">oop_field_store</span><span class="params">(oop* field, oop new_value)</span> </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    *field = new_value; </span><br><span class="line">    <span class="comment">// 写屏障-写后操作：① 检查是否为跨代引用 ② 如果是跨代引用就会写入记忆集</span></span><br><span class="line">    <span class="built_in">post_write_barrier</span>(field, value); </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></div></figure></li>
+</ul>
+
+        <h4 id="增量更新"   >
+          <a href="#增量更新" class="heading-link"><i class="fas fa-link"></i></a><a href="#增量更新" class="headerlink" title="增量更新"></a>增量更新</h4>
+      
+        <h4 id="分区算法"   >
+          <a href="#分区算法" class="heading-link"><i class="fas fa-link"></i></a><a href="#分区算法" class="headerlink" title="分区算法"></a>分区算法</h4>
+      </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/">http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">垃圾回收-垃圾回收器</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__text">垃圾回收-概述</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">
+          垃圾回收算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E5%BC%8F%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">
+          引用计数式垃圾收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E6%B3%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          引用计数法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          循环引用问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%BD%E8%B8%AA%E5%BC%8F%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86"><span class="toc-number">1.3.</span> <span class="toc-text">
+          追踪式垃圾收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90"><span class="toc-number">1.3.1.</span> <span class="toc-text">
+          可达性分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%86%85%E5%AE%B9"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">
+          基本内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E7%BB%93%E7%82%B9%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">
+          根结点枚举</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%82%B9%E4%B8%8E%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">
+          安全点与安全区域</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%82%B9"><span class="toc-number">1.3.1.3.1.</span> <span class="toc-text">
+          安全点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E5%8C%BA%E5%9F%9F"><span class="toc-number">1.3.1.3.2.</span> <span class="toc-text">
+          安全区域</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">
+          并发可达性分析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.</span> <span class="toc-text">
+          回收算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0-%E6%B8%85%E9%99%A4%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">
+          标记-清除算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0-%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">
+          标记-复制算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0-%E6%95%B4%E7%90%86%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">
+          标记-整理算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E4%BB%A3%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">
+          分代算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%86%85%E5%AE%B9-1"><span class="toc-number">1.3.2.4.1.</span> <span class="toc-text">
+          基本内容</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%A1%E8%A1%A8%E4%B8%8E%E8%AE%B0%E5%BF%86%E9%9B%86"><span class="toc-number">1.3.2.4.2.</span> <span class="toc-text">
+          卡表与记忆集</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="toc-number">1.3.2.4.3.</span> <span class="toc-text">
+          写屏障</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0"><span class="toc-number">1.3.2.5.</span> <span class="toc-text">
+          增量更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.2.6.</span> <span class="toc-text">
+          分区算法</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

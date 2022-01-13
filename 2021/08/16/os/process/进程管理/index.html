@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="进程概述                           进程概念                           进程定义        定义：  处于 &#x3D;&#x3D;并发&#x3D;&#x3D; 状态下   注：非并发情况下的程序不可以称之为进程  具有某种功能的程序在某个数据集上执行的 &#x3D;&#x3D;过程&#x3D;&#x3D;   注：进程不是静态的实体而是活动的过程  是 &#x3D;&#x3D;进程调度&#x3D;&#x3D; 和 &#x3D;&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程概述">
+<meta property="og:url" content="http://example.com/2021/08/16/os/process/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="进程概述                           进程概念                           进程定义        定义：  处于 &#x3D;&#x3D;并发&#x3D;&#x3D; 状态下   注：非并发情况下的程序不可以称之为进程  具有某种功能的程序在某个数据集上执行的 &#x3D;&#x3D;过程&#x3D;&#x3D;   注：进程不是静态的实体而是活动的过程  是 &#x3D;&#x3D;进程调度&#x3D;&#x3D; 和 &#x3D;&#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/18/a084f67f611ec916e89c3757bcf14667.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/18/51238e9c1e1bcddf61d990aa90246f49.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/18/31a2d2f8d0e97ef1834e0c09f62c532a.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/18/44debe8ff8f28bb1b969b68ed489cb15.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/19/4bf1c3e2265801cf9eeb03aa08a9ac57.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/19/ee5fa8257ee9d585f9237842c1c0baca.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/19/47671e747f498844ea2d896a70bd38e1.png">
+<meta property="article:published_time" content="2021-08-16T07:56:56.456Z">
+<meta property="article:modified_time" content="2021-09-28T11:01:47.547Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/18/a084f67f611ec916e89c3757bcf14667.png"><title>进程概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/08/16/os/process/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">进程概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-08-16</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="进程概述"   >
+          <a href="#进程概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程概述" class="headerlink" title="进程概述"></a>进程概述</h1>
+      
+        <h2 id="进程概念"   >
+          <a href="#进程概念" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程概念" class="headerlink" title="进程概念"></a>进程概念</h2>
+      
+        <h3 id="进程定义"   >
+          <a href="#进程定义" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程定义" class="headerlink" title="进程定义"></a>进程定义</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li><p>处于 ==并发== 状态下</p>
+<p>  <a style="color:red;">注：非并发情况下的程序不可以称之为进程</a></p>
+</li>
+<li><p>具有某种功能的程序在某个数据集上执行的 ==过程==</p>
+<p>  <a style="color:red;">注：进程不是静态的实体而是活动的过程</a></p>
+</li>
+<li><p>是 ==进程调度== 和 ==资源分配== 的 ==独立== 单位</p>
+<p>  <a style="color:red;">注：这里说的是独立单位不是最小单位；进程调度的最小单位是线程；资源分配的最小单位是进程</a></p>
+</li>
+</ul>
+</li>
+<li><p>进程 &amp; 程序</p>
+<ul>
+<li><p>进程是 ==活动== 的实体：进程 = 程序段 + 数据段 + <a href="#%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6%E5%9D%97">进程控制块</a></p>
+<p>  <a style="color:red;">注：每个进程都拥有自己独立的逻辑程序计数器，但是物理程序计数器只有一个</a></p>
+</li>
+<li><p>程序是 ==被动== 的实体：只是存放在硬盘中的代码段</p>
+</li>
+</ul>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6">CPU 密集型进程 &amp; I/O 密集型进程</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%8D%8F%E4%BD%9C">独立进程 &amp; 协作进程</a></li>
+<li>前端进程 &amp; 后端进程</li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%AE%9E%E7%8E%B0">父进程 &amp; 子进程</a></li>
+<li>孤儿进程 &amp; 僵尸进程 &amp; 守护进程</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>处理器频繁切换进程实现并行；采用跟踪正在运行的进程集（主存）而不是跟踪处理器如何切换的</p>
+</li>
+<li><p>并行 &amp; 伪并行</p>
+<ul>
+<li><p>并行：多个进程 ==同时== 运行</p>
+</li>
+<li><p>伪并行：处理器通过频繁 ==切换== 进程执行</p>
+<p>  解释：制造了多个进程同时进行的错觉</p>
+</li>
+</ul>
+<p>  <a style="color:red;">1. 单处理器系统每个瞬间只能够运行一个进程 -&gt;  单处理器系统并没有实现真正意义上的并行（伪并行）</a></p>
+<p>  <a style="color:red;">2. 多处理器系统具有多个处理器芯片每个瞬间可以运行多个进程 -&gt; 多处理器系统实现了真正意义上的并行</a></p>
+<p>  <a style="color:red;">3. 多个进程可以共享同一个程序</a></p>
+<p>  解释：同一个程序可以被执行多次，每执行一次都算作一个进程，但是程序只有一个</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>​        <img src="https://i1.xpic.jp/file/xpicjp/2021/05/18/a084f67f611ec916e89c3757bcf14667.png" alt="a084f67f611ec916e89c3757bcf14667.png"></p>
+
+        <h3 id="进程状态"   >
+          <a href="#进程状态" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h3>
+      <ul>
+<li><p>五种状态</p>
+<ul>
+<li><p>初始态(<code>new</code>)：进程刚被创建时的状态</p>
+<ul>
+<li>创建的情况：(1)系统初始化；(2)正在执行进程创建另一个进程；(3)用户请求创建新的进程</li>
+</ul>
+<p>  <a style="color:red;">注：进程刚被创建时进入作业队列，等待获取相应的资源后，进入就绪队列</a></p>
+</li>
+<li><p>就绪态(<code>ready</code>)：进程已经获取到所需所有资源；等待处理器的调度后即可执行</p>
+<p>  <a style="color:red;">1. 运行态 -&gt; 就绪态：代表进程是被动放弃 CPU 的；处理器因为中断需要执行其他的进程</a></p>
+<p>  <a style="color:red;">2. 这个状态下的进程已经可以执行了</a></p>
+</li>
+<li><p>运行态(<code>running</code>)：处理器中正在执行的进程</p>
+</li>
+<li><p>阻塞态（等待态）(<code>wating</code>)：进程等待某些资源的获取</p>
+<p>  <a style="color:red;">1. 运行态 -&gt; 阻塞态：代表进程值主动放弃 CPU 的；因为进程需要获取资源后才可以执行</a></p>
+<p>  <a style="color:red;">2. 阻塞态是不可以在获取到相应资源后直接返回运行态，必须进入就绪态等待</a></p>
+</li>
+<li><p>终止态(<code>terminated</code>)：进程执行完成</p>
+<ul>
+<li>终止的情况：(1) 正常退出；(2) 出错退出；(3)被其他进程杀死</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>状态转换图：</p>
+<p>  <a style="color:red;">中断处理，启动进程，结束进程都是由调度程序处理的（调度程序是一段非常短小的程序）</a></p>
+</li>
+</ul>
+<p><img src="https://i1.xpic.jp/file/xpicjp/2021/05/18/51238e9c1e1bcddf61d990aa90246f49.png" alt="51238e9c1e1bcddf61d990aa90246f49.png"></p>
+
+        <h3 id="进程控制块"   >
+          <a href="#进程控制块" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程控制块" class="headerlink" title="进程控制块"></a>进程控制块</h3>
+      <ul>
+<li><p>定义：每个进程都维护的一个结构数组，用于保存进程所有的相关信息</p>
+<p>  <a style="color:red;">处理器 <strong>只会通过进程控制块</strong> 找到进程在内存中的所有相关信息</a></p>
+</li>
+<li><p>相关信息：(进程相关的所有信息都存放在进程控制块中：可能是具体的数据也可能是指针)</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>进程描述信息</th>
+<th>进程控制信息和管理信息</th>
+<th>资源分配信息</th>
+<th>处理器相关信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>进程唯一标识符</td>
+<td>进程状态</td>
+<td>代码段指针</td>
+<td>程序状态字寄存器</td>
+</tr>
+<tr>
+<td>用户唯一标识符</td>
+<td>进程优先级</td>
+<td>数据段指针</td>
+<td>地址寄存器</td>
+</tr>
+<tr>
+<td>子进程 &amp; 父进程唯一标识符</td>
+<td>代码段入口地址</td>
+<td>堆栈段指针</td>
+<td>程序计数器</td>
+</tr>
+<tr>
+<td></td>
+<td>程序磁盘地址</td>
+<td>文件描述符</td>
+<td>通用寄存器</td>
+</tr>
+<tr>
+<td></td>
+<td>进入内存时间 &amp; 处理器使用时间</td>
+<td>外接设备</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>信号量</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table></div>
+</li>
+<li><p>上下文：当前进程的物理实体(PCB)和进程的运行环境(处理器各个寄存器值)被统称为上下文</p>
+<ul>
+<li>上下文切换：<a style="color:red;">保存当前正在执行的进程状态(运行环境)然后载入另一个进程的状态(运行环境)</a></li>
+<li>具体过程<ol>
+<li>保存当前 <strong>处理器的各个寄存器的值</strong> 并且 <strong>更新</strong> 进程相应的 <strong>进程控制块信息</strong></li>
+<li><strong>载入</strong> 将要运行的进程的 <strong>进程控制块</strong> 并且 <strong>更新处理器各个寄存器的值</strong></li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>细节：<a style="color:red;">进程控制块采用两种方式进行组织：<strong>链表 / 索引表</strong></a></p>
+</li>
+</ul>
+<p><img src="https://i1.xpic.jp/file/xpicjp/2021/05/18/31a2d2f8d0e97ef1834e0c09f62c532a.png" alt="31a2d2f8d0e97ef1834e0c09f62c532a.png"></p>
+
+        <h2 id="进程调度"   >
+          <a href="#进程调度" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h2>
+      <ul>
+<li><p>定义：多个进程需要处理器执行，调度程序采用一定的 ==策略== 选择其中一个进程分派给处理器执行</p>
+</li>
+<li><p>调度队列：</p>
+<ul>
+<li><p>作业队列：包含操作系统中的所有初始态的进程（未分配到相应资源的进程）</p>
+<p>  <a style="color:red;">注：作业队列也就是输入队列，都是等待被调度到内存中执行的进程；作业队列的进程都是存放在磁盘上</a></p>
+</li>
+<li><p>就绪队列：已经加载到内存中等待执行的进程</p>
+<p>  <a style="color:red;">1. 就绪队列中的所有进程都处于内存中，且都处于就绪态</a></p>
+<p>  <a style="color:red;">2. 就绪队列仅仅只是内存的一部分，代表已经可以执行的进程，部分没有准备的好的进程仍然可以在内存中等待</a></p>
+</li>
+<li><p>设备队列：包含所有需要相应 I/O 资源的进程</p>
+</li>
+</ul>
+<p>  <a style="color:red;">调度队列采用具有尾指针的链表队列实现</a></p>
+</li>
+<li><p>调度程序：</p>
+<ul>
+<li><p>定义：将处理器的 ==控制权== 交付 给由调度算法确定的 ==进程==</p>
+</li>
+<li><p>功能：</p>
+<ul>
+<li>上下文切换(<a style="color:red;">保存当前进程时会从用户态进入内核态；恢复新进程时会从内核态进入用户态</a>)</li>
+<li>获取 PCB 中程序计数器的值跳转到合适的位置 -&gt; 重新执行进程</li>
+</ul>
+</li>
+<li><p>CPU 密集型进程 &amp; I/O 密集型进程</p>
+<ul>
+<li><p>CPU 密集型进程：需要花费更多时间在执行计算上</p>
+</li>
+<li><p>I/O 密集型进程：需要花费更多时间在提交 I/O 请求上</p>
+<p>  <a style="color:red;">进程两个执行区间：CPU 执行区间 + I/O 执行区间</a></p>
+</li>
+</ul>
+</li>
+<li><p>调度延迟：调度程序保存一个进程并恢复另一个进程的过程（上下文切换）所花费的时间</p>
+</li>
+<li><p>调度程序分类</p>
+<ul>
+<li><p>长期调度程序：从硬盘等二级存储中调度 ==程序== 到 ==内存== 中等待执行</p>
+<p>  <a style="color:red;">1. 长期调度程序执行的频率相对较低</a></p>
+<p>  <a style="color:red;">2. 长期调度程序可以控制多道程序系统的度</a></p>
+</li>
+<li><p>短期调度程序：从内存中调度 ==进程== 到 处理器中执行 (这只是一种抽象的说法：实际上是处理器获取到进程的入口地址和寄存器信息开始执行进程)</p>
+<p>  <a style="color:red;">短期调度程序执行的频率相对较高</a></p>
+</li>
+<li><p>中期调度程序：将 ==进程== 从内存中 ==暂时交换== 到备份存储的 ==交换空间== 中，从而降低多道程序系统的度，在合适的时候再将进程调入内存中继续执行</p>
+<ul>
+<li><p>交换方式：</p>
+<ul>
+<li><p>标准交换：将进程再次调度进入内存时分配进程 ==可能需要== 的内存大小</p>
+</li>
+<li><p>“变体”交换：将进程再次调度进入内存时分配进程 ==真正需要== 的内存大小(<a style="color:red;">进程可以利用系统调用告知操作系统</a>)</p>
+<p>  <a style="color:red;">现代操作系统通常采用的方式是在空闲内存低于一定的阈值时才会采用交换来改善内存状况；否则禁止采用交换</a></p>
+</li>
+</ul>
+</li>
+<li><p>备份存储：<a style="color:red;">通常是大容量的存储设备（磁盘）</a></p>
+</li>
+<li><p>原因：长期调度程序在调度进程时很可能对于进程的组合不够得当，导致 CPU 或 I/O 的效率很低 -&gt; 借助中期调度程序进行改善</p>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li>优点：(1) <a style="color:red;">改善进程组合</a> (2) <a style="color:red;">降低多道程序的度</a></li>
+<li>缺点：==标准交换== 上下文的切换时间 ==相当高==</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>中期调度程序在 ==换出进程== 时应该确保进程中的那个进程是 ==完全空闲== 的</p>
+<p>  解释：如果进程处于设备等待队列，那么就是不能够立即换出的</p>
+</li>
+<li><p><a style="color:red;">移动设备不支持任何形式的交换</a></p>
+<p>  解释：Android &amp; iOS 在空闲内存低于阈值时都是要求进程 ==主动放弃== 占用的内存以达到释放内存的目的</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>调度队列图</p>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/18/44debe8ff8f28bb1b969b68ed489cb15.png" alt="44debe8ff8f28bb1b969b68ed489cb15.png"></p>
+</li>
+<li><p><a href="#%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95">调度算法</a></p>
+</li>
+<li><p>进程调度 &amp; 上下文切换的区别</p>
+<ul>
+<li>进程调度仅仅只是 <strong>决定将要分配</strong> 给进程何种资源何种环境 (决策行为)</li>
+<li>上下文切换是 <strong>真正意义</strong> 上将资源和环境分配给进程 (执行行为)</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="进程实现"   >
+          <a href="#进程实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程实现" class="headerlink" title="进程实现"></a>进程实现</h2>
+      <p><a style="color:red;">实现进程的所有函数实际上都是系统调用且都在内核态下运行</a></p>
+<ul>
+<li><p>前提：按照 UNIX 标准实现进程；Windows 实现类似</p>
+</li>
+<li><p>进程层次结构：</p>
+<ul>
+<li><p>父进程 &amp; 子进程：</p>
+<ul>
+<li>父进程：创建子进程的进程</li>
+<li>子进程：由父进程调用 <code>fork()</code> 函数创建的进程</li>
+</ul>
+</li>
+<li><p>进程组：父进程和其派生的 ==所有== 子进程共同组成进程组</p>
+</li>
+<li><p>进程标识符（PID）：每个进程由操作系统分配的 ==唯一== 编号</p>
+</li>
+<li><p>资源共享：</p>
+<ul>
+<li>父进程允许子进程共享 ==全部== 资源</li>
+<li>父进程不允许子进程共享资源 -&gt; 子进程只可以从 ==操作系统== 处获取资源</li>
+<li>父进程允许子进程共享 ==部分== 资源</li>
+</ul>
+</li>
+<li><p>运行顺序：</p>
+<ul>
+<li><p>父进程可以和子进程并发运行；<a style="color:red;">父进程和子进程此时都进入就绪队列 -&gt; 处于就绪态</a></p>
+</li>
+<li><p>父进程等待子进程执行结束后再执行；<a style="color:red;">只有子进程进入就绪队列，处于就绪态；父进程直到子进程结束之前都处于阻塞态</a></p>
+<p>  <a style="color:red;">注：无论是并发运行还是等待运行，子进程都会优先于父进程执行</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><a style="color:red;">父进程可以拥有多个子进程；每个子进程只可以拥有一个父进程</a></p>
+</li>
+<li><p>UNIX Solaris 中进程都是采用 ==树形== 层次结构；Windows 中并没有进程层次的概念，所有进程都是平等的</p>
+</li>
+<li><p>每个子进程可以继续创建自己的子进程</p>
+</li>
+<li><p><a style="color:red;">父进程和子进程的 <strong>逻辑地址</strong> 和 <strong>物理地址</strong> 都是相同的</a>(在调用 <code>exec</code> 指令或者进行写操作之前)</p>
+<p>  解释：需要使用写时复制进行解释</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>进程实现方式</p>
+<ul>
+<li><p>进程创建：<code>fork()</code> </p>
+<ul>
+<li><p>创建过程：</p>
+<ol>
+<li><p>父进程调用 <code>fork()</code> 函数创建自身的 ==副本进程==（子进程） -&gt; <code>fork()</code> 函数返回子进程的进程标识符</p>
+</li>
+<li><p>操作系统创建 <strong>空白进程控制块</strong> (如果进程控制块创建失败则会直接导致 <strong>进程创建失败</strong>)</p>
+</li>
+<li><p>操作系统为进程分配内存空间 (如果内存空间不足以容纳新的进程则会导致 <strong>进程处于阻塞态</strong>)</p>
+</li>
+<li><p>操作系统 <strong>初始化进程控制块信息</strong></p>
+</li>
+<li><p>调度程序将子进程调度进入就绪队列等待执行</p>
+</li>
+<li><p>子进程可以调用 <code>exec()</code> 函数载入新的程序运行</p>
+</li>
+</ol>
+<pre><code>解释：子进程不再是父进程的副本，调用 `fork()` 也可以创建子进程了
+</code></pre>
+</li>
+<li><p>写时复制：</p>
+<ul>
+<li><p>引入：</p>
+<p>  父进程在调用 <code>fork()</code> 函数时会创建副本子进程；显然需要将父进程的所有内容全部复制一遍</p>
+<p>  但是大多数的子进程在被创建后都会立刻执行 <code>exec()</code> 函数去执行另一个程序；这样就显得此前复制操作非常没有必要</p>
+</li>
+<li><p>概念：</p>
+<ul>
+<li><p>子进程在被创建后和父进程共享同一块内存空间</p>
+</li>
+<li><p>等待子进程需要对内存空间进行 ==写操作== 时才单独为子进程分配单独的内存空间并复制父进程的内容</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ol>
+<li><p><a style="color:red;">父进程和子进程共享内存空间时是不可以对其进行写操作的</a></p>
+</li>
+<li><p>子进程写操作</p>
+<ul>
+<li>子进程不使用 <code>exec()</code> 进行写操作：操作系统仍然会让子进程和父进程共享代码段；其余内容重新分配</li>
+<li>子进程使用 <code>exrc()</code> 进行写操作：操作系统会对子进程的所有内容重新分配</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_32131499/article/details/94561780" >写时复制</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/19/4bf1c3e2265801cf9eeb03aa08a9ac57.png" alt="4bf1c3e2265801cf9eeb03aa08a9ac57.png"></p>
+</li>
+<li><p>进程等待：<code>wait()</code></p>
+<ul>
+<li>父进程创建子进程之后选择等待子进程执行结束后再执行就会使用 <code>wait()</code> 指令</li>
+</ul>
+</li>
+<li><p>进程删除：<code>exit()</code>  &amp; <code>kill()</code></p>
+<ul>
+<li><p>正常退出：进程使用 <code>exit()</code> 指令即可退出；子进程退出后 <code>exit()</code> 指令返回 ==退出状态== </p>
+</li>
+<li><p>异常退出：进程出现访问越界，使用非法指令，运行超时，运算出错等都会造成进程异常结束 (子进程使用了不该使用的资源)</p>
+</li>
+<li><p>外界干预：父进程被终止或者程序员手动干预</p>
+</li>
+<li><p>终止过程：</p>
+<ol>
+<li>操作系统根据 <strong>进程唯一标识符</strong> 查找其 <strong>进程控制块</strong> (进程控制块最后删除)</li>
+<li>操作系统 <strong>终止</strong> 该进程的 <strong>所有子进程</strong> 并且将其拥有的资源全部 <strong>还给父进程或操作系统</strong></li>
+<li>操作系统在在 <strong>链表</strong> 中 <strong>删除</strong> 该进程的 <strong>进程控制块</strong></li>
+</ol>
+<p>  <a style="color:red;">级联终止：如果一个父进程被终止，其派生的所有子进程一并终止</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ol>
+<li><p><a style="color:red;">父进程调用 fork() 函数会得到子进程的进程标识符；子进程如果仍然是副本的话调用 fork() 函数只会得到 0</a></p>
+<p> 解释：因为子进程也是从 <code>fork()</code> 函数开始执行的，如果子进程也正常调用 <code>fork()</code> 函数创建子进程，那就成死循环了</p>
+</li>
+<li><p><code>fork()</code> 函数时 UNIX 中 ==唯一== 可以创建进程的函数</p>
+</li>
+<li><p><code>exec()</code> 并不是一个具体的函数而是包含了 <code>execl</code> <code>execv</code>  <code>execle</code> <code>execve</code> <code>execlp</code> <code>execvp</code> 六种具体函数</p>
+</li>
+<li><p>Windows 进程相关函数：</p>
+<ul>
+<li>CreateProcess = fork + exec</li>
+<li>ExitProcess = exit；TerminateProcess = kill</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>  childPid; <span class="comment">// 子进程的进程标识符</span></span><br><span class="line">    childPid = fork(); <span class="comment">// 创建子进程</span></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) <span class="comment">// 进程创建失败 </span></span><br><span class="line">    &#123; </span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Fork Failed&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>); <span class="comment">// 异常退出</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (childPid == <span class="number">0</span>) <span class="comment">// 子进程开始执行时也是从第一行开始执行的，毕竟是父进程的副本</span></span><br><span class="line">    &#123; </span><br><span class="line">        <span class="comment">// 子进程进入这个分支，载入其他的程序</span></span><br><span class="line">        execlp(<span class="string">&quot;/bin/ls&quot;</span>, <span class="string">&quot;ls&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="comment">// 父进程创建子进程之后进入的分支 </span></span><br><span class="line">    &#123; </span><br><span class="line">        <span class="comment">// 父进程进行等待</span></span><br><span class="line">        wait (<span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">printf</span> (<span class="string">&quot;Child Complete&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;	</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="进程协作-amp-通信"   >
+          <a href="#进程协作-amp-通信" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程协作-amp-通信" class="headerlink" title="进程协作 &amp; 通信"></a>进程协作 &amp; 通信</h2>
+      <ul>
+<li><p>协作进程 &amp; 独立进程</p>
+<ul>
+<li><p>协作进程：能够 ==影响== 其他进程或者 ==受== 其他进程 ==影响== 的进程</p>
+<p>  注：提供相应的环境保证多个进程之间可以协作通信显然更有利于用户</p>
+</li>
+<li><p>独立进程：不能够影响其他进程也不受其他啊进程影响的进程</p>
+</li>
+</ul>
+</li>
+<li><p>进程通信机制（IPC）</p>
+<ul>
+<li><p>共享内存：</p>
+<ul>
+<li><p>定义：允许两个或多个通信进程访问同一块物理内存</p>
+</li>
+<li><p>优点：共享内存的通信方式 ==效率更高== </p>
+<p>  解释：<a style="color:red;">只有在创建共享内存区域的时候需要使用系统调用</a>，进程访问共享区域都是 ==直接访问== 的，不需要使用系统调用</p>
+</li>
+<li><p>缺点：<a style="color:red;">共享内存没有提供进程同步机制</a> -&gt; <a href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5">同步机制</a></p>
+<p>  解释：共享区域有进程正在使用时，其他进程不需要等待当前进程结束就可以使用共享区域，即共享区域没有上锁</p>
+</li>
+</ul>
+<p>  <a style="color:red;">注：共享内存不代表进程之间可以相互访问对方的内存空间，本质上访问的是共享区域</a></p>
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/ypt523/article/details/79958188" >共享内存通信</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/19/ee5fa8257ee9d585f9237842c1c0baca.png" alt="ee5fa8257ee9d585f9237842c1c0baca.png"></p>
+</li>
+<li><p>消息传递</p>
+<ul>
+<li><p>定义：两个或多个进程之间通过发送规定格式的消息进行通信</p>
+</li>
+<li><p>优点：<a style="color:red;">分布式系统/多核处理器中中采用消息传递的方式效率相对更高且容易实现</a></p>
+<p>  注：共享内存在这种情况下会出现高速缓存不一致的情况</p>
+</li>
+<li><p>缺点：消息传递的通信方式 ==效率更低==</p>
+<p>  解释：<a style="color:red;">进程每次发送消息都需要执行系统调用</a>，需要和内核交互，导致执行效率较低</p>
+</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/19/47671e747f498844ea2d896a70bd38e1.png" alt="47671e747f498844ea2d896a70bd38e1.png"></p>
+</li>
+<li><p>优点：(1) 信息共享；(2)计算加速；(3)模块化；(4) 更加便利</p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5">进程通信问题</a></p>
+</li>
+<li><p>生产者-消费者</p>
+<ul>
+<li><p>生产者 &amp; 缓冲区 &amp; 消费者 </p>
+<ul>
+<li><p>生产者：生成数据信息的进程</p>
+</li>
+<li><p>消费者：使用数据信息的进程</p>
+</li>
+<li><p>缓冲区：用于存储生产者生成的数据信息，并且提供给消费者使用数据信息的区域</p>
+<p>  <a style="color:red;">缓冲区分为两类：无界缓冲区：没有实际大小的缓冲区；有界缓冲区：拥有实际大小的缓冲区</a></p>
+</li>
+</ul>
+</li>
+<li><p>过程：</p>
+<ol>
+<li><p>生产者进程生成数据信息提交至缓冲区中</p>
+<p> <a style="color:red;">注：如果缓冲区位有界缓冲区且已经被数据填满，生产者进程必须停止产生数据</a></p>
+</li>
+<li><p>消费者进程从缓冲区中获取数据信息</p>
+<p> <a style="color:red;">注：如果缓冲区中没有任何数据，消费者进程不可以从中获取数据</a></p>
+</li>
+</ol>
+</li>
+<li><p>细节</p>
+<ol>
+<li>生产者-消费者模式不是 23 种设计模式中的；23 种设计模式都是基于面向对象的，该模式是基于面向过程的</li>
+<li><a style="color:red;">生产者-消费者模式时采用共享内存实现的；缓冲区就是两者共享的内存</a></li>
+</ol>
+</li>
+<li><p>实现（循环队列）</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/luego/p/12048857.html" >生产者-消费者模式</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/08/16/os/process/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">http://example.com/2021/08/16/os/process/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/08/16/java/generic/%E6%B3%9B%E5%9E%8B%E6%9C%BA%E5%88%B6/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">泛型编程</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/08/16/blog/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"><span class="paginator-prev__text">Hexo-博客搭建</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">
+          进程概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">
+          进程概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          进程定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          进程状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6%E5%9D%97"><span class="toc-number">1.1.3.</span> <span class="toc-text">
+          进程控制块</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">1.2.</span> <span class="toc-text">
+          进程调度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">
+          进程实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%8D%8F%E4%BD%9C-amp-%E9%80%9A%E4%BF%A1"><span class="toc-number">1.4.</span> <span class="toc-text">
+          进程协作 &amp; 通信</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

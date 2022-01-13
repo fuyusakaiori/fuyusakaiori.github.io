@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="用户系统                           概述        为什么 Linux 需要提供用户管理机制？   核心：[用户管理机制是用于 文件的安全防护措施]{.red} 描述：普通用户只有具备权限才可以进行操作；系统管理员拥有最大的权限从而可以进行 [任何操作]{.green}   Linux 用户管理机制分为几个级别？   定义：①">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 用户系统">
+<meta property="og:url" content="http://example.com/2021/09/11/linux/Linux%20%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="用户系统                           概述        为什么 Linux 需要提供用户管理机制？   核心：[用户管理机制是用于 文件的安全防护措施]{.red} 描述：普通用户只有具备权限才可以进行操作；系统管理员拥有最大的权限从而可以进行 [任何操作]{.green}   Linux 用户管理机制分为几个级别？   定义：①">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/10/8da1f87ae15b28af0420e033acaf4aed.png">
+<meta property="article:published_time" content="2021-09-11T09:26:46.859Z">
+<meta property="article:modified_time" content="2021-09-11T09:47:48.053Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/10/8da1f87ae15b28af0420e033acaf4aed.png"><title>Linux 用户系统 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/11/linux/Linux%20%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Linux 用户系统</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-11</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-11</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="用户系统"   >
+          <a href="#用户系统" class="heading-link"><i class="fas fa-link"></i></a><a href="#用户系统" class="headerlink" title="用户系统"></a>用户系统</h1>
+      
+        <h2 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      <blockquote>
+<p><strong>为什么 Linux 需要提供用户管理机制？</strong></p>
+</blockquote>
+<ul>
+<li>核心：[用户管理机制是用于 <strong>文件的安全防护措施</strong>]{.red}</li>
+<li>描述：普通用户只有具备权限才可以进行操作；系统管理员拥有最大的权限从而可以进行 [任何操作]{.green}</li>
+</ul>
+<blockquote>
+<p><strong>Linux 用户管理机制分为几个级别？</strong></p>
+</blockquote>
+<ul>
+<li>定义：① 用户 ② 用户组 ② 其他用户组</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/08/10/8da1f87ae15b28af0420e033acaf4aed.png" alt="8da1f87ae15b28af0420e033acaf4aed.png" style="zoom: 80%;" />
+
+
+        <h2 id="用户管理"   >
+          <a href="#用户管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h2>
+      
+        <h3 id="概述-1"   >
+          <a href="#概述-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述-1" class="headerlink" title="概述"></a>概述</h3>
+      <ul>
+<li><p>定义：文件的拥有者</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li>普通账号：可以被正常登陆使用的账号</li>
+<li>系统账号：[系统正常运行所必须的用户：不可以被登陆使用的账号]{.red}</li>
+</ul>
+</li>
+<li><p>用户标识符（ UID ）：</p>
+<ul>
+<li>定义：每个用户都具有的唯一标识符</li>
+<li>系统管理员（ UID=0 ）：[可以拥有多个系统管理员：多个用户标识符为 <code>0</code> 的用户]{.red}</li>
+<li>系统账号（ 1&lt;UID&lt;999 ）：1&lt;UID&lt;200：系统自行建立的账号，201&lt;UID&lt;999：用户自行建立的系统账号</li>
+<li>普通账号（ 1000&lt;UID&lt;60000 ）：最新版本的内核已经支持普通账号数量达到 2^32 - 1 个</li>
+<li>细节：[采用普通的方式建立用户时标识符必须不同，但是可以修改文件使得两个账号标识符相同]{.red}</li>
+</ul>
+</li>
+<li><p>用户家目录：</p>
+<ul>
+<li>定义：每个 [普通用户]{.red} 登陆后默认进入的目录 / 每个 [普通用户]{.red} 被创建后默认拥有的目录</li>
+<li>细节：<ul>
+<li>[系统账号默认不具有家目录]{.red} （/etc/passwd 会记录系统账号的家目录但是并不会生成）</li>
+<li>[用户家目录默认只有自己可以访问，用户家目录名默认和用户账号名相同]{.red}</li>
+<li>用户家目录默认创建在 /home 目录下并且内容为空（参考 /etc/default/useradd 文件就知道为什么了）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>配置文件</p>
+<ul>
+<li><p>/etc/passwd：[记录用户各种信息的配置文件：任何用户都具有权限操作]{.red}</p>
+<blockquote>
+<p>用户名 : 密码 : 用户标识符 : 组标识符 : 描述性内容 : 家目录 : 使用的 Shell </p>
+<p>注：[任何用户都具有权限操作所以密码不可以记录在该配置文件中]{.red}</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 普通用户账号的记录</span></span><br><span class="line"><span class="comment"># 原本的密码确实记录在 passwd 文件中，但是由于不安全所以后续就放入了 shadow 文件中，这里的密码字段就采用 x 代替</span></span><br><span class="line">fuyusakaiori:x:1000:1000::/home/fuyusakaiori:/bin/bash</span><br><span class="line"><span class="comment"># 系统用户账号的记录：注意这里系统账号虽然被记录具有家目录，但是这个家目录是没有被创建的</span></span><br><span class="line">system:x:991:986::/home/system:/bin/bash</span><br></pre></td></tr></table></div></figure></li>
+<li><p>/etc/shadow：[记录用户密码的配置文件：仅有系统管理员具有权限操作]{.red}</p>
+<blockquote>
+<p>用户名 : 加密密码 : 最近修改时间 : 下次修改密码最少间隔时间 : 下次修改密码最大间隔时间 : 密码即将过期时提前警告的时间 : 密码过期后经过多少天失效 : 账号失效时间 : 保留</p>
+<p>(1) CentOS 加密方式采用 <strong>SHA512</strong></p>
+<p>(2) [加密密码前添加 ！或者 * 会导致密码失效]{.red}（锁定密码的原理也是这个）</p>
+<p>(3) <strong>密码失效</strong> 后该账号就无法登陆了，<strong>密码过期</strong> 后仍然可以登陆账号，只是系统会提示修改密码</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户的密码记录</span></span><br><span class="line">fuyusakaiori:$6$gio2YePg$/yShZXZO9OhGGivMslwpSNBkwsUXoCmaq/N/qhmQY168uqcQ5ifDLTktvidGXy6SDhAqP/bhErzaJrB2Mf9aw.:18838:0:99999:7:::</span><br><span class="line"><span class="comment"># 查询加密方式</span></span><br><span class="line">authconfig --<span class="built_in">test</span> | grep hashing</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>登陆流程</p>
+<ul>
+<li>系统查找 /etc/passwd 文件看是否存在输入的账号：如果存在就将记录读取出来并且进行下一步；如果不存在显然无法登陆</li>
+<li>系统查找 /etc/shadow 文件看账号密码是否正确：如果正确就能够正常登陆；如果不正确显然也无法登陆</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="管理"   >
+          <a href="#管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#管理" class="headerlink" title="管理"></a>管理</h3>
+      <ul>
+<li><p>前提：[新增、删除、修改用户仅有系统管理员可以使用；用户功能则是普通用户都可以使用的]{.red}</p>
+</li>
+<li><p>新增用户</p>
+<ul>
+<li><p>命令：[useradd [-u uid] [-g 初始用户组] [-G 次要用户组] [-d 家目录绝对路径] 新增用户名]{.green}</p>
+<blockquote>
+<p>[useradd 新增用户名]{.green}：创建用户时使用默认设置（只要没有指定的内容都默认参考配置文件 /etc/default/useradd 进行设置）</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]:useradd username</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>[useradd -u uid 新增用户名]{.green}：创建用户时指定用户标识符</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 普通用户指定用户标识符：(1) 不能够指定已经存在的用户标识符 (2) 可以使用系统账号范围中的标识符，但是不会被视为系统账号，最好不要这样做</span></span><br><span class="line">[root@localhost ~]:useradd -u 2200 username</span><br><span class="line"><span class="comment"># 系统用户指定用户标识符：必须添加 -r 选项才可以真正创建系统账户</span></span><br><span class="line">[root@localhost ~]:useradd -r -u 450 username</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>[useradd -g 初始用户组 -G 次要用户组]{.green}</p>
+<p>(1) [每个用户可以加入多个不同的用户组]{.green}：设置的时候仅可以设置一个，如果需要更多则需要使用其他命令进行追加</p>
+<p>(2) 每个用户默认的初始用户组是自身：不指定初始用户组时会自行创建一个和用户名称相同的用户组，并将用户添加进该用户组</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 指定的用户组必须是存在的</span></span><br><span class="line">[root@localhost ~]:useradd -g initgroup -G othergroup username </span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>[useradd -d 家目录绝对路径]{.green}</p>
+<p>(1) [可以自定义家目录的名称，即可以不和账户名相同]{.red}</p>
+<p>(2) 每个用户默认家目录名称和用户名称相同，并且默认创建家目录，系统账号除外</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 家目录路径建议使用绝对路径</span></span><br><span class="line">[root@localhost ~]:useradd -d pathname username</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>[passwd [-u] [-l] [-S]用户名]{.green}：</p>
+<p>(1) 账号完成创建之后通常没有密码，需要设置密码才可以登录该账号</p>
+<p>(2) 如果不填写用户名，那么修改的就是系统管理员的账号密码</p>
+<p>(3) [系统管理员无论设置何种样式的密码都是可以被接受的，普通用户必须严格按照规范设置密码，否则不予通过]{.red}（ PAM 模块检验 ）</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 密码的形式是严格限制的</span></span><br><span class="line"><span class="comment"># 1. 密码不能够和账号相同						# 5. 密码不要使用简单的关系式</span></span><br><span class="line"><span class="comment"># 2. 密码尽量不要选择用字典里面会出现的字符串	  # 6. 密码尽量使用大小写字符、数字、特殊字符的组合</span></span><br><span class="line"><span class="comment"># 3. 密码需要超过 8 个字符</span></span><br><span class="line"><span class="comment"># 4. 密码不要使用个人信息</span></span><br><span class="line">[root@localhost ~]:passwd username</span><br><span class="line"><span class="comment"># 锁定密码：即使密码失效，账号无法登陆</span></span><br><span class="line">[root@localhost ~]:passwd -l username</span><br><span class="line"><span class="comment"># 解锁密码：让密码重新生效</span></span><br><span class="line">[root@localhost ~]:passwd -u username</span><br><span class="line"><span class="comment"># 列出密码相关的详细信息：即 /etc/shadow 中的记录</span></span><br><span class="line">[root@localhost ~]:passwd -S username</span><br></pre></td></tr></table></div></figure></li>
+<li><p>配置文件：/etc/default/useradd：创建用户时默认值的配置文件</p>
+<blockquote>
+<p><strong>GROUP</strong>：配置用户默认进入的用户组（CentOS、RHEL、Fedora 发行版没有采用该默认值、SUSE 采用该默认值（<a href="#">用户组机制</a>））</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认每个用户都添加进入标识符为 100 的用户组（user 组）</span></span><br><span class="line">GROUP=100</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>HOME</strong>：配置用户家目录默认位置（[系统管理员的家目录并不在该目录下]{.red）</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认每个用户的家目录都存放在 /home 目录下</span></span><br><span class="line">HOME=/home</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>INACTIVE</strong>：配置密码过期是否失效（-1 ：密码即使过期也永不失效；0 ：密码过期后立刻失效；其他数字：经过多少天后失效）</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认密码永不过期：</span></span><br><span class="line">INACTIVE=-1</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>EXPIRE</strong>：配置账号是否失效（可以在会员付费的系统中使用该属性）</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认永不失效</span></span><br><span class="line">EXPIRE=</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>SHELL</strong>：配置用户登陆使用的命令行程序</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认使用 bash</span></span><br><span class="line">SHELL=/bin/bash			</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>SKEL</strong>：配置家目录创建参考的基准目录（该目录下有什么，家目录创建时也会具有相应的内容）</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该目录下默认为空</span></span><br><span class="line">SKEL=/etc/skel</span><br><span class="line">CREATE_MAIL_SPOOL=yes</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>删除用户</p>
+<ul>
+<li><p>命令：[userdel [-r] 用户名]{.green}</p>
+<blockquote>
+<p>[userdel 用户名]{.green}：[删除用户但是保留用户的家目录下的所有文件]{.red}</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该用户被删除后尽管保留了家目录但是依然不可以登陆了</span></span><br><span class="line">[root@localhost ~]:userdel username</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>[userdel -r 用户名]{.green}：[删除用户并且不保留家目录]{.red}</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]:userdel -r username</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>修改用户</p>
+<ul>
+<li><p>命令：[usermod [-g 初始用户组] [-G 次要用户组] [-d 家目录路径] [-a 增加的用户组] [-l 新的用户名] [-u 新的uid] 用户名]{.green}</p>
+<blockquote>
+<p>[usermod [-g 初始用户组] [-G 次要用户组] [-d 家目录路径]]{.green}：更新用户所属的初始用户组，次要用户组，家目录路径</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">		</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>[usermod -aG 增加的用户组 用户名]{.green}：</p>
+<p>(1) [每次仅可以追加一个次要用户组，不可以追加多个]{.red}</p>
+<p>(2) 必须配合 -G 选项使用</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以使用用户功能中提供的 groups 命令查看当前用户到底属于哪些组</span></span><br><span class="line">[root@localhost ~]:usermod -aG firstgroup username</span><br><span class="line">[root@localhost ~]:usermod -aG secondgroup username</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>[usermod -l 新的用户名 -u 新的uid 用户名]{.green}</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># uid 尽量在创建之后不要乱改，容易出问题</span></span><br><span class="line">[root@localhost ~]:usermod -l newusername -u uid username</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>用户功能</p>
+<ul>
+<li><p>命令：</p>
+<blockquote>
+<p>[id 用户名]{.green}：查看用户的相关信息</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]:id username</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="用户组管理"   >
+          <a href="#用户组管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#用户组管理" class="headerlink" title="用户组管理"></a>用户组管理</h2>
+      
+        <h3 id="概述-2"   >
+          <a href="#概述-2" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述-2" class="headerlink" title="概述"></a>概述</h3>
+      <ul>
+<li><p>定义：多个相互协作的用户组成的集合</p>
+</li>
+<li><p>用户组标识符（ GID ）：每个用户组都具有的唯一的标识符</p>
+<p>  注：[用户组也分为系统用户组和普通用户组，用户组标识符遵循的规范和用户标识符是一致的]{.red}</p>
+</li>
+<li><p>用户组机制</p>
+<ul>
+<li><p>私有用户组机制：[每个用户建立时，系统会建立一个相应的用户组，并将该新用户放入新用户组中]{.red}</p>
+<p>  注：CentOS、RHEL、Fedora 采用私有用户组机制</p>
+</li>
+<li><p>公有用户组机制：每个用户建立时，系统直接将其放入用户组默认值中（ users 组）</p>
+<p>  注：SUSE 采用公有用户组机制</p>
+</li>
+</ul>
+</li>
+<li><p>分类：</p>
+<ul>
+<li>有效用户组：[每个文件所属的用户组都是该用户的有效用户组]{.red}</li>
+<li>次要用户组：用户存在于组内，但是对于文件来说是其他用户组</li>
+</ul>
+</li>
+<li><p>配置文件</p>
+<ul>
+<li><p>/etc/group：记录用户组相关的所有信息的配置文件</p>
+<blockquote>
+<p>用户组名 : 用户组密码 : 用户组标识符 : 用户组支持的账号名称</p>
+<p>(1) 用户组密码：每个组都可以设置 <strong>用户组管理员</strong>，用户组密码提供给用户组管理员使用，用户组管理员可以自行进行用户相关操作（用户组管理员现在实际已经被 sudo 命令代替）</p>
+<p>(2) [系统默认建立的用户组是不会将该组中的用户添加进去的]{.red}，所以看到的可能是空白</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户自行建立组：密码依然为 x 保存在 gshadow 文件中</span></span><br><span class="line">anime:x:1001:shinobu</span><br><span class="line"><span class="comment"># 新增用户时系统默认建立的用户组</span></span><br><span class="line">fuyusakaiori:x:1000:</span><br></pre></td></tr></table></div></figure></li>
+<li><p>/etc/gshadow：记录用户组密码相关的所有信息配置文件（[用户组通常禁止使用密码]{.red}）</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">anime:!::shinobu</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="管理-1"   >
+          <a href="#管理-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#管理-1" class="headerlink" title="管理"></a>管理</h3>
+      <ul>
+<li><p>前提：[新增、删除、切换用户组的命令只能够由系统管理员使用]{.red}（包括用户组管理员）</p>
+</li>
+<li><p>新增用户组：[groupadd [-g gid] [-r] 用户组名称]{.green}</p>
+<blockquote>
+<p>[groupadd -g gid 用户组名称]{.green}</p>
+</blockquote>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建立普通的用户组</span></span><br><span class="line">[root@localhost ~]:groupadd -g 1145 groupname</span><br><span class="line"><span class="comment"># 建立系统用户组</span></span><br><span class="line">[root@localhost ~]:groupadd -r -g 450 groupname</span><br></pre></td></tr></table></div></figure></li>
+<li><p>删除用户组：[groupdel 用户组名称]{.green}</p>
+<ul>
+<li><p>[删除的用户组必须是没有用户作为初始用户组]{.red}：如果有用户在创建时就制定了该用户组，那么只要这个用户存在，那么这个用户组就不能够删除</p>
+</li>
+<li><p>[非空的用户组都是可以删除的，除了初始用户组]{.red}</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]:groupdel groupname</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>查看用户所属用户组：[groups 用户名]{.green}：查看当前用户所属的用户组（[命令输出的第一个用户组为有效用户组]{.red}）</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果不添加用户名的话就是查看当前用户所属的用户组</span></span><br><span class="line">[root@localhost ~]:groups username</span><br></pre></td></tr></table></div></figure></li>
+<li><p>切换有效用户组：[newgrp 用户组名]{.green}</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换的有效用户组必须是该用户支持的用户组</span></span><br><span class="line">[root@localhost ~]:newgrps groupname</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+
+        <h2 id="运行级别"   >
+          <a href="#运行级别" class="heading-link"><i class="fas fa-link"></i></a><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h2>
+      <ul>
+<li>级别 0：关机</li>
+<li>级别 1：单用户（++找回密码++）</li>
+<li>级别 2：多用户状态没有网络</li>
+<li>级别 3：++多用户状态有网络服务++</li>
+<li>级别 4：系统未使用保留给用户</li>
+<li>级别 5：图形用户界面</li>
+<li>级别 6：系统重启</li>
+</ul>
+<figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换运行级别</span></span><br><span class="line">init status</span><br><span class="line"><span class="comment"># 获取当前系统的运行级别</span></span><br><span class="line">systemctl get-default</span><br><span class="line"><span class="comment"># 设置默认运行级别为图形化界面：需要 root 权限</span></span><br><span class="line">systemctl set-default graphical.target </span><br></pre></td></tr></table></div></figure>
+
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/11/linux/Linux%20%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F/">http://example.com/2021/09/11/linux/Linux%20%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/11/linux/Linux%20%E8%BF%9B%E7%A8%8B%E7%B3%BB%E7%BB%9F/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">Linux 进程系统</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/11/linux/Linux%20%E5%8E%86%E5%8F%B2/"><span class="paginator-prev__text">Linux 历史</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">
+          用户系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">
+          用户管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">
+          用户组管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">
+          管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="toc-number">1.4.</span> <span class="toc-text">
+          运行级别</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

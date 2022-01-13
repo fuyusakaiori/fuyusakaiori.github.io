@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="反射机制       :::warning  反射机制是非常难解释清楚的，主要原因有如下几个 反射机制概念本身就很抽象，难以理解其概念 反射机制在初学时使用的机会很少，因为初学者甚至都没有类加载的概念 反射机制涉及到虚拟机中类加载的概念，在各个框架中也有很广泛的应用，没有这些的基本了解真的很难理解   我会尽可能将反射最基础的内容和虚拟机联系起来  :::">
+<meta property="og:type" content="article">
+<meta property="og:title" content="反射机制">
+<meta property="og:url" content="http://example.com/2021/09/22/java/reflection/%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="反射机制       :::warning  反射机制是非常难解释清楚的，主要原因有如下几个 反射机制概念本身就很抽象，难以理解其概念 反射机制在初学时使用的机会很少，因为初学者甚至都没有类加载的概念 反射机制涉及到虚拟机中类加载的概念，在各个框架中也有很广泛的应用，没有这些的基本了解真的很难理解   我会尽可能将反射最基础的内容和虚拟机联系起来  :::">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-22T05:44:32.810Z">
+<meta property="article:modified_time" content="2021-09-22T07:25:15.004Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary"><title>反射机制 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/22/java/reflection/%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">反射机制</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-22</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-22</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="反射机制"   >
+          <a href="#反射机制" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h1>
+      <p>:::warning</p>
+<ul>
+<li>反射机制是非常难解释清楚的，主要原因有如下几个<ul>
+<li>反射机制概念本身就很抽象，难以理解其概念</li>
+<li>反射机制在初学时使用的机会很少，因为初学者甚至都没有类加载的概念</li>
+<li>反射机制涉及到虚拟机中类加载的概念，在各个框架中也有很广泛的应用，没有这些的基本了解真的很难理解</li>
+</ul>
+</li>
+<li>我会尽可能将反射最基础的内容和虚拟机联系起来</li>
+</ul>
+<p>:::</p>
+<p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/a745233700/article/details/82893076?ops_request_misc=&request_id=&biz_id=102&utm_term=Java%20%E5%8F%8D%E5%B0%84&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-82893076.nonecase&spm=1018.2226.3001.4187" >Java基础篇：反射机制详解</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是类加载机制?</strong></p>
+</blockquote>
+<p>:::info</p>
+<p>详细了解：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/JVM/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" >Java 虚拟机-类加载机制</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是反射?</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：</p>
+<ul>
+<li>[虚拟机处于 <strong>运行状态</strong> 中]{.red}</li>
+<li>[对于任意一个类都能够知道这个类所有的属性和方法]{.blue}</li>
+<li>[对于任意一个对象，都能够调用它的任意一个方法]{.blue}</li>
+</ul>
+</li>
+<li><p>核心：[在进程运行期间将类 <strong>动态</strong> 地加载到虚拟机内存中使用]{.red}</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>为什么要使用反射?</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>如何使用反射?</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>反射的原理是什么?</strong></p>
+</blockquote>
+
+        <h2 id="反射"   >
+          <a href="#反射" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射" class="headerlink" title="反射"></a>反射</h2>
+      <ul>
+<li><p>概念解释    </p>
+<ul>
+<li>Java 程序处于运行过程中</li>
+<li><strong>根据</strong> Java 程序的<strong>需要</strong></li>
+<li><strong>动态</strong>加载 .class 文件</li>
+<li>图示解释</li>
+</ul>
+</li>
+<li><p>目的解释</p>
+<ul>
+<li>更加灵活地根据需求加载 .class 文件</li>
+</ul>
+<p>  例：每个数据库系统都有不同的数据库驱动（MySQL Oracle）；</p>
+<p>  如果在编写代码的时候无法确定程序在执行的过程中究竟使用哪一套数据库驱动系统；</p>
+<p>  采用反射机制使用 Class.forName（<em>需要加载的类的全限定名</em>）加载需要使用的数据库驱动</p>
+</li>
+<li><p>Java 成为<strong>准动态</strong>语言</p>
+</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; forName(String name, <span class="keyword">boolean</span> initialize,</span><br><span class="line">                                   ClassLoader loader)</span><br><span class="line">        <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">    &#123;</span><br><span class="line">        Class&lt;?&gt; caller = <span class="keyword">null</span>;</span><br><span class="line">        SecurityManager sm = System.getSecurityManager();</span><br><span class="line">        <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Reflective call to get caller class is only needed if a security manager</span></span><br><span class="line">            <span class="comment">// is present.  Avoid the overhead of making this call otherwise.</span></span><br><span class="line">            caller = Reflection.getCallerClass();</span><br><span class="line">            <span class="keyword">if</span> (sun.misc.VM.isSystemDomainLoader(loader)) &#123;</span><br><span class="line">                ClassLoader ccl = ClassLoader.getClassLoader(caller);</span><br><span class="line">                <span class="keyword">if</span> (!sun.misc.VM.isSystemDomainLoader(ccl)) &#123;</span><br><span class="line">                    sm.checkPermission(</span><br><span class="line">                        SecurityConstants.GET_CLASSLOADER_PERMISSION);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// forName 方法会自动选择类加载器(ClassLoader)加载.class文件</span></span><br><span class="line">        <span class="keyword">return</span> forName0(name, initialize, loader, caller);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="反射的用途"   >
+          <a href="#反射的用途" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射的用途" class="headerlink" title="反射的用途"></a>反射的用途</h3>
+      <ul>
+<li>创建实例</li>
+<li>框架实现的原理</li>
+</ul>
+
+        <h3 id="反射主要内容"   >
+          <a href="#反射主要内容" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射主要内容" class="headerlink" title="反射主要内容"></a>反射主要内容</h3>
+      
+        <h4 id="Javac"   >
+          <a href="#Javac" class="heading-link"><i class="fas fa-link"></i></a><a href="#Javac" class="headerlink" title="Javac"></a>Javac</h4>
+      <ul>
+<li><p>基本概念：Javac 全称 Java Compiler </p>
+</li>
+<li><p>目的</p>
+<ul>
+<li><p>Java 源代码实是由 Javac.exe 执行的</p>
+<p>  也就是说我们执行 Java 程序实际上是在执行 Javac.exe</p>
+</li>
+<li><p>Javac 将由 <strong>Java 语言编写的源代码</strong> 转换成 机器能够识别的 <strong>字节码文件(.class)</strong></p>
+<p>  ![image-20210307172652963](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307172652963.png)</p>
+</li>
+</ul>
+</li>
+<li><p>使用</p>
+</li>
+</ul>
+
+        <h4 id="类加载器"   >
+          <a href="#类加载器" class="heading-link"><i class="fas fa-link"></i></a><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4>
+      <ul>
+<li><p>概念：将 C++ 和 Java 编写完成的 <strong>“类”</strong> 加载到<strong>堆中的方法区</strong>中生成 <strong>Class 对象</strong></p>
+<ul>
+<li>类：所有的类（.java）文件都被 Javac 编译成 .class 文件；所以实际类加载器加载的是 .class 文件</li>
+</ul>
+</li>
+<li><p>分类</p>
+<ul>
+<li>BootstrapClassLoader<ul>
+<li>功能：负责加载 Java 语言中的最核心的类库（java.lang.*） 和 构造 ExtClassLoader 和 APPClassLoader</li>
+<li>特点<ul>
+<li>C++编写</li>
+<li>涉及到虚拟机的本地实现细节，不能够被直接调用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ExtClassLoader<ul>
+<li>功能：负责加载 Java 语言中的扩展类库（javax.*）</li>
+<li>特点<ul>
+<li>Java 编写</li>
+<li>开发者可以实际调用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>APPClassLoader<ul>
+<li>功能：主要负责加载应用程序的主函数类</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>类加载机制</p>
+<ul>
+<li><p>图示</p>
+<p>  ![preview](D:\Typora\Typora\文件\Java 反射机制.assets\v2-b9d39568c0e3f87a5df6a0cbfe753cda_r.jpg)</p>
+</li>
+</ul>
+</li>
+<li><p>双亲委派机制</p>
+<ul>
+<li><p>图示</p>
+<p>  ![image-20210307175110119](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307175110119.png)</p>
+</li>
+<li><p>解释</p>
+<p>  从 <strong>自定义类加载器</strong> 开始判断当前的类是否加载过；</p>
+<p>  如果当前的类已经在任何一个 类加载器中加载过了，那么当前类就不需要加载了</p>
+<p>  如果直到 <strong>核心类库加载器</strong> 中还没有加载过，那么开始从 <strong>核心类库加载器</strong> 开始判断当前类是否可以被加载</p>
+<p>  如果当前的类加载器无法加载那么依次向下提交，直到 <strong>自定义类加载器</strong></p>
+<p>  如果连 <strong>自定义类加载器</strong> 都无法加载，那么证明当前的类是无法被加载的</p>
+</li>
+<li><p>目的</p>
+<ul>
+<li>避免类的重复加载</li>
+<li>避免基础核心类库被篡改（自行编写的 String 类是无法被加载的）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/codeyanbao/article/details/82875064" >双亲委派机制1</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/54693308" >双亲委派机制2</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+
+        <h4 id="实例构建过程"   >
+          <a href="#实例构建过程" class="heading-link"><i class="fas fa-link"></i></a><a href="#实例构建过程" class="headerlink" title="实例构建过程"></a>实例构建过程</h4>
+      <p>![image-20210307180421814](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307180421814.png)</p>
+
+        <h4 id="Class-对象"   >
+          <a href="#Class-对象" class="heading-link"><i class="fas fa-link"></i></a><a href="#Class-对象" class="headerlink" title="Class 对象"></a>Class 对象</h4>
+      <ul>
+<li>概念：.class 文件被类加载器载入堆的方法区中生成 Class 对象</li>
+<li>内容<ul>
+<li>Class 对象具有<strong>被加载类</strong>的所有信息（注解，方法，字段，构造函数等）</li>
+<li>Class 对象提供 <strong>Method Field Constructor <strong>等</strong>静态类</strong>存储<strong>方法</strong>，<strong>字段</strong>，<strong>构造器</strong>的所有信息</li>
+</ul>
+</li>
+<li>源代码</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ReflectionData</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">       <span class="keyword">volatile</span> Field[] declaredFields; <span class="comment">// 字段和方法的信息太多，所以Class对象提供专门的静态类用于存储信息</span></span><br><span class="line">       <span class="keyword">volatile</span> Field[] publicFields;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] declaredMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] publicMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Constructor&lt;T&gt;[] declaredConstructors;</span><br><span class="line">       <span class="keyword">volatile</span> Constructor&lt;T&gt;[] publicConstructors;</span><br><span class="line">       <span class="comment">// Intermediate results for getFields and getMethods</span></span><br><span class="line">       <span class="keyword">volatile</span> Field[] declaredPublicFields;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] declaredPublicMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Class&lt;?&gt;[] interfaces;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// Value of classRedefinedCount when we created this ReflectionData instance</span></span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> redefinedCount;</span><br><span class="line"></span><br><span class="line">       ReflectionData(<span class="keyword">int</span> redefinedCount) &#123;</span><br><span class="line">           <span class="keyword">this</span>.redefinedCount = redefinedCount;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h4 id="API"   >
+          <a href="#API" class="heading-link"><i class="fas fa-link"></i></a><a href="#API" class="headerlink" title="API"></a>API</h4>
+      <ul>
+<li>获取类的方式</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一种方式 -- 任意情况都能够使用</span></span><br><span class="line">Class clz = Class.forName(<span class="string">&quot;java.lang.String&quot;</span>);</span><br><span class="line"><span class="comment">// 第二种方式 -- 明确知道类的使用方法</span></span><br><span class="line">Class clz = String.class;</span><br><span class="line"><span class="comment">// 第三种方式</span></span><br><span class="line">String str = <span class="keyword">new</span> String(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">Class clz = str.getClass();</span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li>获得构造器的方式</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Constructor <span class="title">getConstructor</span><span class="params">(Class[] params)</span> -- 获得使用特殊的参数类型的公共构造函数， </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor[] <span class="title">getConstructors</span><span class="params">()</span> -- 获得类的所有公共构造函数 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor <span class="title">getDeclaredConstructor</span><span class="params">(Class[] params)</span> -- 获得使用特定参数类型的构造函数<span class="params">(与接入级别无关)</span> </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor[] <span class="title">getDeclaredConstructors</span><span class="params">()</span> -- 获得类的所有构造函数<span class="params">(与接入级别无关)</span></span></span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li>获得字段的方式</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Field <span class="title">getField</span><span class="params">(String name)</span> -- 获得命名的公共字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field[] <span class="title">getFields</span><span class="params">()</span> -- 获得类的所有公共字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field <span class="title">getDeclaredField</span><span class="params">(String name)</span> -- 获得类声明的命名的字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field[] <span class="title">getDeclaredFields</span><span class="params">()</span> -- 获得类声明的所有字段</span></span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li>获得方法的方式</li>
+</ul>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Method <span class="title">getMethod</span><span class="params">(String name, Class[] params)</span> -- 使用特定的参数类型，获得命名的公共方法 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method[] <span class="title">getMethods</span><span class="params">()</span> -- 获得类的所有公共方法 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method <span class="title">getDeclaredMethod</span><span class="params">(String name, Class[] params)</span> -- 使用特写的参数类型，获得类声明的命名的方法</span></span><br><span class="line"><span class="function"><span class="comment">/* </span></span></span><br><span class="line"><span class="comment"><span class="function">这里必须要传入 参数的类型 而且只能够是 Class 对象</span></span></span><br><span class="line"><span class="comment"><span class="function">不能够只传入方法的名称，这样是无法找到方法的（JVM实际上是在Class对象中循环遍历找到的）</span></span></span><br><span class="line"><span class="comment"><span class="function">重载的实现过程实际上是 JVM 在执行方法的时候将参数都传入进去了，所以反射获取方法的时候同样需要传递参数</span></span></span><br><span class="line"><span class="comment"><span class="function">*/</span></span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method[] <span class="title">getDeclaredMethods</span><span class="params">()</span> -- 获得类声明的所有方法</span></span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.zhihu.com/question/24304289?sort=created" >Java 反射机制</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><a href="jianshu.com/p/9be58ee20dee">Java反射 API</a></p>
+</blockquote>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/22/java/reflection/%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/">http://example.com/2021/09/22/java/reflection/%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/23/jvm/runtime/heapspace/%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">堆空间-概述</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/21/jvm/runtime/methodarea/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0/"><span class="paginator-prev__text">字符串常量池</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">
+          反射机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84"><span class="toc-number">1.1.</span> <span class="toc-text">
+          反射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E7%9A%84%E7%94%A8%E9%80%94"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          反射的用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          反射主要内容</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Javac"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">
+          Javac</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">
+          类加载器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E6%9E%84%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">
+          实例构建过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Class-%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">
+          Class 对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#API"><span class="toc-number">1.1.2.5.</span> <span class="toc-text">
+          API</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

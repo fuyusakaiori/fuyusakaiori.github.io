@@ -1,0 +1,697 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="垃圾回收器                           概述       :::warning ① 垃圾回收器是虚拟机中具体执行垃圾回收的部分，也是垃圾回收算法的具体实现 ② 不过后续许多的垃圾回收器并不是严格使用此前提到的算法，有非常多不同的改进 ③ Java 社区中的许多公司都开发了自己的虚拟机，诸如 IBM、Oracle、RedHat 等等 ④">
+<meta property="og:type" content="article">
+<meta property="og:title" content="垃圾回收-垃圾回收器">
+<meta property="og:url" content="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="垃圾回收器                           概述       :::warning ① 垃圾回收器是虚拟机中具体执行垃圾回收的部分，也是垃圾回收算法的具体实现 ② 不过后续许多的垃圾回收器并不是严格使用此前提到的算法，有非常多不同的改进 ③ Java 社区中的许多公司都开发了自己的虚拟机，诸如 IBM、Oracle、RedHat 等等 ④">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器分类.fg1iu3bz6ww.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器组合图示.2b22lycmp7b4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/吞吐量与延迟.tunha27nl68.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/查看-Serial-垃圾回收器.59tbi2y2k3k0.png">
+<meta property="article:published_time" content="2021-09-28T09:17:53.928Z">
+<meta property="article:modified_time" content="2021-10-03T13:07:53.730Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器分类.fg1iu3bz6ww.png"><title>垃圾回收-垃圾回收器 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">垃圾回收-垃圾回收器</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-03</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="垃圾回收器"   >
+          <a href="#垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h1>
+      
+        <h2 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      <p>:::warning</p>
+<p>① 垃圾回收器是虚拟机中具体执行垃圾回收的部分，也是垃圾回收算法的具体实现</p>
+<p>② 不过后续许多的垃圾回收器并不是严格使用此前提到的算法，有非常多不同的改进</p>
+<p>③ Java 社区中的许多公司都开发了自己的虚拟机，诸如 IBM、Oracle、RedHat 等等</p>
+<p>④ 不同的公司研发的不同的虚拟机，以及虚拟机的逐步改进，可能会让初看的同学感到混乱</p>
+<p>⑤ 所以我打算先把垃圾回收器的发展历史写出来，先了解大致有什么垃圾回收器，再进一步了解</p>
+<p>:::</p>
+
+        <h3 id="历史"   >
+          <a href="#历史" class="heading-link"><i class="fas fa-link"></i></a><a href="#历史" class="headerlink" title="历史"></a>历史</h3>
+      <ul>
+<li>伴随 Java 虚拟机诞生的 [两款串行执行垃圾回收器应该是 Serial 和 Serial Old]{.red}<ul>
+<li>[Serial 主要用于收集年轻代、Serial Old 主要用于收集老年代]{.red}</li>
+</ul>
+</li>
+<li>JDK 1.3 推出了第一款能够 [并行执行的垃圾回收器 ParNew]{.red}<ul>
+<li>ParNew 是 Serial 垃圾回收器的多线程版本</li>
+</ul>
+</li>
+<li>JDK 1.4 推出了 [高吞吐量的并行执行的垃圾回收器 Parallel Scavenge]{.red}<ul>
+<li>[Parallel Scavenge 主要用于收集年轻代]{.red}</li>
+<li>Parallel Scavenge 并不是采用 HotSpot 虚拟机规定的分代框架，导致后面无法和 Concurrent Mark Sweep 配合</li>
+</ul>
+</li>
+<li>JDK 5 推出了能够 [并发执行的垃圾回收器 Concurrent Mark Sweep]{.red}<ul>
+<li>Concurrent Mark Sweep 是第一款能够实现并发的垃圾回收器</li>
+<li>[Concurrent Mark Sweep 主要和 ParNew 进行配合]{.red}</li>
+</ul>
+</li>
+<li>JDK 6 时推出 [Prarallel Old 垃圾回收器]{.red}<ul>
+<li>Prarallel Old 垃圾回收器主要用于收集老年代</li>
+<li>[默认使用 Concurrent Mark Sweep + ParNew 的组合]{.red}</li>
+</ul>
+</li>
+<li>JDK 7 时 [全能垃圾回收器 Garbage First]{.red} 被推出</li>
+<li>JDK 8 时 [默认使用 Parallel Scavenge + Parallel Old 组合]{.red}</li>
+<li>JDK 9 时 使用 Garbage First 垃圾回收器替代此前的组合<ul>
+<li>Concurrent Mark Sweep 垃圾回收器则不被推荐使用</li>
+</ul>
+</li>
+<li>JDK 11 时引入 [两款前沿的垃圾回收器 Epsilon 和 ZGC]{.red}<ul>
+<li>Epsilon 是无操作垃圾回收器</li>
+<li>[ZGC 是 Oralce 自主开发的垃圾回收器，仍然处于实验性质]{.blue}</li>
+</ul>
+</li>
+<li>JDK 12 时引入 [Shenandoah 垃圾回收器]{.red}<ul>
+<li>[Shenandoah 垃圾回收器是由 RedHat 开发的]{.blue}</li>
+</ul>
+</li>
+<li>JDK 14 时彻底移除 Concurrent Mark Sweep 垃圾回收器</li>
+</ul>
+<p>:::info</p>
+<p>① 关于这个发展历史，我觉得非常搞笑的一点是，网络上大多数博客提到的都是 JDK 1.3 开始采用第一款垃圾回收器</p>
+<p>② 可是 JDK 1.0 到 JDK 1.3 中间有三年的过度，那不可能这三年间虚拟机没有垃圾回收器吧，太扯了</p>
+<p>③ 《深入理解虚拟机》中提到 JDK 1.3 之前都是采用的 Serial 垃圾回收器，我觉得还比较合理</p>
+<p>:::</p>
+
+        <h3 id="分类"   >
+          <a href="#分类" class="heading-link"><i class="fas fa-link"></i></a><a href="#分类" class="headerlink" title="分类"></a>分类</h3>
+      <p>:::info</p>
+<p>不同的垃圾回收器针对的堆空间区域不同，而且有并行与并发的区别</p>
+<p>:::</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器分类.fg1iu3bz6ww.png" alt="垃圾回收器分类" style="zoom:80%;" />
+
+<ul>
+<li><p>按照垃圾回收线程数量分类</p>
+<ul>
+<li>垃圾回收的执行过程中可以启用多条垃圾回收线程并行执行，也可以单线程串行执行</li>
+<li>[串行（单线程）：常用于客户端模式的下的虚拟机中；在单核处理器中的表现甚至优于并行执行的效率]{.red}</li>
+<li>[并行（多线程）：常用于服务端模式下的虚拟机中；在多核处理器中的效果较好]{.red}</li>
+</ul>
+</li>
+<li><p>按照垃圾回收线程和用户线程关系分类</p>
+</li>
+<li><p>按照工作区域分类</p>
+<ul>
+<li>垃圾回收算法中提到了分代算法，针对不同的堆空间区域采用不同的算法</li>
+<li>垃圾回收算法的具体实现又是垃圾回收器，所以最早垃圾回收器也是针对不同区域设计的</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="组合"   >
+          <a href="#组合" class="heading-link"><i class="fas fa-link"></i></a><a href="#组合" class="headerlink" title="组合"></a>组合</h3>
+      <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器组合图示.2b22lycmp7b4.png" alt="垃圾回收器组合图示" style="zoom:80%;" />
+
+<ul>
+<li>[最早的垃圾回收器组合：Serial + Serial Old]{.blue}</li>
+<li>[JDK 6 时代的垃圾回收器组合：ParNew + CMS]{.blue}</li>
+<li>[JDK 8 时代的垃圾回收器组合：Parallel Scavenge + Parallel Old]{.blue}</li>
+<li>[JDK 9 时代的垃圾回收器：G1]{.blue}</li>
+</ul>
+
+        <h3 id="性能指标"   >
+          <a href="#性能指标" class="heading-link"><i class="fas fa-link"></i></a><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3>
+      <p>:::info</p>
+<p>就好比采用时间复杂度衡量算法的好坏一样，需要有相应的标准衡量垃圾回收器性能的好坏</p>
+<p>:::</p>
+<ul>
+<li><p>核心指标：</p>
+<ul>
+<li>[延迟（Latency）：垃圾回收过程中用户线程暂停的总时间]{.red}</li>
+<li>[吞吐量（Throughput）：$$\frac{\text{用户线程运行时间}}{用户线程运行时间 + 垃圾回收时间}$$]{.red}</li>
+<li>[内存占用（Footprint）：堆空间的大小]{.red}</li>
+</ul>
+</li>
+<li><p>不可能三角（类似于分布式系统中的 CAP 理论）</p>
+<ul>
+<li><p>垃圾回收器想要减少 STW 带来的延迟影响就只能够允许并发，将整个垃圾回收过程分成几个阶段进行</p>
+<p>  但是分阶段之后就会造成吞吐量的下降，所以这两个条件是很难一起满足的</p>
+</li>
+<li><p>虚拟机想要使用更大的堆空间，那么回收的过程需要垃圾回收器扫描的区域就变大了，耗费的时间就变长了</p>
+<p>  STW 带来的延迟影响就更加明显，所以这两个条件也是非常难以同时满足的</p>
+</li>
+<li><p>总结：[最优秀的垃圾回收器也最多只能够满足其中的两个条件，是无法同时满足三个条件的]{.red}</p>
+</li>
+<li><p>问题：可能初学的时候会觉得延迟和吞吐量并不是矛盾的，无法理解为什么分阶段之后就会造成吞吐量下降，这里用图示来演示</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/吞吐量与延迟.tunha27nl68.png" alt="吞吐量与延迟" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>其余指标：[垃圾回收器为了标记清除垃圾所维护的额外信息占用的内存]{.blue}</p>
+<ul>
+<li>可达性分析中维护引用采用的 Oopmap 占用的空间</li>
+<li>记录跨代引用的卡表占用的空间，以及维护卡表所需要的操作开销</li>
+</ul>
+</li>
+<li><p>核心：[未来所有垃圾回收器都是朝着在 <strong>确保延迟可控的情况尽最大可能提升吞吐量</strong> 的方向努力]{.red}</p>
+</li>
+</ul>
+
+        <h2 id="垃圾回收器-1"   >
+          <a href="#垃圾回收器-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收器-1" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h2>
+      
+        <h3 id="7-大经典垃圾回收器"   >
+          <a href="#7-大经典垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#7-大经典垃圾回收器" class="headerlink" title="7 大经典垃圾回收器"></a>7 大经典垃圾回收器</h3>
+      <p>:::info</p>
+<p>① 前面的串行和并行垃圾收集器都是比较简单，算法都是基于此前提到过的基础算法</p>
+<p>② 后面的并发和全能回收器的理解具有一定的难度，一些细节是缺失的，算法是有改进的</p>
+<p>:::</p>
+
+        <h4 id="串行垃圾回收器"   >
+          <a href="#串行垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#串行垃圾回收器" class="headerlink" title="串行垃圾回收器"></a>串行垃圾回收器</h4>
+      
+        <h5 id="Serial-垃圾回收器"   >
+          <a href="#Serial-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Serial-垃圾回收器" class="headerlink" title="Serial 垃圾回收器"></a>Serial 垃圾回收器</h5>
+      <ul>
+<li><p>历史：JDK 1.3 之前新生代垃圾收集器的唯一选择，是历史最长最基础的垃圾收集器</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>[针对堆空间中的新生代回收垃圾]{.red}</li>
+<li>[采用 <strong>标记-复制</strong> 算法 <strong>串行回收</strong> 新生代的垃圾]{.red}<ul>
+<li>标记-复制算法效率相对较高</li>
+<li>串行回收不仅造成用户线程长时间的暂停，还因为其单线程所以总的效率相对较低</li>
+</ul>
+</li>
+<li>[默认在客户端模式下采用的垃圾回收器，也可以手动设置为服务器端下使用（没啥意义）]{.red}</li>
+<li>默认 Serial 和 Serial Old 进行搭配</li>
+</ul>
+</li>
+<li><p>优点：</p>
+<ul>
+<li>[所有垃圾收集器中占用额外内存最小的（不需要记录太多的信息辅助垃圾收集）]{.red}</li>
+<li>[单核处理器下运行效果非常好，相比于其他串行垃圾收集器简单高效]{.red}<ul>
+<li>可以在桌面应用程序中应用</li>
+<li>也可以在微服务中应用（客户端）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>[串行回收会造成长时间的用户线程暂停，效率相对来说较低]{.green}</li>
+<li>[多核处理器下就明显比不过并行的垃圾回收器，无法应用于服务器端]{.green}</li>
+</ul>
+</li>
+<li><p>设置命令：[-XX:+UseSerialGC]{.blue}</p>
+<ul>
+<li><p>指定新生代垃圾回收器为 Serial 的同时，老年代默认设置为 Serial Old</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/查看-Serial-垃圾回收器.59tbi2y2k3k0.png" alt="查看-Serial-垃圾回收器" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="Serial-Old-垃圾回收器"   >
+          <a href="#Serial-Old-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Serial-Old-垃圾回收器" class="headerlink" title="Serial Old 垃圾回收器"></a>Serial Old 垃圾回收器</h5>
+      <ul>
+<li>历史：伴随 Serial 垃圾收集器诞生的老年代垃圾收集器</li>
+<li>特点：<ul>
+<li>[针对堆空间中的老年代回收垃圾]{.red}</li>
+<li>[采用 <strong>标记-整理</strong> 算法 <strong>串行回收</strong> 老年代的垃圾]{.red}</li>
+<li>[默认在客户端下使用的垃圾回收器，可以设置为服务器端下使用]{.red}<ul>
+<li>用于服务器端的目的①：[配合 Parallel Scavenge 新生代收集器使用（JDK 9 中废弃）]{.blue}</li>
+<li>用于服务器端的目的②：[用于 CMS 出现失败时（Concurrent Mode Failure）的后备垃圾收集器]{.blue}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>优点缺点和 Serial 垃圾收集器基本一致</li>
+</ul>
+
+        <h4 id="并行垃圾回收器"   >
+          <a href="#并行垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#并行垃圾回收器" class="headerlink" title="并行垃圾回收器"></a>并行垃圾回收器</h4>
+      <ul>
+<li>所有的并行垃圾回收器都可以设置并行的 GC 线程数量</li>
+<li>[开启的 GC 线程数量最好不要超过处理器计算核的数量，避免引起线程并发带来的性能下降问题]{.red}</li>
+</ul>
+
+        <h5 id="ParNew-垃圾回收器"   >
+          <a href="#ParNew-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#ParNew-垃圾回收器" class="headerlink" title="ParNew 垃圾回收器"></a>ParNew 垃圾回收器</h5>
+      <ul>
+<li>历史：JDK 1.3 推出第一款并行的垃圾回收器</li>
+<li>特点：<ul>
+<li>[针对堆空间中的新生代回收垃圾]{.red}</li>
+<li>[采用 <strong>标记-复制</strong> 算法 <strong>并行回收</strong> 新生代的垃圾]{.red}</li>
+<li>[默认在服务器端下采用的垃圾回收器，默认开启的线程数量和服务器的计算核数量一致]{.red}</li>
+<li>JDK 6 默认 ParNew 和 CMS 进行搭配使用</li>
+</ul>
+</li>
+<li>优点：[能够非常高效地利用多核处理器的计算优势，尽快地完成垃圾回收]{.red}</li>
+<li>缺点：[单核处理器下的垃圾回收效率并没有 Serial 垃圾回收的效果好]{.green}</li>
+<li>细节：ParNew 垃圾回收器除了是多线程并行之外，和 Serial 没有太多的区别</li>
+<li>设置命令：<ul>
+<li>[-XX:UseParNewGC 启用 ParNew 垃圾回收器]{.blue}</li>
+<li>[-XX:ParallelGCThreads 设置 ParNew 启用的垃圾回收线程数量]{.blue}</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="Parallel-Scavenge-垃圾回收器"   >
+          <a href="#Parallel-Scavenge-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Parallel-Scavenge-垃圾回收器" class="headerlink" title="Parallel Scavenge 垃圾回收器"></a>Parallel Scavenge 垃圾回收器</h5>
+      <ul>
+<li><p>历史：JDK 1.4 推出，采用不同于 HotSpot 虚拟机规定的垃圾回收器框架，导致该垃圾回收器非常“特别”</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>[针对堆空间中的新生代回收垃圾]{.red}</li>
+<li>[采用 <strong>标记-复制</strong> 算法并行垃圾回收新生代的垃圾]{.red}</li>
+<li>[唯一 <strong>优先确保吞吐量</strong> 的垃圾回收器，其余垃圾回收器几乎都是优先确保低延迟]{.red}<ul>
+<li><p>开发者可以通过设置 [预期延迟时间]{.red} 控制垃圾回收器的吞吐量大小</p>
+</li>
+<li><p>开发者也可以通过设置 [垃圾回收时间占比]{.red} 控制吞吐量大小（默认值为 ）</p>
+<p>  :::info</p>
+<p>  ① Parallel Scavenge 和 Garbage First 垃圾回收器都可以设置预期延迟时间，只不过两者的控制方式不一致</p>
+<p>  ② 前者为了达到预期时间是通过缩小新生代空间完成的，后者是通过减少回收的内存区域完成的</p>
+<p>  ③ 两者的相同点是都会造成吞吐量的下降，只不过后者下降得更少</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li>[采用自适应调节策略：虚拟机自主对内存空间进行调优]{.red}<ul>
+<li>在开发者对调优细节并不了解的情况下可以采用这种方式</li>
+<li>堆空间中伊甸园区和幸存者区默认比例是 8:1:1，采用了自适应策略实际采用的比例并不是 8:1:1</li>
+</ul>
+</li>
+<li>[默认在服务器端下采用的垃圾回收器]{.red}<ul>
+<li>服务器端不需要太多和用户（开发者）交互的时间，需要处理大量的请求数据，高吞吐量的垃圾回收器更合适</li>
+</ul>
+</li>
+<li>JDK 8 默认采用 Parallel Scavenge 和 Parallel Old 垃圾回收器配合</li>
+</ul>
+</li>
+<li><p>优点</p>
+</li>
+<li><p>缺点：[采用的垃圾回收器框架不同，导致无法和并发垃圾回收器 CMS 配合使用]{.green}</p>
+</li>
+<li><p>设置命令</p>
+<ul>
+<li>[-XX:+UseParallelGC 采用 Parallel Scavenge 新生代垃圾回收器]{.blue}</li>
+</ul>
+</li>
+<li><p>开启 Parallel Scavenge 垃圾回收器的同时默认开启 Parallel Old 老年代垃圾回收器</p>
+<ul>
+<li>[-XX:ParallelGCThreads=count 设置垃圾回收器开启的线程数量]{.blue}</li>
+<li>处理器计算核的数量不超过 8 个的时候：[默认 GC 线程的数量等于处理器计算核的数量]{.red}<ul>
+<li>处理器计算核的数量超过 8 个的时候：[默认 GC 线程数量 = 3 + ( 5 * CPU_Count / 8)]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[-XX:MaxGCPauseMillis=time 设置预期延迟时间]{.blue}</p>
+<pre><code>  * 垃圾回收器会尽可能达到用户设定预期延迟时间，通过减小吞吐量和新生代空间（不可能三角）
+  * 最好不要去设置这个参数
+</code></pre>
+</li>
+<li><p>[-XX:GCTimeRatio=time 设置垃圾回收时间占比]{.blue}</p>
+<ul>
+<li>虽然这个参数是这个意思，但是实际设置的参数应该是用户运行时间，然后虚拟机会自动计算出垃圾回收时间占比</li>
+<li>[默认值为 99，所以垃圾回收时间占比为 $$ \frac{1}{用户运行时间 + 1} $$]{.red}（优先关注吞吐量）</li>
+<li>[-XX:+UseAdaptiveSizePolicy 开启自适应调节机制]{.blue}</li>
+<li>无法利用这个参数直接关闭自适应调节机制</li>
+</ul>
+</li>
+</ul>
+<p>​            </p>
+
+        <h5 id="Parallel-Old-垃圾回收器"   >
+          <a href="#Parallel-Old-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Parallel-Old-垃圾回收器" class="headerlink" title="Parallel Old 垃圾回收器"></a>Parallel Old 垃圾回收器</h5>
+      <ul>
+<li>历史：JDK 6 推出的老年代的并行垃圾收集器（《深入理解虚拟机》中提到这是个并发收集器，我觉得是写错了）</li>
+<li>特点：<ul>
+<li>[针对老年代进行垃圾回收]{.red}</li>
+<li>[采用 <strong>标记-整理</strong> 算法 <strong>并行回收</strong> 老年代的垃圾]{.red}</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="并发垃圾回收器"   >
+          <a href="#并发垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#并发垃圾回收器" class="headerlink" title="并发垃圾回收器"></a>并发垃圾回收器</h4>
+      <p>:::primary</p>
+<p>参考博客：</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/zqz_zqz/article/details/70568819" >CMS垃圾回收器详解</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36697880/article/details/105201936" >Java虚拟机 —-CMS 垃圾回收器</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+
+        <h5 id="CMS-垃圾回收器"   >
+          <a href="#CMS-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#CMS-垃圾回收器" class="headerlink" title="CMS 垃圾回收器"></a>CMS 垃圾回收器</h5>
+      <ul>
+<li><p>历史：</p>
+<ul>
+<li>JDK 5 时期推出的第一款并发式垃圾回收器，真正意义上实现了 GC 线程和用户线程同时执行</li>
+<li>JDK 6 时默认采用 CMS + ParNew 的组合，无法和新推出的 Parallel Scavenge 配合</li>
+<li>JDK 14 时直接被 Oracle 官方移除</li>
+</ul>
+</li>
+<li><p>执行过程（细粒度划分）：</p>
+<ul>
+<li>标记阶段<ul>
+<li>初始标记（initial mark）<ul>
+<li>内容：[标记 GC Roots 直接关联到的对象]{.red}</li>
+<li>细节：采用 STW 机制，用户线程依然需要停止，不过初始标记非常迅速，造成的时延很短</li>
+</ul>
+</li>
+<li>并发标记（concurrent mark）<ul>
+<li>内容：[从 GC Roots 直接关联的对象开始遍历整个对象图]{.red}</li>
+<li>细节：不采用 STW 机制，用户线程和 GC 线程同时执行</li>
+</ul>
+</li>
+<li>重新标记（remark）<ul>
+<li>内容：[修正并发标记过程中因用户线程持续运行出现变动的标记]{.red}</li>
+<li>细节：采用 STW 机制，用户线程依然需要停止，不过重新标记速度也相对较快，时延步长</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>清除阶段<ul>
+<li>并发清除<ul>
+<li>内容：[清除所有 <strong>没有</strong> 被标记的对象，释放内存空间]{.red}</li>
+<li>方式：标记-清除 / 标记-整理</li>
+<li>细节：不采用 STW 机制，用户线程和 GC 线程同时执行</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>[针对老年代设计的垃圾回收器]{.red}</li>
+<li>[采用 <strong>标记-清除 + 标记-整理</strong> 算法进行 <strong>并发式</strong> 的垃圾回收]{.red}<ul>
+<li>[CMS 能够在不影响对象分配的情况下，容忍标记清除算法带来的碎片问题]{.red}</li>
+<li>[CMS 将会在执行 Full GC 的时候，启用标记-整理算法用以消除碎片问题]{.red}<ul>
+<li>[标记-整理算法会移动对象的位置，此时运行的用户线程就无法找到对象，所以采用标记-整理算法时无法并发执行，会产生长时间的 STW]{.red}</li>
+</ul>
+</li>
+<li>[CMS 采用增量更新的方式解决并发可达性分析的问题]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>优点：[虽然初始标记和重新标记依旧具有时延，但是整体上仍然有效降低 STW 造成的时延]{.red}</p>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>[需要占用处理器资源执行垃圾回收，将会降低用户线程的吞吐量]{.green}</li>
+<li>[需要确保并发运行期间有足够的预留内存供用户线程使用]{.green}<ul>
+<li>因为并发运行时用户线程依然会使用内存空间，所以没有预留空间用户线程就无法运行</li>
+<li>[如果预留空间不足或者用户线程使用内存的速度超过回收速度，那么就会切换至 Serial Old 执行，将会长时间冻结用户线程执行]{.aqua}</li>
+</ul>
+</li>
+<li>[需要确保可达性分析的一致性]{.green}<ul>
+<li>[采用 <strong>增量更新</strong> 保持可达性分析的一致性]{.aqua}</li>
+</ul>
+</li>
+<li>[无法处理浮动垃圾问题]{.green}<ul>
+<li>浮动垃圾：用户线程在 GC 线程标记阶段之后产生的垃圾对象</li>
+<li>细节：只能够等待下次垃圾回收发生时再去回收浮动垃圾</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>设置命令：</p>
+<ul>
+<li><p>[-XX:+UseConcMarkSweep 启用 CMS 垃圾回收器]{.blue}</p>
+<ul>
+<li>新生代默认使用 ParNew 垃圾回收器</li>
+<li>还会默认将 Serial Old 作为紧急情况下的老年代回收器</li>
+</ul>
+</li>
+<li><p>[-XX:ParallelCMSThreads=count 设置 CMS 使用的 GC 线程数量]{.red}</p>
+<ul>
+<li>并发式收集中同样可以启用多条 GC 线程，只不过可能面临交替运行的情况</li>
+<li>[默认使用的线程数量 = (CPU_Count + 3) / 4]{.red}</li>
+<li>[多线程占用的处理器资源比例会随着处理器计算核数量的增加而减少]{.red}（建议自己算一算）<ul>
+<li>意味着处理器计算核数量越多，GC 线程就可以开得更多</li>
+<li>计算核数量低于 4 个时，多条 GC 线程就会严重影响用户线程的运行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[-XX:CMSInitiatingOccupancyFraction=threshold 设置 CMS 开始回收的阈值]{.blue}</p>
+<ul>
+<li><p>JDK 5 以前默认设置的值为 68%，JDK 6 之后默认值为 92%</p>
+</li>
+<li><p>[老年代增长较快的时候应该降低阈值，避免触发紧急情况]{.red}</p>
+<p>  [老年大增长较慢时应该提升阈值，避免频繁触发 Major GC]{.red}</p>
+</li>
+</ul>
+</li>
+<li><p>[-XX:+UseCMSCompactAtFullCollection 执行 Full GC 时启用标记整理算法]{.blue}</p>
+<ul>
+<li>默认在 CMS 中开启这个选项</li>
+</ul>
+</li>
+<li><p>[-XX:CMSFullGCBeforeCompaction=count 设置执行几次 Full GC 后才使用标记整理算法]{.blue}</p>
+<ul>
+<li>设置为 0 的话就是每次执行 Full GC 都采用标记整理算法</li>
+<li>默认值为 0</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="G1-垃圾回收器"   >
+          <a href="#G1-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#G1-垃圾回收器" class="headerlink" title="G1 垃圾回收器"></a>G1 垃圾回收器</h5>
+      <p>:::primary</p>
+<p>参考博客：</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/coderlius/article/details/79272773" >详解 JVM Garbage First(G1) 垃圾收集器</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+
+        <h6 id="概述-1"   >
+          <a href="#概述-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述-1" class="headerlink" title="概述"></a>概述</h6>
+      <ul>
+<li>历史<ul>
+<li>G1 是垃圾回收器技术发展史上的里程碑，开创了面向局部收集的设计思路和基于 Region 的布局方式</li>
+<li>JDK 6 中作为实验性质的垃圾回收器被推出</li>
+<li>JDK 7 中正式作为可商用的垃圾回收器推出</li>
+<li>JDK 8 中支持回收方法区</li>
+<li>JDK 9 中作为默认使用的垃圾回收器</li>
+</ul>
+</li>
+<li>核心进化：[在延迟可控的情况下尽最大可能提升吞吐量]{.red}<ul>
+<li>如何实现延迟可控：<ul>
+<li>采用启发式垃圾回收的方式</li>
+<li>建立可靠的停顿时间模型</li>
+</ul>
+</li>
+<li>回顾此前的垃圾回收器：都无法控制垃圾回收的延迟的，只有 Parallel Scavenge 可以控制吞吐量</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>[面向具有大内存和多处理器的服务器端]{.red}</li>
+<li>[针对 <strong>整个堆空间</strong>（老年代+新生代）进行垃圾回收]{.red}</li>
+<li>[局部上看采用 <strong>标记-复制</strong> 算法进行垃圾回收、整体上看可以认为是采用 <strong>标记-整理</strong> 算法进行垃圾回收]{.red}<ul>
+<li>标记-复制：将 Region 中存活的对象全部复制到另外的空的 Region 区域中</li>
+<li>标记-整理：整个堆空间是由多个相等的 Region 构成的，每次回收可以看做是在移动碎片</li>
+</ul>
+</li>
+<li>[]{.red}</li>
+</ul>
+</li>
+</ul>
+
+        <h6 id="Region-布局"   >
+          <a href="#Region-布局" class="heading-link"><i class="fas fa-link"></i></a><a href="#Region-布局" class="headerlink" title="Region 布局"></a>Region 布局</h6>
+      <ul>
+<li>前提：[不再采用 <strong>连续内存分配</strong> 的方式为对象分配空间，而是采用 <strong>非连续内存</strong> 的方式]{.red}<ul>
+<li>连续内存分配：以前大多数对象通常占据的空间都是连续的</li>
+<li>非连续内存分配：现在对象占据的空间都是可以不连续的</li>
+</ul>
+</li>
+<li>核心：[将整个堆空间划分多个大小相等的独立区域（Region）]{.red}</li>
+<li>大小：<ul>
+<li>默认值：[默认 Region 的大小是 1MB]{.red}</li>
+<li>设置命令：[-XX:G1HeapRegionSize=size 设置 Region 区域的大小]{.blue}</li>
+<li>细节：<ul>
+<li>Region 大小在进程运行期间都是不会发生改变的</li>
+<li>通常规定 Region 大小的取值范围在 1MB~32MB 之间且最好是 2 的次幂</li>
+<li>实际上设置的 Region 大小超过范围或者不是 2 的次幂也不会报错</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>分类：<ul>
+<li>普通 Region：存放普通大小的对象</li>
+<li>巨型 Region（Humongous）：<ul>
+<li>定义：<ul>
+<li>巨型 Region 是多个连续的普通 Region 的组合</li>
+<li>起始的 Region 被称为开始巨型、后面的 Region 被称为连续巨型</li>
+</ul>
+</li>
+<li>用途：[存放大小超过 Region 大小一半的巨大对象]{.red}</li>
+<li>细节：[如果垃圾回收器找不到多个连续的 Region 组成 Humongous，那么可能需要启动 Full GC]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>记忆集：<ul>
+<li>[每个 Region 都需要维护自己的记忆集]{.red}</li>
+<li>[每个记忆集不仅维护其他 Region 对自己的引用，而且还维护自己对其他 Region 的引用]{.red}</li>
+</ul>
+</li>
+<li>动态分代<ul>
+<li>定义：<ul>
+<li>[新生代和老年代可以有多个并不连续的 Region 组成]{.red}</li>
+<li>[组成新生代和老年代的 Region 数量并不固定，取决于多个参数]{.red}</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>新生代初始被分配的空间大小为 5%，随着程序的运行而变化大小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>TAMS（Top At Mark Start）：<ul>
+<li>定义：[用于划分用户线程使用的空间和 GC 回收的空间的指针]{.red}</li>
+<li>原因：用户线程和 GC 线程是并发执行的，所以需要在 Region 中预留一部分空间给用户线程使用</li>
+</ul>
+</li>
+<li>启发式垃圾收集<ul>
+<li>每次都会将各个 Region 按照回收价值和成本进行排序</li>
+<li>依据用户设定的期望停顿时间来选择合适的 Region 组合回收集</li>
+</ul>
+</li>
+<li>停顿时间模型<ul>
+<li>定义：[支持在指定的 M 毫秒的时间片段内，垃圾回收占用的时间 <strong>大概率</strong> 不超过 N 毫秒]{.red}</li>
+<li>实现：<ul>
+<li>垃圾回收器每次都会根据回收 Region 消耗的时间以及 Region 记忆集中脏卡的数量等参数决定其价值</li>
+<li>每个 Region 的价值被决定之后就会采用启发式垃圾收集从而完成停顿时间模型要求的目标</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h6 id="回收模式"   >
+          <a href="#回收模式" class="heading-link"><i class="fas fa-link"></i></a><a href="#回收模式" class="headerlink" title="回收模式"></a>回收模式</h6>
+      <ul>
+<li>新生代回收（Minor GC / Young GC）：<ul>
+<li>内容：采用标记-复制算法将伊甸园区+幸存者区的 Region 中存活的对象复制到空的 Region 中去</li>
+<li>回收条件：[新生代的大小占据整个堆空间的 60% 的时候开始执行新生代回收]{.blue}</li>
+</ul>
+</li>
+<li>混合回收（Mixed GC）<ul>
+<li>内容：采用标记-复制算法将新生代+老年代 Region 中存活的对象全部复制到空的 Region 中去 </li>
+<li>回收条件：[老年代的大小占据整个堆空间的 45% 的时候开始执行混合回收]{.blue}</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>[G1 两种回收模式都会回收新生代，老年代只有混合回收中才会回收]{.red}</li>
+<li>[G1 混合回收老年代的时候只会依据价值高低回收部分的 Region 而不是全部]{.red}</li>
+</ul>
+</li>
+</ul>
+
+        <h6 id="回收过程"   >
+          <a href="#回收过程" class="heading-link"><i class="fas fa-link"></i></a><a href="#回收过程" class="headerlink" title="回收过程"></a>回收过程</h6>
+      <ul>
+<li><p>前提：无论采用哪种回收模式，其回收过程都是完全一致的</p>
+</li>
+<li><p>标记阶段</p>
+<ul>
+<li>初始标记（Initial Marking）<ul>
+<li>内容：[标记 GC Roots 能够直接关联到的对象，并且修改 TAMS 的位置为用户线程留出空间]{.red}</li>
+<li>细节：依然需要采用 STW 机制不过耗时非常短</li>
+</ul>
+</li>
+<li>并发标记（Concurrent Marking）</li>
+<li>最终标记（Final Marking）<ul>
+<li>内容：</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>清除阶段</p>
+<ul>
+<li>筛选回收</li>
+</ul>
+</li>
+</ul>
+
+        <h6 id="优点与缺点"   >
+          <a href="#优点与缺点" class="heading-link"><i class="fas fa-link"></i></a><a href="#优点与缺点" class="headerlink" title="优点与缺点"></a>优点与缺点</h6>
+      <ul>
+<li>优点</li>
+<li>缺点</li>
+<li>命令<ul>
+<li>[-XX:UseG1GC 启用 G1 垃圾回收器]{.blue}<ul>
+<li>G1 垃圾回收器不需要和任何垃圾回收器搭配</li>
+</ul>
+</li>
+<li>[-XX:MaxGCPauseMillis 设置期望的垃圾回收时延]{.blue}</li>
+<li>[-XX:GCTimeRatio=time 设置垃圾回收时间占比]{.blue}<ul>
+<li>Parallel Scavenge 中提供的参数，默认值为 99</li>
+<li>G1 中同样提供的参数，默认值为 9</li>
+</ul>
+</li>
+<li>[]{.blue}</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="3-大前沿垃圾回收器"   >
+          <a href="#3-大前沿垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-大前沿垃圾回收器" class="headerlink" title="3 大前沿垃圾回收器"></a>3 大前沿垃圾回收器</h3>
+      
+        <h4 id="Shenandoah-垃圾回收器"   >
+          <a href="#Shenandoah-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Shenandoah-垃圾回收器" class="headerlink" title="Shenandoah 垃圾回收器"></a>Shenandoah 垃圾回收器</h4>
+      
+        <h4 id="ZGC-垃圾回收器"   >
+          <a href="#ZGC-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#ZGC-垃圾回收器" class="headerlink" title="ZGC 垃圾回收器"></a>ZGC 垃圾回收器</h4>
+      
+        <h4 id="Epsilon-垃圾回收器"   >
+          <a href="#Epsilon-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Epsilon-垃圾回收器" class="headerlink" title="Epsilon 垃圾回收器"></a>Epsilon 垃圾回收器</h4>
+      </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">类加载机制-概述</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/"><span class="paginator-prev__text">垃圾回收-垃圾回收算法</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">
+          垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
+          概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88"><span class="toc-number">1.1.3.</span> <span class="toc-text">
+          组合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.4.</span> <span class="toc-text">
+          性能指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8-1"><span class="toc-number">1.2.</span> <span class="toc-text">
+          垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%A4%A7%E7%BB%8F%E5%85%B8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          7 大经典垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%B2%E8%A1%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">
+          串行垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Serial-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.1.</span> <span class="toc-text">
+          Serial 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Serial-Old-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.2.</span> <span class="toc-text">
+          Serial Old 垃圾回收器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">
+          并行垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ParNew-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.1.</span> <span class="toc-text">
+          ParNew 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Parallel-Scavenge-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.2.</span> <span class="toc-text">
+          Parallel Scavenge 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Parallel-Old-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.3.</span> <span class="toc-text">
+          Parallel Old 垃圾回收器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">
+          并发垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CMS-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.1.</span> <span class="toc-text">
+          CMS 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#G1-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.2.</span> <span class="toc-text">
+          G1 垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-1"><span class="toc-number">1.2.1.3.2.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Region-%E5%B8%83%E5%B1%80"><span class="toc-number">1.2.1.3.2.2.</span> <span class="toc-text">
+          Region 布局</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9E%E6%94%B6%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.1.3.2.3.</span> <span class="toc-text">
+          回收模式</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9E%E6%94%B6%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.1.3.2.4.</span> <span class="toc-text">
+          回收过程</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%E4%B8%8E%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.1.3.2.5.</span> <span class="toc-text">
+          优点与缺点</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%A7%E5%89%8D%E6%B2%BF%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          3 大前沿垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Shenandoah-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">
+          Shenandoah 垃圾回收器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ZGC-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">
+          ZGC 垃圾回收器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Epsilon-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">
+          Epsilon 垃圾回收器</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

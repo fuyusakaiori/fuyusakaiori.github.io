@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="本地方法栈       :::primary 参考博客：java调用本地方法–jni简介 :::  什么是本地方法？   定义：[采用非 Java 代码实现的“接口”]{.red}  本地方法并不需要采用 Java 实现，[类似于]{.blue} 接口和抽象类中的方法  但是本地方法依然会采用其他语言具体实现，所以也只是类似于接口和抽象类   12&#x2F;&#x2F; 本地">
+<meta property="og:type" content="article">
+<meta property="og:title" content="栈空间-本地方法栈">
+<meta property="og:url" content="http://example.com/2021/09/23/jvm/runtime/stackspace/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="本地方法栈       :::primary 参考博客：java调用本地方法–jni简介 :::  什么是本地方法？   定义：[采用非 Java 代码实现的“接口”]{.red}  本地方法并不需要采用 Java 实现，[类似于]{.blue} 接口和抽象类中的方法  但是本地方法依然会采用其他语言具体实现，所以也只是类似于接口和抽象类   12&#x2F;&#x2F; 本地">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-23T07:53:14.378Z">
+<meta property="article:modified_time" content="2021-09-23T07:54:00.892Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary"><title>栈空间-本地方法栈 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/23/jvm/runtime/stackspace/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">栈空间-本地方法栈</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-23</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-23</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h3 id="本地方法栈"   >
+          <a href="#本地方法栈" class="heading-link"><i class="fas fa-link"></i></a><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3>
+      <p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/w1992wishes/article/details/80283403" >java调用本地方法–jni简介</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是本地方法？</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：[采用非 Java 代码实现的“接口”]{.red}</p>
+<ul>
+<li><p>本地方法并不需要采用 Java 实现，[类似于]{.blue} 接口和抽象类中的方法</p>
+</li>
+<li><p>但是本地方法依然会采用其他语言具体实现，所以也只是类似于接口和抽象类</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 本地方法是没有方法体的，也就没有具体的实现，类似于接口和抽象类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">nativeMethod</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>Java 本地方法大多数采用 C/C++ 实现</li>
+<li>Java 本地方法可以通过本地方法接口（JNI）访问 Java 运行时数据区</li>
+<li>Java 线程调用本地方法后就不再受到虚拟机限制，可以访问操作系统的寄存器、内存等硬件设备</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>为什么需要使用本地方法?</strong></p>
+</blockquote>
+<p>+++danger 核心：Java 需要和操作系统级别的软件进行交互]</p>
+<p>① Java 采用虚拟机隔离了操作系统，所以才能够实现跨平台</p>
+<p>② 正是因为虚拟机隔离了操作系统，所以 Java 难以直接和操作系统建立联系，本地方法就提供了访问操作系统的接口</p>
+<p>+++</p>
+<p>+++ Java 需要使用某些采用其他语言实现的功能</p>
+<p>① 虚拟机内部的解释器就是采用 C 实现的</p>
+<p>② Java 想要使用虚拟机提供的某些方法就不得不提供链接其他语言的接口</p>
+<p>+++</p>
+<blockquote>
+<p><strong>如何编写本地方法?</strong>!!草，网上查到的全是在 Linux 下编写的，就离谱，大致过程还是记录下!!{.bulr}</p>
+</blockquote>
+<ul>
+<li><p>方式：[JNI（Java Native Interface）]{.blue}</p>
+<p>  :::info</p>
+<p>  ① Java 借助本地调用接口使用存放在库文件中的本地方法，从而使用操作系统提供的功能</p>
+<p>  ② Windows 库文件是采用 DLL 格式存方法的，Linux 库文件是采用 SO 格式存放的</p>
+<p>  :::</p>
+</li>
+<li><p>编写过程：</p>
+<p>  (1) 编写 Java 代码</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NativeMethod</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 调用静态链接库</span></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            System.loadLibrary(<span class="string">&quot;nativeMethod&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e)</span><br><span class="line">        &#123;</span><br><span class="line">            System.err.println(<span class="string">&quot;fail...&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;success...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 调用本地方法</span></span><br><span class="line">        <span class="keyword">new</span> NativeMethod().nativeMethod(<span class="string">&quot;Fuyusakaiori&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 声明本地方法</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">nativeMethod</span><span class="params">(String name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>  (2) 利用 javah 程序生成相应的 jni 文件</p>
+<p>  :::primary</p>
+<p>  ① IDEA 中配置 javah 程序：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/u011781521/article/details/106956827/?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-0.no_search_link&spm=1001.2101.3001.4242" >配置并使用 JNI</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>  ② 直接在命令行中使用 javah 指令可能无法被识别，即使你配置了环境变量</p>
+<p>  :::</p>
+<p>  (3) 采用 C/C++ 编写方法的具体实现</p>
+  <figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stdio.h&quot;</span></span></span><br><span class="line"><span class="comment">// 头文件记得换成你自己 JNI 生成的文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;chapter06_NativeMethod.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数名</span></span><br><span class="line"><span class="function">JNIEXPORT jstring JNICALL <span class="title">chapter06_NativeMethod_nativeMethod</span></span></span><br><span class="line"><span class="function"><span class="params">(JNIEnv* env, jclass jc, jstring name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// 返回传入的名称</span></span><br><span class="line">	<span class="keyword">return</span> name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>  (4) 编译 C/C++ 源文件</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -D_REENTRANT -fPIC -l $Java_HOME$\include -l $Java_HOME$\include\win32 -c nativeMethod.c</span><br></pre></td></tr></table></div></figure>
+
+<p>  (5) 后续暂时不记录了，因为有问题</p>
+</li>
+<li><p>特点：JNI 调用本地方法会导致开发的程序跨平台性能变差</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>什么是本地方法栈?</strong></p>
+</blockquote>
+<ul>
+<li><p>核心：基本内容和虚拟机栈完全相同</p>
+</li>
+<li><p>定义：存储被调用的本地方法拥有的信息</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>[本地方法栈完全采用 C 语言实现]{.red}</li>
+<li>[本地方法栈也不存在垃圾回收机制，但是能够抛出 StackOverFlowError 异常和 OutOfMemoryError 异常]{.blue}</li>
+<li>[本地方法栈也是线程私有空间]{.blue}</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>Java 虚拟机规范没有明确说明虚拟机必须实现本地方法栈，所以本地方法栈是可以没有的</li>
+<li>HotSpot 虚拟机中直接将虚拟机栈和本地方法栈合二为一</li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/23/jvm/runtime/stackspace/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88/">http://example.com/2021/09/23/jvm/runtime/stackspace/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/24/jvm/execution-engine/%E5%89%8D%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">执行引擎-前端编译器</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/23/jvm/runtime/stackspace/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/"><span class="paginator-prev__text">栈空间-虚拟机栈</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-number">1.</span> <span class="toc-text">
+          本地方法栈</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

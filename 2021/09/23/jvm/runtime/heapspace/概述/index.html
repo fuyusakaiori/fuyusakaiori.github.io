@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="堆空间                           概述        什么是堆空间?   定义：虚拟机中 [最大的存储空间]{.red}  作用：[存放所有被创建的对象和数组的空间]{.red}   +++danger 对象一定被分配在堆空间中吗？   逃逸分析   +++  特点：  [堆空间可以处于物理上并不连续的内存空间中]{.red}  物">
+<meta property="og:type" content="article">
+<meta property="og:title" content="堆空间-概述">
+<meta property="og:url" content="http://example.com/2021/09/23/jvm/runtime/heapspace/%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="堆空间                           概述        什么是堆空间?   定义：虚拟机中 [最大的存储空间]{.red}  作用：[存放所有被创建的对象和数组的空间]{.red}   +++danger 对象一定被分配在堆空间中吗？   逃逸分析   +++  特点：  [堆空间可以处于物理上并不连续的内存空间中]{.red}  物">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间实际占用内存.69fin0iqv300.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间划分.3mxvqtnctuw0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/方法区落地实现.1dqvno6ggn8g.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间比例.4vqbtj0dody0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露.2mbg5mrp49q0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露1.i0i0025otcw.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/堆内存分析1.2caocz52qy4g.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存溢出.689o51k3uf40.png">
+<meta property="article:published_time" content="2021-09-23T07:40:37.229Z">
+<meta property="article:modified_time" content="2021-09-23T07:45:50.187Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间实际占用内存.69fin0iqv300.png"><title>堆空间-概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/23/jvm/runtime/heapspace/%E6%A6%82%E8%BF%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">堆空间-概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-23</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-23</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="堆空间"   >
+          <a href="#堆空间" class="heading-link"><i class="fas fa-link"></i></a><a href="#堆空间" class="headerlink" title="堆空间"></a>堆空间</h1>
+      
+        <h2 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      <blockquote>
+<p><strong>什么是堆空间?</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：虚拟机中 [最大的存储空间]{.red}</p>
+</li>
+<li><p>作用：[存放所有被创建的对象和数组的空间]{.red}</p>
+<p>  +++danger 对象一定被分配在堆空间中吗？</p>
+<p>  <a href="#%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90">逃逸分析</a></p>
+<p>  +++</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p>[堆空间可以处于物理上并不连续的内存空间中]{.red}</p>
+<ul>
+<li><p>物理上不连续：操作系统采用了虚拟内存技术，所以分配给虚拟机的内存显然是不连续的</p>
+</li>
+<li><p>逻辑上连续：虚拟机的使用者并不关心实际内存是怎么存储的，从表面上看来就是连续的</p>
+</li>
+<li><p>[如果创建的是大对象通常会要求使用连续的堆空间]{.red}</p>
+<p>  :::info</p>
+<p>  大对象：需要占用的堆内存非常大的对象，诸如数组对象 new byte[1024 * 1024 * 1024]</p>
+<p>  :::</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间实际占用内存.69fin0iqv300.png" alt="堆空间实际占用内存" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>[堆空间中的对象的销毁不取决于方法是否结束，而是取决于垃圾回收机制]{.red}</p>
+</li>
+<li><p>[堆空间既存在垃圾回收机制，也存在 OutOfMemoryError 异常]{.red}</p>
+</li>
+<li><p>[堆空间是所有线程共享的区域：线程可以互相访问彼此创建的对象和数组]{.red}</p>
+</li>
+<li><p>[堆空间主要管理数据的存储，所以存储的是对象和数组的实际数据]{.red}</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="空间划分"   >
+          <a href="#空间划分" class="heading-link"><i class="fas fa-link"></i></a><a href="#空间划分" class="headerlink" title="空间划分"></a>空间划分</h2>
+      <ul>
+<li><p>核心：[分代思想]{.red}</p>
+</li>
+<li><p>虚拟机规范划分：新生代 + 老年代</p>
+<ul>
+<li><p>新生代：</p>
+<ul>
+<li>伊甸园区：TLAB（Thread Local Allocation Buffer） + 共享区域</li>
+<li>幸存者区：幸存者0区 + 幸存者1区</li>
+</ul>
+</li>
+<li><p>老年代</p>
+</li>
+<li><p>方法区：[逻辑上归属堆区，物理上并不属于堆区，甚至可以称为非堆区]{.red}</p>
+<p>  :::info</p>
+<p>  ① 类似于中国大陆和中国台湾的关系，逻辑上台湾归属于中国，但是目前中国大陆的政策无法管理台湾</p>
+<p>  ② 方法区和堆区实际存储的内容完全不同，所以进行区分也是正常的</p>
+<p>  :::</p>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间划分.3mxvqtnctuw0.png" alt="堆空间划分" style="zoom:80%;" /></li>
+<li><p>JDK 7：[方法区采用永久代实现：使用内存是虚拟机提供的内存]{.red}</p>
+</li>
+<li><p>JDK 8：[方法区采用元空间实现：使用的内存是操作系统提供的物理内存]{.red}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/方法区落地实现.1dqvno6ggn8g.png" alt="方法区落地实现" style="zoom:80%;" />
+
+<p>  +++danger 为什么堆空间要采用分代思想进行管理？</p>
+<p>  ① 显然堆空间即使不分代也是可以进行垃圾回收的</p>
+<p>  ② 但是如果所有的对象都被杂乱无章地放在一起，每次执行垃圾回收的时候就需要挨个查找</p>
+<p>  ③ 哪些是短生命周期的，可以回收，哪些是长生命周期的，不能回收，就相当于每次都要问一问老年代需不需要回收</p>
+<p>  ④ 这样垃圾回收的性能显然就会下降，执行了太多没有意义的操作</p>
+<p>  ⑤ 核心：优化垃圾回收机制的性能</p>
+<p>  +++</p>
+</li>
+</ul>
+
+        <h2 id="空间大小"   >
+          <a href="#空间大小" class="heading-link"><i class="fas fa-link"></i></a><a href="#空间大小" class="headerlink" title="空间大小"></a>空间大小</h2>
+      <ul>
+<li><p>堆空间大小设置</p>
+<ul>
+<li><p>特点：[堆空间大小可以是固定容量也可以是动态扩展的]{.red}</p>
+</li>
+<li><p>固定容量：虚拟机默认采用的是动态扩展，固定容量需要自行设置</p>
+<p>  +++info 如何将堆空间设置为固定容量？</p>
+<p>  ① 只需要将堆空间的的初始容量和最大容量设置为相同的即可</p>
+<p>  ② 再继续想想，为什么要将两者设置为相同？或者说为什么要使用固定容量？</p>
+<p>  +++</p>
+</li>
+<li><p>动态扩展</p>
+<ul>
+<li><p>[默认初始化容量：物理内存 / 64]{.blue}</p>
+</li>
+<li><p>[默认最大容量：物理内存 / 4]{.blue}</p>
+</li>
+<li><p>现状：大多数虚拟机都支持堆空间的动态扩展，[但是实际开发中都是采用固定容量]{.blue}</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Runtime: 运行时数据区</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 初始内存：245MB</span></span><br><span class="line">    <span class="keyword">long</span> initialMemory = Runtime.getRuntime().totalMemory(); </span><br><span class="line">    <span class="comment">// 最大内存：3625MB</span></span><br><span class="line">    <span class="keyword">long</span> maxMemory = Runtime.getRuntime().maxMemory();</span><br><span class="line">    <span class="comment">// 输出内存提示信息</span></span><br><span class="line">    System.out.println(<span class="string">&quot;堆空间初始化内存: &quot;</span> + initialMemory / <span class="number">1024</span> /<span class="number">1024</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;堆空间最大内存: &quot;</span> + maxMemory / <span class="number">1024</span> / <span class="number">1024</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算物理机的实际内存：15680MB 14500MB</span></span><br><span class="line">    System.out.println(<span class="string">&quot;物理机实际内存: &quot;</span> + initialMemory / <span class="number">1024</span> /<span class="number">1024</span> * <span class="number">64</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;物理机实际最大内存: &quot;</span> + maxMemory / <span class="number">1024</span> /<span class="number">1024</span> * <span class="number">4</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>问题：</p>
+<p>  +++danger 为什么要将堆空间的初始化大小和最大容量设置为相同的呢？</p>
+<p>  ① 核心：避免频繁扩展堆空间的大小，同时也避免在垃圾回收之后重新计算堆空间大小，从而提高虚拟机的执行性能</p>
+<p>  ② 此前提到大多数的虚拟机都支持堆的动态扩展，并且需要使用垃圾回收机制</p>
+<p>  ③ 如果允许堆采用动态扩展，那么每次垃圾回收之后都会重新计算堆空间大小</p>
+<p>  ④ 因为对象被回收了，堆需要的空间就没那么大了，所以需要重新计算，这显然是浪费性能的</p>
+<p>  +++</p>
+<p>  +++ 为什么计算得到的物理机内存和实际内存不一样呢？</p>
+<p>  ① Runtime.getRuntime().totalMemory();  获取的堆内存是只有正在使用的内存</p>
+<p>  ② 幸存者区只会将其中一个区用作存放对象，另外一个区空着不放对象，所以获得的内存每次就少了一部分幸存者区的内存</p>
+<p>  +++</p>
+</li>
+</ul>
+</li>
+<li><p>设置堆空间大小命令</p>
+<ul>
+<li><p>[-Xms Size 设置堆空间的初始化大小]{.blue} </p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间初始化大小</span></span><br><span class="line"><span class="comment"># 等价于 -XX:InitialHeapSize</span></span><br><span class="line"><span class="comment">#（实际上这个参数我并没有使用过，网上也没有提到如何使用，很奇怪，就连官方文档都没有提到）</span></span><br><span class="line">-Xms1m</span><br></pre></td></tr></table></div></figure></li>
+<li><p>[-Xmx Size 设置堆空间的最大容量]{.blue}：</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间最大大小</span></span><br><span class="line"><span class="comment"># 等价于 -XX:MaxHeapSize</span></span><br><span class="line">-Xmx1m</span><br></pre></td></tr></table></div></figure></li>
+<li><p>[-Xmn Size 设置堆空间中年轻代的大小]{.blue}：堆剩下的空间就是老年代占有的</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间中年轻代的大小</span></span><br><span class="line">-Xmn1m</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>新生代和老年代大小设置</p>
+<ul>
+<li><p>默认大小比例</p>
+<ul>
+<li><p>[新生代 : 老年代 = 1 : 2]{.blue}</p>
+</li>
+<li><p>[伊甸园区 : 幸存者0区 : 幸存者1区 = 8 : 1 : 1]{.blue}</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>实际开发中通常使用默认的比例设置</p>
+</li>
+<li><p>实际上虚拟机会采用 [自适应策略]{.red}，新生代和老年代的比例是 1:2，但是新生代内部的比例却不是 8:1:1</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间比例.4vqbtj0dody0.png" alt="堆空间比例" style="zoom: 67%;" /></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>设置大小比例命令</p>
+<ul>
+<li><p>[-XX:+UseAdaptiveSizePolicy：关闭虚拟机自适应策略]{.blue}</p>
+<p>  :::info</p>
+<p>  实际上这个命令并不会生效，自适应策略是无法关闭的，想要让比例为默认的8:1:1，直接设置就好</p>
+<p>  :::</p>
+</li>
+<li><p>[-XX:NewRatio=ration：设置新生代和老年代的比例大小]{.blue}</p>
+</li>
+<li><p>[-XX:SurvivorRation=ratio：设置伊甸园区和幸存者区的比例大小]{.blue}</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>  +++ 为什么两个幸存者区的比例始终为 1:1 呢？</p>
+<p>  涉及到垃圾回收算法：复制标记算法</p>
+<p>  +++</p>
+</li>
+</ul>
+
+        <h2 id="堆空间溢出"   >
+          <a href="#堆空间溢出" class="heading-link"><i class="fas fa-link"></i></a><a href="#堆空间溢出" class="headerlink" title="堆空间溢出"></a>堆空间溢出</h2>
+      <p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/366840983" >来来来，聊聊7种内存泄露场景和13种解决方案</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>警告：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/sunweiye/p/10863985.html" >jvm 内存泄露与内存溢出</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>、<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43689480/article/details/96474346" >jvm内存泄漏</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>这些博客的例子全部都是错的，但凡写的人自己试一试他写的代码就会发现错了</p>
+<p>:::</p>
+<ul>
+<li><p>异常：OutOfMemoryError</p>
+</li>
+<li><p>原因：[内存泄露或者内存溢出]{.red}</p>
+<ul>
+<li><p>内存泄露（Memory Leak）</p>
+<ul>
+<li><p>定义：[应该被垃圾回收机制清除的对象无法被顺利清除，造成空间浪费，最终可能造成 OOM 异常]{.red}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露.2mbg5mrp49q0.png" alt="内存泄露" style="zoom:80%;" /></li>
+<li><p>情况：（这部分笔记暂时存在问题，先了解什么是内存泄露就行）</p>
+<p>  +++danger ① 静态集合类变量长期引用短生命周期的对象</p>
+<p>  测试代码</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 线程休眠: 便于观察上升曲线</span></span><br><span class="line">    Thread.sleep(<span class="number">10000</span>);</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        Object object = <span class="keyword">new</span> Object();</span><br><span class="line">        <span class="comment">// 链表不被销毁就会长期持有这个对象的引用</span></span><br><span class="line">        list.add(object);</span><br><span class="line">        <span class="comment">// 短生命周期引用不再指向对象, 链表依然持有该对象的引用</span></span><br><span class="line">        <span class="comment">// 注意: 这里将引用置为空的目的是代表这个对象我们不想再使用了</span></span><br><span class="line">        object = <span class="keyword">null</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;创建对象数量: &quot;</span> + ++count);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 线程休眠: 便于观察上升曲线</span></span><br><span class="line">    Thread.sleep(<span class="number">10000000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>  测试图示</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露1.i0i0025otcw.png" alt="内存泄露1" style="zoom:80%;" />
+
+<p>  测试堆内存结果</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/堆内存分析1.2caocz52qy4g.png" alt="堆内存分析1" style="zoom:80%;" />
+
+<p>  测试结论：</p>
+<ul>
+<li>每个添加进入链表的对象我们都不想继续使用，但是由于链表是静态变量，生命周期和类加载器一致，所以垃圾回收无法回收</li>
+<li>堆内存结果会再创建对象完成之后长时间保持水平线，意味着垃圾回收一直没有生效</li>
+</ul>
+<p>  :::info</p>
+<p>  疑惑：为什么将 static 关键字去掉之后依然没有触发垃圾回收机制？</p>
+<p>  :::</p>
+<p>  +++</p>
+<p>  ② [未关闭不再使用的连接资源]{.red}：创建的数据库连接、流对象等连接资源再使用之后没有合理关闭，就会造成内存泄露</p>
+<p>  ③ [未重写相应的 equals 和 hashCode 方法]{.red}</p>
+<p>  ④ 外部类引用内部类对象：</p>
+<p>  ⑤ 重写 finalize 方法不得当：</p>
+</li>
+</ul>
+</li>
+<li><p>内存溢出（Memory OverFlow）</p>
+<ul>
+<li><p>定义：[堆空间需要使用的内存超过虚拟机分配的内存，造成 OOM 异常]{.red}</p>
+</li>
+<li><p>测试：</p>
+<p>  测试代码</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 虚拟机参数设置: -Xms1m -Xmx1m</span></span><br><span class="line">    ArrayList&lt;Object&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">// 注意：尽可能将对象数量设置多点，否则不会溢出</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 循环创建对象</span></span><br><span class="line">        list.add(<span class="keyword">new</span> Object());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>  测试结果</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存溢出.689o51k3uf40.png" alt="内存溢出" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/23/jvm/runtime/heapspace/%E6%A6%82%E8%BF%B0/">http://example.com/2021/09/23/jvm/runtime/heapspace/%E6%A6%82%E8%BF%B0/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/23/jvm/runtime/heapspace/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">堆空间-对象创建</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/22/java/reflection/%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"><span class="paginator-prev__text">反射机制</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A0%86%E7%A9%BA%E9%97%B4"><span class="toc-number">1.</span> <span class="toc-text">
+          堆空间</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E5%88%92%E5%88%86"><span class="toc-number">1.2.</span> <span class="toc-text">
+          空间划分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%A7%E5%B0%8F"><span class="toc-number">1.3.</span> <span class="toc-text">
+          空间大小</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A0%86%E7%A9%BA%E9%97%B4%E6%BA%A2%E5%87%BA"><span class="toc-number">1.4.</span> <span class="toc-text">
+          堆空间溢出</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

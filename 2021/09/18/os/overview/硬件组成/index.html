@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="硬件设备                           I&#x2F;O 设备        组成部分：&#x3D;&#x3D;I&#x2F;O 设备控制器 + I&#x2F;O 设备&#x3D;&#x3D;  I&#x2F;O 结构模式：  同步 I&#x2F;O 结构：&#x3D;&#x3D;进程&#x3D;&#x3D; 必须等待 I&#x2F;O 完成后才可以继续执行（进程进入 &#x3D;&#x3D;等待&#x3D;&#x3D; 状态）   注：处理器并不会等待 I&#x2F;O 完成 -&gt; 处理器执行另外的程序  异步 I">
+<meta property="og:type" content="article">
+<meta property="og:title" content="硬件概述">
+<meta property="og:url" content="http://example.com/2021/09/18/os/overview/%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="硬件设备                           I&#x2F;O 设备        组成部分：&#x3D;&#x3D;I&#x2F;O 设备控制器 + I&#x2F;O 设备&#x3D;&#x3D;  I&#x2F;O 结构模式：  同步 I&#x2F;O 结构：&#x3D;&#x3D;进程&#x3D;&#x3D; 必须等待 I&#x2F;O 完成后才可以继续执行（进程进入 &#x3D;&#x3D;等待&#x3D;&#x3D; 状态）   注：处理器并不会等待 I&#x2F;O 完成 -&gt; 处理器执行另外的程序  异步 I">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/08/6ef8be35b1323e9295bf7c82c8efcbf0.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/13/ce3ece7dc54fbcc1bb4af50063191358.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/04/7659f4ae13dca9b8de76ebd71c406932.png">
+<meta property="article:published_time" content="2021-09-18T07:26:21.820Z">
+<meta property="article:modified_time" content="2021-10-21T07:08:12.697Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/08/6ef8be35b1323e9295bf7c82c8efcbf0.png"><title>硬件概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/18/os/overview/%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">硬件概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="硬件设备"   >
+          <a href="#硬件设备" class="heading-link"><i class="fas fa-link"></i></a><a href="#硬件设备" class="headerlink" title="硬件设备"></a>硬件设备</h1>
+      
+        <h2 id="I-O-设备"   >
+          <a href="#I-O-设备" class="heading-link"><i class="fas fa-link"></i></a><a href="#I-O-设备" class="headerlink" title="I/O 设备"></a>I/O 设备</h2>
+      <ul>
+<li><p>组成部分：==I/O 设备控制器 + I/O 设备==</p>
+</li>
+<li><p>I/O 结构模式：</p>
+<ul>
+<li><p>同步 I/O 结构：==进程== 必须等待 I/O 完成后才可以继续执行（进程进入 ==等待== 状态）</p>
+<p>  <a style="color:red;">注：处理器并不会等待 I/O 完成 -&gt; 处理器执行另外的程序</a></p>
+</li>
+<li><p>异步 I/O 结构：==进程== 不需要等待 I/O 完成而是由处理器继续执行剩下的代码</p>
+<p>  <a style="color:red;">注：进程可以申请多个 I/O 设备</a> -&gt; 产生中断时如何判断到底是哪个设备产生的呢？</p>
+</li>
+<li><p>设备状态表：记录每个设备的 ==状态 地址 类型==</p>
+<p>  执行过程：中断产生时处理器会根据设备状态表索引到发出中断的设备控制器</p>
+</li>
+<li><p>问题：每次请求 I/O 设备并返回的过程中都会产生中断 -&gt; 导致处理器会频繁地处理中断程序 -&gt; 处理器 ==性能下降== </p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/06/08/6ef8be35b1323e9295bf7c82c8efcbf0.png" alt="6ef8be35b1323e9295bf7c82c8efcbf0.png" style="zoom:80%;" /></li>
+<li><p>传输过程：</p>
+<ul>
+<li><p>轮询机制：</p>
+<ul>
+<li>定义：CPU 会不断询问 I/O 设备是否完成任务</li>
+<li>细节：<a style="color:red;">CPU 会一直处于忙等待状态 -&gt; 此期间 CPU 无法完成其他的工作</a></li>
+</ul>
+</li>
+<li><p><a href="#%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6">中断机制</a></p>
+</li>
+<li><p>直接内存访问机制</p>
+<ul>
+<li>定义：直接内存访问机制是指外部设备不通过处理器而直接与系统内存交换数据的技术</li>
+<li>过程：<ol>
+<li>处理器每次将 数据 + 指令 + 设备信息 <strong>写入内存</strong> 中 ( 称为 <code>DMA</code> 地址块)</li>
+<li>处理器将 <code>DMA</code> 地址块的地址交付给 <code>DMA</code> 控制器 (<a style="color:red;">计算机总线现在由 DMA 控制器接管而不是处理器</a>)</li>
+<li>处理器通知 <strong>硬件驱动程序</strong> 操控相应的 <strong>硬件控制器</strong> 进行读写操作</li>
+<li>硬件设备控制器发送 <strong><code>DMA</code> 请求</strong> 通知 <code>DMA</code> 开始传输数据</li>
+<li><code>DMA</code> 控制器占用 <strong>内存总线</strong> 根据 <strong>内存地址</strong> 获取相应的 <strong>内存空间</strong> (<a style="color:red;">此时处理器不可以访问内存只可以访问缓存</a>)</li>
+<li><code>DMA</code> 控制器获取到相应内存空间后发送 <strong><code>DMA</code> 确认</strong></li>
+<li>硬件设备开始传输数据并且 <strong>清除</strong> <code>DMA</code> 请求</li>
+<li><code>DMA</code> 接收到数据之后就将其通过总线送入相应的内存空间中</li>
+<li><code>DMA</code> 等待 <strong>内存空间</strong> 充满之后向处理器发出中断交付数据</li>
+</ol>
+</li>
+<li>细节：<ol>
+<li><a style="color:red;">大多数操作系统都是不会直接为 DMA 设置物理空间</a>(就是不会做个单独做个存储硬件)，<a style="color:red;">主要是在内存中开辟缓冲区</a></li>
+<li>实际上 <code>DMA</code> 控制器仅仅只负责收取数据而实际操作设备控制器的始终都是 <strong>设备驱动程序</strong></li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>驱动程序 &amp; 控制器：</p>
+<ul>
+<li><p>流程：操作系统发出指令 -&gt; 驱动程序接收指令 -&gt; 控制器接收指令操作具体的 I/O 设备</p>
+<p>  前提：应用程序的运行需要驱动程序</p>
+</li>
+<li><p>控制器属于硬件设备 &lt;-&gt; 驱动程序是安装在 ==操作系统之上== 或者内置在 ==操作系统内== 的程序</p>
+</li>
+<li><p><a style="color:red;">控制器管理同规格的不同类型的设备 &lt;-&gt; 驱动程序管理同类型的设备</a></p>
+<p>  解释：只要满足控制器的规格设备都可以接入计算机：比如 友基 和 wacom 的数位板都是通过 USB 接口接入控制器，被 USB 控制器统一管理</p>
+<p>  ​          但是每种类型的数位板都需要安装不同的驱动程序，每个 wacom 的驱动程序仅管理 wacom 的数位板不管理友基的</p>
+</li>
+<li><p>控制器都是运行在底层的 &lt;-&gt; <a style="color:red;">大多数驱动程序都是运行在内核态</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="存储器"   >
+          <a href="#存储器" class="heading-link"><i class="fas fa-link"></i></a><a href="#存储器" class="headerlink" title="存储器"></a>存储器</h2>
+      <ul>
+<li><p>存储结构</p>
+<ul>
+<li><p>寄存器：(1) 用和处理器相同的材料制成 (2) 处理器访问寄存器时不会产生时延</p>
+</li>
+<li><p>高速缓存（Cache）：</p>
+<ul>
+<li><p>定义：用于存放经常使用的数据</p>
+</li>
+<li><p>分类：(1) 一级缓存 (2) 二级缓存</p>
+<p>  注：访问一级缓存不需要时延因为一级缓存通常存放在 处理器 中；访问二级缓存会延时 1 到 2 个时钟周期（CLK）</p>
+</li>
+<li><p>缓存机制（Caching）：<a style="color:red;">将数据从速度较慢的内存中拷贝到速度较快的缓存中</a></p>
+</li>
+<li><p>置换数据：[LRU 置换算法](#LRU 置换算法)</p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">主存</a></p>
+<ul>
+<li>定义：<a style="color:red;">具有巨大容量的字节数组，每块字节都具有自己独立的地址</a></li>
+<li>组成：==RAM（易失性） + ROM（非易失性）==</li>
+<li>细节：<a style="color:red;">主存可以被认为二级存储的缓存</a></li>
+</ul>
+</li>
+<li><p>固态硬盘</p>
+<ul>
+<li><p>磁盘：硬盘 + 软盘</p>
+<p>  注：不过现在的软盘已经被废弃所以说磁盘就是硬盘也没问题</p>
+</li>
+<li><p>硬盘：(1) 固态硬盘：采用 PCB 主板构成，读取速率更快 (2) 普通硬盘采用磁片重叠组成</p>
+</li>
+</ul>
+</li>
+<li><p>光盘：通常需要外接光驱进行使用；磁盘通常直接嵌入在计算机中</p>
+<p>  注：现在通常使用蓝光(BD)；光盘已经很少在用</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ol>
+<li><p>磁盘等大容量存储设备是 <strong>不可以</strong> 直接被 CPU 访问 </p>
+</li>
+<li><p><a style="color:red;">主存是 处理器 唯一可以直接访问的大容量存储设备</a></p>
+<p> 注：计算机组成原理：CPU 是不会直接访问主存的 -&gt; 如果高速缓存未命中 -&gt; 经由高速缓存去主存中索取相应的数据而不是 CPU</p>
+</li>
+</ol>
+</li>
+<li><p>图示</p>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/13/ce3ece7dc54fbcc1bb4af50063191358.png" alt="ce3ece7dc54fbcc1bb4af50063191358.png" style="zoom:80%;" />
+
+
+
+
+        <h2 id="处理器"   >
+          <a href="#处理器" class="heading-link"><i class="fas fa-link"></i></a><a href="#处理器" class="headerlink" title="处理器"></a>处理器</h2>
+      <ul>
+<li><p>前提：处理器内部结构非常重要，对理解内存中的进程如何执行是很关键的（建议学习《计算机组成原理》）</p>
+</li>
+<li><p>寄存器：</p>
+<ul>
+<li><p>数据寄存器（DR）：临时存放需要 ==写入内存== 或者 ==从内存读取== 的指令和数据</p>
+<ul>
+<li>==弥补== 处理器和主存以及外围设备之间在 ==操作速度上的差异==</li>
+<li>数据寄存器在部分情况下可以作为操作数寄存器（通用寄存器）</li>
+</ul>
+</li>
+<li><p>指令寄存器（IR）：保存当前 ==正在执行的指令）==</p>
+</li>
+<li><p>程序计数器（PC）：保存将要执行的 ==指令的地址==</p>
+<p>  <a style="color:red;">注：程序计数器的地址是可以 <strong>自增</strong> 的</a></p>
+</li>
+<li><p>地址寄存器（AR）：保存处理器正在访问的内存的 ==地址相关信息==</p>
+<ul>
+<li>基地址寄存器：保存访问内存的 ==基地址==</li>
+<li>界限地址寄存器：保存访问内存的 ==上限地址==</li>
+<li>栈顶寄存器（SP）：存放 ==内存== 中堆栈区域的 ==起始地址）==</li>
+</ul>
+</li>
+<li><p>累加寄存器：存放加减乘除的运算结果和操作数</p>
+</li>
+<li><p>程序状态字寄存器：保存条件码 + 模式 + CPU优先级 + 各种控制位信息</p>
+<ul>
+<li>条件码：计算过程有无进位和溢出；模式：<a style="color:red;">操作系统处于用户模式还是内核模式</a>；控制位：<a style="color:red;">是否屏蔽中断</a></li>
+</ul>
+</li>
+<li><p>通用寄存器：存放运算结果</p>
+</li>
+</ul>
+</li>
+<li><p>运算器：执行数据的 <strong>算术运算</strong> 和 <strong>逻辑运算</strong></p>
+</li>
+<li><p>控制器：</p>
+<ul>
+<li><p><a style="color:red;">(1) 根据 <strong>程序计数器</strong> 中保存的指令地址获取指令并写入 <strong>指令寄存器</strong> (2) 利用 <strong>译码器</strong> 解析获取的指令</a></p>
+</li>
+<li><p>根据指令的解析结果去控制硬件设备</p>
+<p>  注：译码器是控制器中的一部分</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">程序计数器 + 累加寄存器 + 程序状态字寄存器 + 指令寄存器 + 栈寄存器都只有一个；其余寄存器都是可以存在多个的</a></li>
+<li>处理器中的寄存器实际并不只有这些，还有其他的寄存器，但是这些是最主要的寄存器</li>
+</ul>
+</li>
+<li><p>执行流程：</p>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/06/04/7659f4ae13dca9b8de76ebd71c406932.png" alt="7659f4ae13dca9b8de76ebd71c406932.png" style="zoom:80%;" /></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/18/os/overview/%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/">http://example.com/2021/09/18/os/overview/%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">虚拟内存</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/18/os/overview/%E5%8E%86%E5%8F%B2/"><span class="paginator-prev__text">操作系统-操作系统历史</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E8%AE%BE%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">
+          硬件设备</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#I-O-%E8%AE%BE%E5%A4%87"><span class="toc-number">1.1.</span> <span class="toc-text">
+          I&#x2F;O 设备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-number">1.2.</span> <span class="toc-text">
+          存储器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">
+          处理器</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

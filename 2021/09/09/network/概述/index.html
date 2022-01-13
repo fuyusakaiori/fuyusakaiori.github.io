@@ -1,0 +1,460 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="概述                           概念                           定义        定义：计算机网络是将多个 [分散独立]{.red} 的计算机系统，通过 [通信设备]{.red} 和 [通信链路]{.red} 连接起来，并且利用软件实现 [资源共享]{.red} 和 [数据传递]{.red} 的系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概述">
+<meta property="og:url" content="http://example.com/2021/09/09/network/%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="概述                           概念                           定义        定义：计算机网络是将多个 [分散独立]{.red} 的计算机系统，通过 [通信设备]{.red} 和 [通信链路]{.red} 连接起来，并且利用软件实现 [资源共享]{.red} 和 [数据传递]{.red} 的系统">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/09/17a785f65128b91281140180321346ed.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/image-20210301143343776.4gg7k2y80ui0.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/09/2e913893eec8bf48149e56305a5315e4.png">
+<meta property="article:published_time" content="2021-09-09T12:46:59.404Z">
+<meta property="article:modified_time" content="2021-09-09T13:00:03.248Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/09/17a785f65128b91281140180321346ed.png"><title>概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/09/network/%E6%A6%82%E8%BF%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-09</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-09</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
+      
+        <h2 id="概念"   >
+          <a href="#概念" class="heading-link"><i class="fas fa-link"></i></a><a href="#概念" class="headerlink" title="概念"></a>概念</h2>
+      
+        <h3 id="定义"   >
+          <a href="#定义" class="heading-link"><i class="fas fa-link"></i></a><a href="#定义" class="headerlink" title="定义"></a>定义</h3>
+      <ul>
+<li><p>定义：计算机网络是将多个 [分散独立]{.red} 的计算机系统，通过 [通信设备]{.red} 和 [通信链路]{.red} 连接起来，并且利用软件实现 [资源共享]{.red} 和 [数据传递]{.red} 的系统</p>
+<p>  [互联网是 <strong>互联自治</strong> 的计算机集合]{.red}</p>
+</li>
+<li><p>通信设备</p>
+<ul>
+<li><p><a href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA">链路层交换机</a> (Link-Layer Switch)  链路层交换机通常称为交换机</p>
+</li>
+<li><p><a href="#%E8%B7%AF%E7%94%B1%E5%99%A8">路由器</a> (Router)</p>
+<p>  注：(1) 链路层交换机和路由器被统称为交换机 (2) 链路层交换机位于 <a href="#%E6%8E%A5%E5%85%A5%E7%BD%91">接入网</a> 而路由器位于 <a href="#%E7%BD%91%E7%BB%9C%E6%A0%B8%E5%BF%83">网络核心</a></p>
+</li>
+</ul>
+</li>
+<li><p>通信链路：又称为 <a href="#%E6%8E%A5%E5%85%A5%E7%BD%91">物理媒介</a> 或者 <a href="#%E6%8E%A5%E5%85%A5%E7%BD%91">接入网</a></p>
+<ul>
+<li>双绞线：(1) 屏蔽双绞线 (2) 非屏蔽双绞线</li>
+<li>同轴电缆</li>
+<li>光纤</li>
+</ul>
+</li>
+<li><p>数据传递：互联网中的所有数据都可以称为 [分组]{.red} ；每层也有自己具体的数据单位</p>
+<ul>
+<li><a href="#%E7%AC%AC%E5%85%AD%E7%AB%A0">应用层</a>：报文</li>
+<li><a href="#%E7%AC%AC%E4%BA%94%E7%AB%A0">传输层</a>：报文段</li>
+<li><a href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0">网络层</a>：数据报</li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E7%AB%A0">数据链路层</a>：帧</li>
+<li>物理层：比特</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="功能"   >
+          <a href="#功能" class="heading-link"><i class="fas fa-link"></i></a><a href="#功能" class="headerlink" title="功能"></a>功能</h3>
+      <ul>
+<li><p>[数据通信]{.red}：借助计算机网络的 [连通性]{.red}，将数据从当前计算机系统 [传递]{.red} 到其他的计算机系统</p>
+</li>
+<li><p>[资源共享]{.red}：硬件 + 软件 + 数据</p>
+<p>  注：资源共享并不只是共享数据；借助计算机网络硬件和软件同样可以共享</p>
+</li>
+<li><p>分布式处理：各台计算机承担同一工作的不同部分</p>
+</li>
+<li><p>提高可靠性：当前计算机系统宕机后，使用代替机继续完成当前工作</p>
+</li>
+<li><p>负载均衡：调整不同计算机系统之间的工作</p>
+</li>
+</ul>
+
+        <h3 id="组成"   >
+          <a href="#组成" class="heading-link"><i class="fas fa-link"></i></a><a href="#组成" class="headerlink" title="组成"></a>组成</h3>
+      <ul>
+<li><p>前提：计算机网络的组成可以按照三种方式看：(1) 从实际的内容看(组成部分) (2) <a href="#%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F">从实际运行方式来看</a> (3) 从实际的功能来看(功能组成)</p>
+</li>
+<li><p>组成部分：</p>
+<ul>
+<li><p>软件：运行在端系统上的各种软件</p>
+</li>
+<li><p>硬件：端系统 + 适配器 + 通信链路 + 通信设备</p>
+<p>  注：端系统又称为主机；端系统可以分为两类：(1) 客户端(个人电脑) (2) 服务器(大型机)</p>
+</li>
+<li><p>协议：[规定了两个或者多个通信实体之间交换报文的格式和顺序，以及发送报文和接收报文等其他事件需要采取的动作]{.red}</p>
+<p>  注：协议是计算机网络的核心；协议仅仅只是规定，真正的实现是由各种各样的硬件实现的，这些硬件需要遵循协议规定的内容</p>
+</li>
+</ul>
+</li>
+<li><p>功能组成：<a href="#%E5%88%86%E5%B1%82%E7%BB%93%E6%9E%84">分层结构</a></p>
+</li>
+</ul>
+
+        <h4 id="工作方式"   >
+          <a href="#工作方式" class="heading-link"><i class="fas fa-link"></i></a><a href="#工作方式" class="headerlink" title="工作方式"></a>工作方式</h4>
+      <img src="https://i1.xpic.jp/file/xpicjp/2021/06/09/17a785f65128b91281140180321346ed.png" alt="17a785f65128b91281140180321346ed.png" style="zoom:80%;" />
+
+
+        <h5 id="网络边缘"   >
+          <a href="#网络边缘" class="heading-link"><i class="fas fa-link"></i></a><a href="#网络边缘" class="headerlink" title="网络边缘"></a>网络边缘</h5>
+      <ul>
+<li>定义：位于网络边缘的通常都是端系统：各式各样的个人电脑，移动端设备，以及大型数据中心</li>
+<li>通信方式：P2P C/S</li>
+<li>细节：网络边缘的设备从网络核心中获取相应的的网络服务</li>
+</ul>
+
+        <h5 id="接入网"   >
+          <a href="#接入网" class="heading-link"><i class="fas fa-link"></i></a><a href="#接入网" class="headerlink" title="接入网"></a>接入网</h5>
+      <ul>
+<li><p>定义：将端系统 [物理连接]{.red} 到网络核心中的边缘路由器的网络</p>
+<ul>
+<li>物理连接：说白了就是装网线的</li>
+<li><a href="%E7%AC%AC%E5%9B%9B%E7%AB%A0">边缘路由器</a></li>
+</ul>
+</li>
+<li><p>接入方式</p>
+<ul>
+<li><p>家庭接入：</p>
+<ul>
+<li><p>DSL (全称：Digital Subscribe Line 俗称：宽带)：</p>
+<ul>
+<li>接入：每个用户将自己的 [DSL 调制解调器]{.red} 使用 [双绞线]{.red} 连接到本地电话公司的 [复用器]{.red} (DSLAM) 中</li>
+<li>调制解调器（俗称：猫(Modem)）：[用于数字信号和模拟信号的相互转换]{.red}</li>
+<li>双绞线：传统的电话线，[只能够传输模拟信号]{.red}</li>
+<li>复用器：就是可以接入多个用户的调制解调器</li>
+<li>[DSL 接入的上行速率和下行速率不相等，这种接入被称为不对称的接入（ADSL 接入）]{.red}</li>
+<li>DSL 使用 <a href="#%E9%93%BE%E8%B7%AF%E7%AE%A1%E7%90%86">FDM</a>(频分复用技术)：用户的多个设备可以共享同一通信链路</li>
+</ul>
+</li>
+<li><p>拨号上网：(1) 可以看做没有使用频分复用技术的 DSL 接入 (2) 速率非常慢</p>
+</li>
+<li><p>电缆接入：</p>
+<ul>
+<li>接入：每个用户将自己的 [电缆调制解调器]{.red} 使用 [同轴电缆]{.red} 连接到本地有线电视公司的 [电缆调制解调器]{.red} (CMTS)  中</li>
+<li>[电缆接入通常采用的也是不对称的接入]{.red}</li>
+<li>电缆接入最重要的特征：[共享广播媒体]{.red}（需要使用 <a href="#%E9%93%BE%E8%B7%AF%E7%AE%A1%E7%90%86">信道访问控制</a> 来解决，否则实际下行速率会远低于理想的下行速率）</li>
+</ul>
+</li>
+<li><p>光纤接入(FTTH)：</p>
+<p>  (1) ISP 直接将光纤接入到每个用户的位置（每个用户独占一根光纤） (2) ISP 直到接近每个用户时才将光纤分开接入到每个用户 (多个用户共享一个光纤)</p>
+</li>
+</ul>
+</li>
+<li><p>企业接入</p>
+<ul>
+<li><a href="#%E4%BB%A5%E5%A4%AA%E7%BD%91">以太网接入</a></li>
+<li>WiFi 接入：使用非导向性质的媒介：无线电波接入</li>
+</ul>
+</li>
+<li><p>广域无线接入：4G 5G 都属于广域无线接入</p>
+</li>
+</ul>
+</li>
+<li><p>物理媒介</p>
+<ul>
+<li><p>导向性质媒介</p>
+<ul>
+<li><p>双绞线(Twisted Pair)：(1) 非屏蔽双绞线(UTP) (2) 屏蔽双绞线(STP)</p>
+<p>  注：10Mbps 传统电话线([3类双绞线]{.blue}) ； 100Mbps 以太网 ([5类双绞线]{.blue}) ；1Gbps 吉比特以太网（[6类双绞线]{.blue}）</p>
+</li>
+<li><p>同轴电缆(Coaxial cable)：(1) 2类同轴电缆(10BASE-2) (2) 5类同轴电缆(10BASE-5)</p>
+</li>
+<li><p>光纤：(1) 单模光纤 (2) 多模光纤</p>
+</li>
+</ul>
+</li>
+<li><p>非导向性质媒介：无线电波，微波，红外线</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="网络核心"   >
+          <a href="#网络核心" class="heading-link"><i class="fas fa-link"></i></a><a href="#网络核心" class="headerlink" title="网络核心"></a>网络核心</h5>
+      <ul>
+<li><p>定义：网络边缘的端系统发送分组到网络核心的交换设备中，经过多个交换设备 [交换]{.red} 送到目的端系统上</p>
+</li>
+<li><p>交换设备：(1) 链路层交换机 (2) 路由器</p>
+</li>
+<li><p>交换方式</p>
+<ul>
+<li><p>电路交换（Circuit Switching）：两个主机之间建立一条由多个交换设备和多条通信链路组成的 [专用线路]{.red}，报文通过专用线路传输到另一个主机上</p>
+<ul>
+<li><p><a href="#%E9%93%BE%E8%B7%AF%E7%AE%A1%E7%90%86">复用</a>：(1) 频分复用(FDM) (2) 时分复用(TDM) (3) 码分多址复用(CDM)</p>
+<p>  注：每个频带或者每个时隙都相当于一条线路，相当于将一条完整的线路在逻辑划分成多条，可以供多个用户使用</p>
+</li>
+<li><p>优点：(1) 报文传输 [延时小实时性强]{.red} (2) [可靠性高]{.red} (3) [没有冲突]{.red} 产生 (4) 适用范围广</p>
+</li>
+<li><p>缺点：(1) 线路独占导致资源利用率低（存在静默期(Silent Period)） (2) 连接建立时间长 (3) 每个用户获得的带宽仅为总带宽的 $\frac{1}{N}$</p>
+</li>
+<li><p>[电路交换时 <strong>面向连接服务</strong> 的：保证了可靠传输]{.red}</p>
+</li>
+<li><p>电路交换发送报文采取的是直通方式不是存储转发的方式</p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2">分组交换</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="分类"   >
+          <a href="#分类" class="heading-link"><i class="fas fa-link"></i></a><a href="#分类" class="headerlink" title="分类"></a>分类</h3>
+      <ul>
+<li><p>按分布范围分类</p>
+<ul>
+<li>[广域网（WAN）]{.red}：使用 [交换技术]{.red}；连接各结点交换机的链路一般是高速电路，具有较大的通信容量；互联网是广域网的一种</li>
+<li>城域网（MAN）</li>
+<li>[局域网（LAN）]{.red}：使用 [广播技术]{.red}；配置的主机数量没有限制（可以达到上百台）；[工作到数据链路层，不涉及网络层]{.red}</li>
+<li>个人网（PAN）：个人范围内（通常范围只有数米）的计算机设备组成的网络</li>
+</ul>
+</li>
+<li><p>按使用者分类</p>
+<ul>
+<li>公网（Extranet）：中国电信 中国移动 中国联通；大众都可以付费使用的网络</li>
+<li>专网（Intranet）：政府 银行 军队；只有特定的人员才能够使用的网络</li>
+</ul>
+</li>
+<li><p>按交换技术分类</p>
+<ul>
+<li>电路交换</li>
+<li>报文交换</li>
+<li><a href="#%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2">分组交换</a></li>
+</ul>
+</li>
+<li><p>按拓扑结构分类(逻辑拓扑 + 物理拓扑)：</p>
+<ul>
+<li><p>定义：描述各个端系统和通信链路的连接方式和布局，以及数据传输的路径</p>
+</li>
+<li><p>总线型网络：</p>
+<ul>
+<li>优点：(1) 建立网络容易 (2) 增删结点方便 (3) 减少成本</li>
+<li>缺点：(1) 重负载时通信效率不高 (2) 总线对故障敏感</li>
+</ul>
+</li>
+<li><p>星型网络</p>
+<ul>
+<li>优点：(1) 便于集中控制管理 (2) 提高流量的利用率</li>
+<li>缺点：(1) 成本高 (2)单点故障</li>
+</ul>
+</li>
+<li><p>环状型网络：(1) 单向环型：环中信号单向传输 (2) 双向环型：允许环中信号双向传输</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>* 网状型（常用于广域网）
+
+    * 优点：可靠性高
+    * 缺点：(1) 控制复杂 (2) 线路成本高
+</code></pre>
+<ul>
+<li><p>按传输技术分类</p>
+<ul>
+<li><p>广播式网络</p>
+<ul>
+<li>共享的公共通信信道</li>
+<li>广域网中的 [卫星通信网络]{.blue} 和 [无线通信网络]{.blue} 也是采用的广播式网络</li>
+</ul>
+</li>
+<li><p>点对点网络：</p>
+<ul>
+<li><p>每条物理线路都连接一对主机</p>
+</li>
+<li><p>使用 <a href="%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91">分组存储转发</a> 和 <a href="#%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE%E5%8F%8A%E7%AE%97%E6%B3%95">路由选择机制</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="互联网提供商"   >
+          <a href="#互联网提供商" class="heading-link"><i class="fas fa-link"></i></a><a href="#互联网提供商" class="headerlink" title="互联网提供商"></a>互联网提供商</h2>
+      
+        <h2 id="性能指标"   >
+          <a href="#性能指标" class="heading-link"><i class="fas fa-link"></i></a><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2>
+      <ul>
+<li><p>速率：单位时间内从一端传送到另一端的 [数据量]{.red}</p>
+<ul>
+<li>单位：bps Kbps Mbps Gbps &lt;-&gt; Bps KBps MBps GBps </li>
+<li>换算：<ul>
+<li>[上述单位都是以 <strong>比特</strong> 为单位的不是 <strong>字节</strong>]{.red}：需要将上述单位再除以 8 才是以字节为单位的</li>
+<li>相邻两个单位之间的使用 [10^3^]{.red} 换算（也有可能是 1024）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>带宽：</p>
+<ul>
+<li>定义 1：指信道具有的频度宽度：就是最高频率和最低频率之差，单位赫兹</li>
+<li>定义 2：单位时间从一端传输到另一端的 [最大数据量]{.red} ([通常都是理想速率，难以达到]{.blue})</li>
+</ul>
+</li>
+<li><p>吞吐量：单位时间内 [成功传输的数据量]{.red}（传输过程中会出现丢包等现象，实际接收的数据量可能并不是发送的数据量）</p>
+<ul>
+<li>[每段链路的吞吐量可能不一致]{.red}：吞吐量 = $min(R_0,R_1,R_2···R_n)$ 取最小的那个吞吐量</li>
+<li>[多个用户共享信道]{.red}：每个用户的吞吐量是信道总的吞吐量的 $\frac{1}{N}$</li>
+<li>[吞吐量受制于接入网或者用户的数量]{.red}</li>
+</ul>
+</li>
+<li><p>时延：</p>
+<ul>
+<li><p>传输时延(propagation delay)：[分组大小 ÷ 带宽]{.red}</p>
+<ul>
+<li>前提：仅考虑传输时延的情况下<ul>
+<li>一个分组经过 $N$ 个路由器转发到达目的地所花的时间 $d = N*\frac{L}{R}$</li>
+<li>$P$ 个分组经过 $N$ 个路由器转发到达目的地所花的时间 $d= (N + P - 1)*\frac{L}{R}$ (无论 $N$ 和 $P$ 的关系如何这个公式都是成立的)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>传播时延(transmission delay)：[信道长度 ÷ 介质传输速率]{.red}</p>
+</li>
+<li><p>排队时延(queuing delay)：分组在路由器队列中等待处理的时间</p>
+</li>
+<li><p>处理时延(processing delay)：路由器查询路由表转发的消耗时间</p>
+<p>  注：通常只考虑传输时延</p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/image-20210301143343776.4gg7k2y80ui0.png" alt="image-20210301143343776" style="zoom:80%;" />
+
+
+
+<ul>
+<li><p>时延带宽积()</p>
+<ul>
+<li>定义：[当前的数字信道中所存在的比特数量]{.red}；即某链路现在又多少比特</li>
+<li>公式：[带宽 x 时延 = 时延带宽积]{.red}</li>
+</ul>
+</li>
+<li><p>流量强度：</p>
+<ul>
+<li>定义：$\frac{L\alpha}{R}$ （$L$ 是每个分组的比特数 $\alpha$ 是到达路由的分组数量 $R$ 是带宽或者传输速率）</li>
+<li>[流量强度增加会导致平均时延增加]{.red}</li>
+</ul>
+</li>
+<li><p>往返时延概念：</p>
+<ul>
+<li>定义：从 [发送方发送数据开始]{.red} 到 [发送方收到接收方的确认]{.red} 为止</li>
+<li>公式：[传播时延 * 2]{.red} + 末端处理时间</li>
+<li>特点：往返时延越大，发送方能够传输的数据就越多，等待越久</li>
+</ul>
+</li>
+<li><p>利用率</p>
+<ul>
+<li><p>信道利用率：[有数据通过的时间 ÷ 有 + 无数据通过的时间]{.red}</p>
+</li>
+<li><p>网络利用率：信道利用率的加权平均值</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="分层结构"   >
+          <a href="#分层结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#分层结构" class="headerlink" title="分层结构"></a>分层结构</h2>
+      
+        <h3 id="概念-1"   >
+          <a href="#概念-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3>
+      <ul>
+<li><p>目的：</p>
+<ul>
+<li>提高功能的独立性</li>
+<li>促进标准化工作</li>
+<li>灵活性高的同时降低了各层协议设计的复杂性</li>
+</ul>
+</li>
+<li><p>实体：(1) 每层中的活动元素称为实体（数据）(2) 同一层中的实体称为 [对等实体]{.red}</p>
+</li>
+<li><p>协议：</p>
+<ul>
+<li>定义：规定两个通信实体之间交换报文的格式和顺序，以及接受报文和发送报文等其他事件需要执行的动作</li>
+<li>组成：<ul>
+<li>(1) [语法]{.red}(Syntax)：规定当前数据如何进行解析 </li>
+<li>(2) [语义]{.red}(Semantic)：解析当前的数据所执行的功能 </li>
+<li>(3) [同步]{.red}(Synchronization)：规定各个数据包解析的先后次序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数据单位：PCI + SDU = PDU</p>
+<ul>
+<li>协议控制信息(PCI)</li>
+<li>服务数据单元(SDU)</li>
+<li>协议数据单元(PDU)</li>
+</ul>
+</li>
+<li><p>服务</p>
+<ul>
+<li>概念<ul>
+<li>下层实体<strong>提供</strong>给上层实体的可以<strong>调用的功能</strong></li>
+<li>上层实体可以调用<strong>所有下层</strong>实体提供的功能</li>
+<li>下层实体提供的服务的实现细节对于上层是<strong>不可见的</strong></li>
+<li>实现本层的协议需要下一层提供的服务</li>
+</ul>
+</li>
+<li>服务原语<ul>
+<li>请求；指示；响应；证实</li>
+<li>有应答服务包含 4 中服务原语；无应答服务只包含 <strong>请求</strong> 和 <strong>指示</strong></li>
+</ul>
+</li>
+<li>服务分类<ul>
+<li>面向连接服务（TCP） 和 无连接服务（UDP / IP）</li>
+<li>可靠服务（TCP） 和 不可靠服务（UDP）</li>
+<li>有应答服务 和 无应答服务（HTTP）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>接口：上层实体 <strong>调用</strong> 下层实体提供的 <strong>服务</strong> 的入口</p>
+</li>
+</ul>
+
+        <h3 id="分层"   >
+          <a href="#分层" class="heading-link"><i class="fas fa-link"></i></a><a href="#分层" class="headerlink" title="分层"></a>分层</h3>
+      <ul>
+<li>TCP/IP 协议栈：<a href="#%E7%AC%AC%E5%85%AD%E7%AB%A0">应用层</a> + <a href="#%E7%AC%AC%E4%BA%94%E7%AB%A0">传输层</a> + <a href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0">网络层</a> + <a href="#%E7%AC%AC%E4%B8%89%E7%AB%A0">数据链路层</a> + <a href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0">物理层</a></li>
+<li>OSI 协议栈：应用层 + 表示层 + 会话层 + 传输层 + 网络层 + 数据链路层 + 物理层</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/06/09/2e913893eec8bf48149e56305a5315e4.png" alt="2e913893eec8bf48149e56305a5315e4.png" style="zoom:80%;" /></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/09/network/%E6%A6%82%E8%BF%B0/">http://example.com/2021/09/09/network/%E6%A6%82%E8%BF%B0/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/09/network/%E7%89%A9%E7%90%86%E5%B1%82/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">物理层</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/09/java/io/AIO/"><span class="paginator-prev__text">AIO</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">
+          概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">
+          概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.1.3.</span> <span class="toc-text">
+          组成</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">
+          工作方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%BE%B9%E7%BC%98"><span class="toc-number">1.1.3.1.1.</span> <span class="toc-text">
+          网络边缘</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8E%A5%E5%85%A5%E7%BD%91"><span class="toc-number">1.1.3.1.2.</span> <span class="toc-text">
+          接入网</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%A0%B8%E5%BF%83"><span class="toc-number">1.1.3.1.3.</span> <span class="toc-text">
+          网络核心</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.4.</span> <span class="toc-text">
+          分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%92%E8%81%94%E7%BD%91%E6%8F%90%E4%BE%9B%E5%95%86"><span class="toc-number">1.2.</span> <span class="toc-text">
+          互联网提供商</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">1.3.</span> <span class="toc-text">
+          性能指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B1%82%E7%BB%93%E6%9E%84"><span class="toc-number">1.4.</span> <span class="toc-text">
+          分层结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">
+          概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B1%82"><span class="toc-number">1.4.2.</span> <span class="toc-text">
+          分层</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

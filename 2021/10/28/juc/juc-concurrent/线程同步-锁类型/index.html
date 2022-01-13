@@ -1,0 +1,209 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="锁类型       :::primary 这里只会简单讲述每种锁的概念是什么，具体到锁的每种实现则会放到后面的部分再讲 :::                     悲观锁和乐观锁        前言：悲观锁和乐观锁都是数据库并发控制中引入的概念，但并不仅限于数据库系统中使用  悲观锁  定义： [每次对共享变量的修改过程持悲观态度，认为其他线程访问会 频">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程同步-锁类型">
+<meta property="og:url" content="http://example.com/2021/10/28/juc/juc-concurrent/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5-%E9%94%81%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="锁类型       :::primary 这里只会简单讲述每种锁的概念是什么，具体到锁的每种实现则会放到后面的部分再讲 :::                     悲观锁和乐观锁        前言：悲观锁和乐观锁都是数据库并发控制中引入的概念，但并不仅限于数据库系统中使用  悲观锁  定义： [每次对共享变量的修改过程持悲观态度，认为其他线程访问会 频">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/公平锁.4305ski22y00.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/非公平锁.434laznbfc80.png">
+<meta property="article:published_time" content="2021-10-28T12:44:47.089Z">
+<meta property="article:modified_time" content="2021-10-28T12:45:32.121Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/公平锁.4305ski22y00.png"><title>线程同步-锁类型 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/10/28/juc/juc-concurrent/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5-%E9%94%81%E7%B1%BB%E5%9E%8B/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">线程同步-锁类型</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-10-28</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="锁类型"   >
+          <a href="#锁类型" class="heading-link"><i class="fas fa-link"></i></a><a href="#锁类型" class="headerlink" title="锁类型"></a>锁类型</h1>
+      <p>:::primary</p>
+<p>这里只会简单讲述每种锁的概念是什么，具体到锁的每种实现则会放到后面的部分再讲</p>
+<p>:::</p>
+
+        <h2 id="悲观锁和乐观锁"   >
+          <a href="#悲观锁和乐观锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#悲观锁和乐观锁" class="headerlink" title="悲观锁和乐观锁"></a>悲观锁和乐观锁</h2>
+      <ul>
+<li><p>前言：悲观锁和乐观锁都是数据库并发控制中引入的概念，但并不仅限于数据库系统中使用</p>
+</li>
+<li><p>悲观锁</p>
+<ul>
+<li>定义：<ol>
+<li>[每次对共享变量的修改过程持悲观态度，认为其他线程访问会 <strong>频繁写入</strong> 共享变量]{.pink}</li>
+<li>[所以每次线程访问共享变量之前都会对其上锁，<strong>阻止其他线程访问</strong> 共享变量]{.pink}</li>
+</ol>
+</li>
+<li>核心：[共享变量每次都只能被一个线程访问，其余线程必须阻塞等待直到当前线程释放锁]{.red}</li>
+<li>实现：[synchronized、ReentrantLock、ReentrantReadWriteLock（Java）]{.aqua}<ul>
+<li>synchronized 底层是采用管程实现的，本质上就符合乐观锁的思想</li>
+<li>ReentrantLock 底层采用 CAS 机制实现，本质上是乐观锁，但是其思想符合的是悲观锁的思想</li>
+</ul>
+</li>
+<li>优点：[多数线程都对共享变量执行写操作时，能够通过阻塞线程避免线程无意义的空转，造成资源浪费]{.red}</li>
+<li>缺点：<ul>
+<li>[每个线程在执行结束之前都不会释放锁从而可能导致死锁问题的发生]{.green}</li>
+<li>[每个线程获取锁和释放锁的过程的过程会增加额外的开销]{.green}</li>
+</ul>
+</li>
+<li>细节：</li>
+</ul>
+</li>
+<li><p>乐观锁</p>
+<ul>
+<li><p>定义：</p>
+<ol>
+<li>[每次对共享变量的修改过程持乐观态度，认为其他线程不会 <strong>频繁写入而只是读取</strong> 共享变量]{.pink}</li>
+<li>[所以每次线程访问共享变量时是不会上锁的，<strong>多个线程可以同时访问</strong> 共享变量]{.pink}</li>
+<li>[只有在多个线程同时写入共享变量时才会 <strong>检测是否发生数据冲突</strong>，如果发生冲突就会重新尝试更新数据，直到数据更新成功]{.pink}</li>
+</ol>
+</li>
+<li><p>核心：[多线程可以同时访问共享变量，如果线程行为发生冲突，那么就会不停重试直到成功为止]{.red}</p>
+</li>
+<li><p>实现：[CAS]{.aqua}</p>
+</li>
+<li><p>优点：</p>
+<ul>
+<li>[线程访问共享变量的过程不需要获取锁从而减少获取锁的开销，以及避免死锁问题]{.red}</li>
+<li>[底层借助硬件实现（指令集）而不是软件实现的，执行的效率也非常高]{.red}</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li><p>[乐观锁会造成 ABA 问题]{.green}</p>
+</li>
+<li><p>[线程冲突情况特别多时，每个线程重试的次数增多就会大幅增加开销，甚至超过上下文切换带来的开销]{.green}</p>
+<p>  :::warning</p>
+<p>  乐观锁的 ABA 问题带来的影响远不悲观锁带来的死锁问题影响大，不过确实是个缺点就是了</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>细节：乐观锁机制是不会共享变量添加排他锁的，无论线程是读取还是写入变量，而是采用自旋的概念替代排他锁</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>:::info</p>
+<p>① 悲观锁一定是独占锁吗？乐观锁是共享锁吗？</p>
+<p>② 乐观锁会对共享变量上锁吗？</p>
+<p>:::</p>
+
+        <h2 id="公平锁和非公平锁"   >
+          <a href="#公平锁和非公平锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#公平锁和非公平锁" class="headerlink" title="公平锁和非公平锁"></a>公平锁和非公平锁</h2>
+      <ul>
+<li><p>前提：公平或者非公平锁都是基于悲观锁而言的，乐观锁根本不存在锁机制也就无从谈起公不公平了</p>
+</li>
+<li><p>公平锁：</p>
+<ul>
+<li><p>定义：</p>
+<ol>
+<li>[想要获取的锁的线程会先检查共享变量的锁是否被其他线程占用]{.pink}</li>
+<li>[如果锁没有被其他线程占用，那么线程获取该锁，如果锁已经被占用，那么直接进入阻塞队列等待]{.pink}</li>
+</ol>
+</li>
+<li><p>优点：[避免线程出现饥饿的现象：每个线程都能够在有限的时间内获取到锁的所有权]{.red}</p>
+</li>
+<li><p>缺点：[正在运行的线程释放锁之后，每次都需要从阻塞队列中唤醒线程，也就是执行上下文切换，增大开销]{.green}</p>
+</li>
+<li><p>图示</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/公平锁.4305ski22y00.png" alt="公平锁" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>非公平锁</p>
+<ul>
+<li><p>定义：</p>
+<ol>
+<li>[想要获取锁的线程会和 <strong>阻塞队列</strong> 中的队首线程竞争获取共享变量的锁]{.pink}</li>
+<li>[如果竞争锁成功，那么该线程就会直接获得锁，如果竞争失败，那么该线程就会进入阻塞队列等待]{.pink}</li>
+</ol>
+</li>
+<li><p>实现：synchronized 是非公平锁，ReentrantLock 默认是非公平锁，可以设置为非公平锁</p>
+</li>
+<li><p>优点：[非公平锁避免频繁唤醒阻塞的线程，减少线程上下文切换造成的开销，增大系统的吞吐量]{.red}</p>
+</li>
+<li><p>缺点：[容易造成 <strong>饥饿</strong> 现象：阻塞队列中的线程长时间获取不到锁的所有权]{.green}</p>
+</li>
+<li><p>图示</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/非公平锁.434laznbfc80.png" alt="非公平锁" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>[无论是公平锁还是非公平锁，阻塞队列中线程都是遵循先进先出的规则来获取锁的]{.red}</li>
+<li>[如果没有特别的要求，通常都会采用非公平锁以提升系统整体的性能]{.red}</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="独占锁和共享锁"   >
+          <a href="#独占锁和共享锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#独占锁和共享锁" class="headerlink" title="独占锁和共享锁"></a>独占锁和共享锁</h2>
+      <ul>
+<li>独占锁：<ul>
+<li>定义：[共享变量的锁每次只能够由一个线程获取，其余线程只能够阻塞等待]{.pink}</li>
+<li>实现：synchronized、ReetrantLock、ReentrantReadWriteLock.WriteLock</li>
+</ul>
+</li>
+<li>共享锁：<ul>
+<li>定义：[共享变量的锁每次可以由多个线程获取，但是多个线程只能够同时进行读操作]{.pink}</li>
+<li>实现：ReentrantReadWriteLock.ReadLock</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="重入锁和不可重入锁"   >
+          <a href="#重入锁和不可重入锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#重入锁和不可重入锁" class="headerlink" title="重入锁和不可重入锁"></a>重入锁和不可重入锁</h2>
+      <ul>
+<li><p>不可重入锁</p>
+<ul>
+<li>定义：<ol>
+<li>[如果线程已经获取到特定共享变量的锁后，想要再次获取该共享变量的锁]{.pink}</li>
+<li>[那么该线程将会因为自己持有锁而被阻塞，这样的锁就是不可重入的]{.pink}</li>
+</ol>
+</li>
+<li>细节：Java 默认提供的锁都是可重入的锁，可以采用 AQS 编写不可重入的锁</li>
+</ul>
+</li>
+<li><p>可重入锁：</p>
+<ul>
+<li><p>定义：</p>
+<ol>
+<li>[如果线程已经获取到特定共享变量的锁后，想要再次获取该共享变量的锁]{.pink}</li>
+<li>[该线程可以继续获取该共享变量的锁而不是被自己阻塞，这样的锁称为可重入的]{.pink}</li>
+</ol>
+</li>
+<li><p>实现：synchronized、ReentrantLock</p>
+</li>
+<li><p>测试代码</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一次获取锁</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    log.debug(<span class="string">&quot;第一次获取锁...&quot;</span>);</span><br><span class="line">    <span class="comment">// 调用方法第二次获取锁</span></span><br><span class="line">    method2();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第二次获取锁</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</span><br><span class="line">    log.debug(<span class="string">&quot;第二次获取锁...&quot;</span>);</span><br><span class="line">    method3();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第三次获取锁</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method3</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    log.debug(<span class="string">&quot;第三次获取锁...&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/10/28/juc/juc-concurrent/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5-%E9%94%81%E7%B1%BB%E5%9E%8B/">http://example.com/2021/10/28/juc/juc-concurrent/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5-%E9%94%81%E7%B1%BB%E5%9E%8B/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/10/28/juc/juc-concurrent/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5-volatile/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">线程同步-volatile</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/10/28/juc/juc-concurrent/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5-%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__text">线程同步-概述</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%94%81%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">
+          锁类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E4%B9%90%E8%A7%82%E9%94%81"><span class="toc-number">1.1.</span> <span class="toc-text">
+          悲观锁和乐观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AC%E5%B9%B3%E9%94%81%E5%92%8C%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81"><span class="toc-number">1.2.</span> <span class="toc-text">
+          公平锁和非公平锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8B%AC%E5%8D%A0%E9%94%81%E5%92%8C%E5%85%B1%E4%BA%AB%E9%94%81"><span class="toc-number">1.3.</span> <span class="toc-text">
+          独占锁和共享锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%85%A5%E9%94%81%E5%92%8C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81"><span class="toc-number">1.4.</span> <span class="toc-text">
+          重入锁和不可重入锁</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

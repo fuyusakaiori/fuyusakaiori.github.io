@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="LinkedList        定义：&#x3D;&#x3D;链表&#x3D;&#x3D;  特点：  底层采用 双向链表 实现：(1) 链表每个结点采用静态内部类 Node 维护 (2) 首尾结点采用 first &amp; last 成员变量维护 (3) 链表长度采用 size 变量维护    注：JDK 1.6 采用循环链表实现 &amp; JDK 1.7 取消循环  没有采用同步机制：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Collection-LinkedList">
+<meta property="og:url" content="http://example.com/2021/11/01/java/jcf/Collection-LinkedList/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="LinkedList        定义：&#x3D;&#x3D;链表&#x3D;&#x3D;  特点：  底层采用 双向链表 实现：(1) 链表每个结点采用静态内部类 Node 维护 (2) 首尾结点采用 first &amp; last 成员变量维护 (3) 链表长度采用 size 变量维护    注：JDK 1.6 采用循环链表实现 &amp; JDK 1.7 取消循环  没有采用同步机制：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-01T11:40:17.006Z">
+<meta property="article:modified_time" content="2021-11-01T11:59:24.478Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary"><title>Collection-LinkedList | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/11/01/java/jcf/Collection-LinkedList/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Collection-LinkedList</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-11-01</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-11-01</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="LinkedList"   >
+          <a href="#LinkedList" class="heading-link"><i class="fas fa-link"></i></a><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h1>
+      <ul>
+<li><p>定义：==链表==</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p><a style="color:red;">底层采用 <strong>双向链表</strong> 实现</a>：(1) 链表每个结点采用静态内部类 <code>Node</code> 维护 (2) 首尾结点采用 <code>first</code> &amp; <code>last</code> 成员变量维护 (3) 链表长度采用 <code>size</code> 变量维护 </p>
+<p>  注：<code>JDK 1.6</code> 采用循环链表实现 &amp; <code>JDK 1.7</code> 取消循环</p>
+</li>
+<li><p><a style="color:red;">没有采用同步机制</a>：多线程并发操作 <code>LinkedList</code> 是 <strong>线程不安全</strong> 的</p>
+</li>
+</ul>
+</li>
+<li><p>实现 &amp; 继承：(1) 没有实现 <code>RandomAccess</code> 接口 (2) 实现 <code>Deque</code> &amp; <code>Queue</code> 接口 (3) 实现 <code>Serializable</code> 接口</p>
+</li>
+<li><p>成员变量：</p>
+<ul>
+<li><code>transient int size = 0;</code> 链表长度 </li>
+<li><code>transient Node&lt;E&gt; first;</code> 结点的前驱指针 </li>
+<li><code>transient Node&lt;E&gt; last;</code> 结点的后继指针</li>
+</ul>
+</li>
+<li><p>构造方法：</p>
+<ul>
+<li><p>空参构造：</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>有参构造：直接添加传入集合中的元素不使用反射进行检查 -&gt; 因为在添加元素的方法中元素类型会被强制转换</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedList</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>();</span><br><span class="line">    addAll(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>方法：(仅列出 <code>List</code> 接口下常用的方法)</p>
+<ul>
+<li><p><code>add()</code>：时间复杂度都是 <strong>常数</strong> &amp; <strong>默认</strong> 将元素添加到 <strong>链表的末尾</strong></p>
+</li>
+<li><p><code>remove()</code>：时间复杂度都是 <strong>线性</strong> 的</p>
+</li>
+<li><p><code>addAll()</code>：内部并没有直接使用 <code>add()</code> 方法</p>
+<p>  <a style="color:red;">1. 原因之一是因为循环调用 add 方法效率太低</a></p>
+<p>  <a style="color:red;">2. 原因之二是因为批量添加元素 modCount 应该仅增加 1，如果循环调用 add 方法会导致 modCount 增加多次</a></p>
+</li>
+<li><p><code>get()</code>：传入参数是索引 &amp; 执行的时间复杂度是 <strong>线性</strong> 的</p>
+<p>  <a style="color:red;">优化：传入的索引大于链表长度一半时，会自动从末尾开始访问</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;"><code>LinkedList</code> 为空的情况下获取首部或者尾部元素都是会抛出异常的</a></li>
+<li><code>LinkedList</code> 可以用作多种数据结构的实现：<a style="color:red;">可以用于普通队列、双端队列、栈的实现</a></li>
+<li><code>LinkedList</code> 插入和删除元素时不受到元素位置的影响：时间复杂度近似为 <code>O(1)</code> &amp; 指定位置插入元素或者删除时受到其影响：时间复杂度为 <code>O(n)</code></li>
+<li><code>LinkedList</code> 对每个 <strong>元素</strong> 都需要 <strong>添加前驱和后继指针</strong> 并包装成 <strong>结点</strong>：每个元素消耗空间比较大</li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/11/01/java/jcf/Collection-LinkedList/">http://example.com/2021/11/01/java/jcf/Collection-LinkedList/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/11/02/juc/juc-concurrent/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">线程安全-内存模型</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/11/01/java/jcf/Collection-overview/"><span class="paginator-prev__text">Collection-overview</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LinkedList"><span class="toc-number">1.</span> <span class="toc-text">
+          LinkedList</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

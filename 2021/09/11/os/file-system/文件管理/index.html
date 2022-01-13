@@ -1,0 +1,620 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="文件管理        引入：  核心：屏蔽底层不同存储介质的异构性 每种存储介质的 基本存储单元 显然是不同的 (磁盘、磁带、光盘…) 每台计算机显然可以同时拥有这些不同的存储介质 操作系统为了统一管理不同的存储介质的存储而提出了 文件 的这种抽象的概念 解释1：无论具体的存储介质是如何实现的，操作系统都只会认为这种存储介质的基本存储单元是文件而不是其他的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件管理">
+<meta property="og:url" content="http://example.com/2021/09/11/os/file-system/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="文件管理        引入：  核心：屏蔽底层不同存储介质的异构性 每种存储介质的 基本存储单元 显然是不同的 (磁盘、磁带、光盘…) 每台计算机显然可以同时拥有这些不同的存储介质 操作系统为了统一管理不同的存储介质的存储而提出了 文件 的这种抽象的概念 解释1：无论具体的存储介质是如何实现的，操作系统都只会认为这种存储介质的基本存储单元是文件而不是其他的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/07/02/1cf8fc38110237e37c958a12e3c04fdc.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/07/04/6b8fad31fe1156416817167e9d5e21a9.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/07/05/f01ad08104791bb17392f3aae6bb9ce1.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/07/05/051d4aab50f20c3d82c6b83460e755df.png">
+<meta property="article:published_time" content="2021-09-11T10:56:12.594Z">
+<meta property="article:modified_time" content="2021-09-28T11:02:44.322Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/07/02/1cf8fc38110237e37c958a12e3c04fdc.png"><title>文件管理 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/11/os/file-system/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">文件管理</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-11</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="文件管理"   >
+          <a href="#文件管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h1>
+      <ul>
+<li><p>引入：</p>
+<ul>
+<li>核心：<a style="color:red;">屏蔽底层不同存储介质的异构性</a></li>
+<li>每种存储介质的 <strong>基本存储单元</strong> 显然是不同的 (磁盘、磁带、光盘…)</li>
+<li>每台计算机显然可以同时拥有这些不同的存储介质</li>
+<li>操作系统为了统一管理不同的存储介质的存储而提出了 <strong>文件</strong> 的这种抽象的概念<ul>
+<li>解释1：无论具体的存储介质是如何实现的，操作系统都只会认为这种存储介质的基本存储单元是文件而不是其他的</li>
+<li>解释2：操作系统如果不提供 <strong>文件</strong> 这种抽象概念，那么显然操作系统需要为每种介质单独提供管理的实现，显然是非常麻烦的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>组成：</p>
+<ul>
+<li><p>文件管理系统分为两个组成部分：==文件接口设计== &amp; ==文件接口实现==</p>
+<p>  <a style="color:red;">注：设计文件系统的接口目的是为了方便用户使用</a></p>
+</li>
+<li><p>文件接口实现分为两个组成部分：==文件集合== &amp; ==目录结构==</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="文件系统接口"   >
+          <a href="#文件系统接口" class="heading-link"><i class="fas fa-link"></i></a><a href="#文件系统接口" class="headerlink" title="文件系统接口"></a>文件系统接口</h2>
+      
+        <h3 id="概念"   >
+          <a href="#概念" class="heading-link"><i class="fas fa-link"></i></a><a href="#概念" class="headerlink" title="概念"></a>概念</h3>
+      <ul>
+<li><p>定义：</p>
+<ul>
+<li><p><a style="color:red;">存储在外部设备上的具有特定名称的 <strong>信息集合</strong> </a></p>
+</li>
+<li><p><a style="color:red;">逻辑上统一存储信息的单元称为文件</a></p>
+<p>  注：数据仅能够通过 <strong>文件这种抽象接口</strong> 才可以写到外存中</p>
+</li>
+</ul>
+</li>
+<li><p>组成：数据 + 程序</p>
+</li>
+<li><p>属性：<a style="color:red;">所有 <strong>文件属性</strong> 信息都保存在 <strong>目录结构</strong> 中</a></p>
+<ul>
+<li>名称：(1) 以人类的可读形式保存的 <strong>唯一</strong> 信息 (2) 名称 <strong>是否区分大小</strong> 写取决于操作系统的具体实现 (<em>Window 不区分大小写</em> )</li>
+<li>标识符：操作系统用于识别每个文件的 <strong>唯一</strong> 符号</li>
+<li>类型：扩展名 (<a style="color:red;">可以指明文件内部结构</a>)</li>
+<li>尺寸：文件当前的大小 (<a style="color:red;">文件的 <strong>实际占用空间</strong> 会比文件自身要大</a>)</li>
+<li>访问：用户对于文件读写和执行的 <strong>权限</strong></li>
+<li>时间 &amp; 日期：文件被创建或者被修改的时间</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/07/02/1cf8fc38110237e37c958a12e3c04fdc.png" alt="1cf8fc38110237e37c958a12e3c04fdc.png"></p>
+</li>
+<li><p>操作：<a style="color:red;">所有文件操作都是通过 <strong>系统调用</strong> 实现</a></p>
+<ul>
+<li><p>创建文件：</p>
+<ul>
+<li><p>系统调用参数：文件空间大小 + 文件存放路径名 + 文件名称</p>
+</li>
+<li><p>系统实际行为：(1) <strong>磁盘</strong> 中为文件 <strong>分配空间</strong> (2) 目录结构中创建相应的 <strong>文件条目</strong></p>
+<p>  注：<a style="color:red;">文件被创建后就 <strong>独立于进程和操作系统</strong> </a></p>
+</li>
+</ul>
+</li>
+<li><p>读文件：</p>
+<ul>
+<li>系统调用参数：文件名称 + 读入数据大小 + 读入数据存放的内存地址</li>
+<li>系统实际行为：(1) 使用 <strong>文件名称</strong> 在目录中搜索其在 <strong>磁盘的位置</strong> (2) 将文件加载到指定的内存地址中 (3) <strong>文件读指针</strong> 指向文件中的第一条数据</li>
+</ul>
+</li>
+<li><p>写文件：</p>
+<ul>
+<li><p>系统调用参数：文件名称 + 写入数据大小 + 写入数据存放在文件中的地址</p>
+</li>
+<li><p>系统实际行为：(1) 使用 <strong>文件名称</strong> 在目录中搜索其在 <strong>磁盘的位置</strong> (2) <strong>文件写指针</strong> 移动到需要写入的位置 (3) 根据文件写指针指向的位置写入数据</p>
+<p>  注：<a style="color:red;">操作系统在实现时通常将文件写指针和读指针作为一个指针实现</a></p>
+</li>
+</ul>
+</li>
+<li><p>重定位文件：(?)</p>
+<ul>
+<li>系统调用参数：文件地址</li>
+<li>系统实际行为：将当前文件指针指向新的文件地址</li>
+</ul>
+</li>
+<li><p>删除文件：</p>
+<ul>
+<li>系统调用参数：文件名称</li>
+<li>系统实际行为：(1) 使用 <strong>文件名称</strong> 在目录中搜索其在 <strong>磁盘的位置</strong> (2) <strong>先</strong> 释放文件在磁盘中占用的空间 (3) <strong>再</strong> 删除目录中相应的文件条目</li>
+</ul>
+</li>
+<li><p>截断文件</p>
+<ul>
+<li>系统调用参数</li>
+<li>系统实际行为：(1) 使用 <strong>文件名称</strong> 在目录中搜索其在 <strong>磁盘的位置</strong> (2) <a style="color:red;">仅释放文件在磁盘中占用的空间，并不删除目录中对应的文件条目</a> (保留文件的结构仅删除信息)</li>
+</ul>
+</li>
+<li><p>注意点：上述 6 个文件操作仅组成了文件操作的最小集合，实际的文件操作并不只有这些</p>
+</li>
+</ul>
+</li>
+<li><p>打开文件表：</p>
+<ul>
+<li><p>引入：</p>
+<ul>
+<li>上述所有的文件操作几乎都涉及搜索文件在磁盘中的位置</li>
+<li>为了简化这个重复搜索的操作，要求每次对文件操作之前都应该执行打开文件的操作</li>
+<li>被打开的文件的属性都会被打开文件表记录</li>
+</ul>
+</li>
+<li><p>定义：(1) 维护所有打开文件的属性 (2) 每个打开文件都与一个索引映射 (便于其余文件操作可以快速找到文件而不用搜索)</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>系统打开文件表：==文件磁盘地址 + 文件访问权限 + 文件打开计数== (<a style="color:red;">记录当前打开此文件的进程数量</a>)</p>
+<p>  注：<a style="color:red;">仅保存所有打开文件的相关信息</a></p>
+</li>
+<li><p>进程打开文件表：==文件指针== ：进程使用文件指针访问系统打开文件表并且操作文件</p>
+<p>  注：<a style="color:red;">仅保存文件指针保存任何文件的相关信息</a></p>
+</li>
+</ul>
+</li>
+<li><p>问题：为什么需要系统打开文件表和进程打开文件表？</p>
+<ul>
+<li>多个进程可以同时打开同一个文件并且各自对其进行操作，每个进程对文件的操作不同显然文件指针不应该是共享的</li>
+<li>文件指针如果保存在系统打开文件表中，那么想要实现文件指针独立，那么多个进程打开同一个文件需要非常多重复的映射关系</li>
+<li>为此只能够将文件指针独立存放在进程打开文件表中，而系统打开文件表中仅存放文件相关信息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>文件锁</p>
+<ul>
+<li><p>引入：多个进程可以同时打开同一文件并对其进行操作显然就很容易造成数据的不一致性</p>
+</li>
+<li><p>锁类型：</p>
+<ul>
+<li>共享锁：多个进程可以同时获取共享锁：允许多个进程同时对文件进行读取操作</li>
+<li>独占锁：仅有一个进程可以获取独占锁：仅允许一个进程对文件进行写入操作</li>
+</ul>
+</li>
+<li><p>锁机制：</p>
+<ul>
+<li><p>强制文件锁定机制：文件的独占锁已经被进程获取时，其余想要访问该文件的进程都会被操作系统禁止</p>
+</li>
+<li><p>建议文件锁定机制：文件的独占锁已经被进程获取时，操作系统不会禁止访问，而是由开发人员自行控制锁的获取和释放</p>
+<p>  注：控制不当显然是会造成死锁的</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">Windows 采用的是强制文件锁定 &amp; UNIX 采用的是建议文件锁定机制</a></li>
+<li>文件锁 &amp; 同步：文件锁显然仅能够用于文件，而同步机制是对任何计算机资源都适用</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="访问"   >
+          <a href="#访问" class="heading-link"><i class="fas fa-link"></i></a><a href="#访问" class="headerlink" title="访问"></a>访问</h3>
+      <ul>
+<li><p>定义：对文件内部数据的访问方式</p>
+</li>
+<li><p>顺序访问：</p>
+<ul>
+<li>内容：对文件中的数据按顺序加以处理</li>
+<li>特点：<a style="color:red;">目前最常见的文件访问方式</a></li>
+</ul>
+</li>
+<li><p>直接访问(随机访问)</p>
+<ul>
+<li><p>内容：文件由固定长度的逻辑记录 (块) 组成，以方便进程按任意顺序读取或者写入文件</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p>每个逻辑记录 (块) 都有自己的编号：用户提供的编号是 <strong>逻辑块号</strong>，操作系统访问的是 <strong>物理块号</strong> (和内存管理的逻辑地址和物理地址类似)</p>
+</li>
+<li><p><a style="color:red;">数据库通常采用这种方式</a>：</p>
+<p>  (1) 数据库软件运行在操作系统上并且存储的数据是文件形式保存 </p>
+<p>  (2) 所以直接访问本质还是顺序访问：因为大多数操作系统只能够进行顺序访问，需要进行复杂的操作来实现直接访问</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>索引访问：</p>
+<ul>
+<li>内容：建立索引表结构保存 <strong>块号 - 块地址</strong> 的映射关系</li>
+<li>特点：<ul>
+<li><a style="color:red;">索引访问时建立在直接访问的基础之上</a></li>
+<li><a style="color:red;">数据库通常采用索引以加快搜索的速度</a>：索引访问本质则是使用 <strong>额外的空间</strong> 保存块地址和块号的映射关系而不再是顺序访问 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>问题：为什么操作系统不采用直接访问的方式去访问文件呢？</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">文件内部数据的 <strong>访问方式</strong> 取决于文件内容的 <strong>存储方式</strong> </a></li>
+<li>文件内部数据太大时会导致索引表也很大：<a style="color:red;">通常会使用 <strong>多级索引</strong> 来解决这个问题</a></li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="目录"   >
+          <a href="#目录" class="heading-link"><i class="fas fa-link"></i></a><a href="#目录" class="headerlink" title="目录"></a>目录</h3>
+      
+        <h4 id="概念-1"   >
+          <a href="#概念-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#概念-1" class="headerlink" title="概念"></a>概念</h4>
+      <ul>
+<li><p>定义：包含所有 ==文件控制块(FCB)== 的有序集合</p>
+</li>
+<li><p>文件控制块 (FCB)：</p>
+<ul>
+<li><p>定义：每个文件都拥有的一个 <strong>保存文件所有相关信息的数据结构</strong></p>
+</li>
+<li><p>内容：文件名 + 文件存放的物理地址 + 访问权限 +···</p>
+<p>  注：<a style="color:red;">每个文件控制块都是一个文件条目 &amp; 每个文件条目的名称是由文件名 + 标识符组成</a></p>
+</li>
+</ul>
+</li>
+<li><p>操作：(1) 搜索文件 (2) 创建文件 (3) 删除文件 (4) 遍历目录 (5) 遍历文件系统 (就是遍历所有的目录)</p>
+</li>
+<li><p>细节：<a style="color:red;">文件目录必须是非易失性的仅能够保存在外部存储设备，需要使用文件目录时再调入内存中</a></p>
+</li>
+</ul>
+
+        <h4 id="结构"   >
+          <a href="#结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#结构" class="headerlink" title="结构"></a>结构</h4>
+      <ul>
+<li><p>存储结构</p>
+<ul>
+<li><p>磁盘：物理意义上的磁盘</p>
+</li>
+<li><p>分区：逻辑意义上的磁盘：<a style="color:red;">多个磁盘可以合并成一个分区进行管理 &amp; 一个磁盘可以采用多个分区进行管理</a></p>
+</li>
+<li><p>卷：实现了文件系统的分区：<a style="color:red;">每个卷都可以采用不同的文件管理系统</a></p>
+<p>  注：每个计算机可能有多个不同的文件管理系统</p>
+</li>
+</ul>
+</li>
+<li><p>目录结构</p>
+<ul>
+<li><p>单级目录：</p>
+<ul>
+<li>定义：所有文件都通过一个目录进行保存</li>
+<li>细节：<a style="color:red;">所有文件的名称都是不可以相同的</a></li>
+</ul>
+</li>
+<li><p>两级目录</p>
+<ul>
+<li><p>定义：(1) <strong>主文件目录</strong> 用于区分不同的用户 (2) 每个用户拥有自己的 <strong>用户文件目录</strong></p>
+</li>
+<li><p>细节：</p>
+<p>  (1) <a style="color:red;">主文件目录的条目名必须唯一不可重复</a></p>
+<p>  (2) <a style="color:red;">不同用户的用户文件目录的条目名可以相同 &amp; 同一个用户的用户文件目录中的条目名也不可以重复</a></p>
+<p>  (3) 用户无法对自己拥有的文件继续分类 &amp; 部分系统限制用户之间不可以访问彼此的用户文件目录 </p>
+</li>
+</ul>
+</li>
+<li><p>树形目录</p>
+<ul>
+<li><p>定义：(1) 每个目录包含文件和子目录 (2)采用 ==路径名== 的形式来访问文件而不是根据用户来访问文件</p>
+</li>
+<li><p>路径名</p>
+<ul>
+<li>绝对路径：从文件所在的根目录开始到当前文件所在的位置：<code>D:\Typora\Typora\File\JVM.assets</code></li>
+<li>相对路径：从进程所在的目录开始到当前文件所在的位置：<code>File\JVM.assets</code></li>
+</ul>
+</li>
+<li><p>目录删除：(1) 直接删除该目录下的所有文件和子目录 (2) 需要优先删除该目录拥有的文件和子目录才可以删除该目录</p>
+<p>  注：两者区别在于前者允许删除不为空的目录，后者禁止删除不为空的目录</p>
+</li>
+<li><p>细节：</p>
+<p>  (1) <a style="color:red;">不同的用户可以访问彼此创建的文件</a></p>
+<p>  (2) <a style="color:red;">禁止不同的目录 <strong>共享</strong> 相同文件或者子目录</a></p>
+</li>
+</ul>
+</li>
+<li><p>无环图目录</p>
+<ul>
+<li><p>定义：在树形目录的基础上允许不同的目录 <strong>共享</strong> 相同的文件或者子目录</p>
+</li>
+<li><p>实现方式：</p>
+<ul>
+<li><p>链接方式：(1) 创建 <strong>链接条目</strong> (2) 链接条目是指向共享文件的指针 (3) 相当于目录中并不包含真实的文件而是文件指针</p>
+<p>  <a style="color:red;">注：遍历目录时会忽略这些链接进行遍历</a> (避免重复遍历同一文件)</p>
+</li>
+<li><p>复制：(1) 复制多份共享文件 (2) 每个需要共享该文件的目录都拥有该副本</p>
+<p>  <a style="color:red;">注：文件具有多个副本的情况需要维护数据的一致性</a></p>
+</li>
+</ul>
+</li>
+<li><p>删除问题：(复制方式在删除时显然只需要将副本一起删除就行，链接方式则涉及到链接的保留问题)</p>
+<ul>
+<li>软链接：允许原始文件被删除后仍保留当前的链接条目 (<a style="color:red;">试图访问指向为空的链接条目被认为是非法的</a>)</li>
+<li>硬链接：不允许直接删除原始文件而是在删除所有的链接条目都被删除后才可以删除 (<a style="color:red;">显然需要使用计数的变量来确定当前的链接条目数</a>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/07/04/6b8fad31fe1156416817167e9d5e21a9.png" alt="6b8fad31fe1156416817167e9d5e21a9.png"></p>
+</li>
+</ul>
+
+        <h3 id="挂载"   >
+          <a href="#挂载" class="heading-link"><i class="fas fa-link"></i></a><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h3>
+      <ul>
+<li><p>定义：操作系统使存储设备中的文件和目录可以通过文件系统访问的过程</p>
+</li>
+<li><p>过程：</p>
+<ul>
+<li>存储设备被挂载到目录 (文件系统) 下后 -&gt; 该目录就会拥有该存储设备中的数据</li>
+<li>存储设备被卸载后 -&gt; 目录中的数据会排队写入磁盘中</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">存储设备被使用之前都必须进行挂载 &amp; 计算机关机后存储设备也会进行卸载</a></li>
+<li>挂接的位置叫做挂载点</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="共享"   >
+          <a href="#共享" class="heading-link"><i class="fas fa-link"></i></a><a href="#共享" class="headerlink" title="共享"></a>共享</h3>
+      <ul>
+<li><p>多用户共享：采用 ==用户和组== 的概念</p>
+<ul>
+<li><p>用户(所有者)：</p>
+<ul>
+<li>定义：分为超级用户、普通用户、虚拟用户 (注：这里是按照 <code>Linux</code> 进行划分的)</li>
+<li>超级用户：具有 <strong>更改其余用户的访问权限</strong> 和 <strong>修改文件的权限</strong> -&gt; <a style="color:red;">具有最高的权限</a></li>
+<li>普通用户：仅能够使用超级用户 <strong>授予的权限</strong></li>
+</ul>
+</li>
+<li><p>组：具有相同权限的用户的集合</p>
+<p>  <a style="color:red;">注：超级用户的集合可以执行所有的操作，普通用户的集合只能够执行所有操作的 <strong>子集</strong></a></p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">用户和组的 ID 将会和文件的属性一起存储在文件控制块中</a></li>
+<li><code>Windows 7</code> 和 <code>Windows 10</code> 开始支持多用户多任务 &amp; <code>Windows XP</code> 不支持多用户多任务 &amp; <code>Linux</code> 天生支持多用户</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>多文件系统共享：(1) 分布式系统 (2) <code>FTP</code> 文件传输 (3) <code>WWW</code> 万维网</p>
+</li>
+</ul>
+
+        <h2 id="文件系统实现"   >
+          <a href="#文件系统实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#文件系统实现" class="headerlink" title="文件系统实现"></a>文件系统实现</h2>
+      
+        <h3 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h3>
+      <ul>
+<li>卷引导控制块：<ul>
+<li>定义：<a style="color:red;">存放引导并加载操作系统的信息 </a>( BIOS(加载程序) 使用引导控制块加载操作系统 )</li>
+<li>细节：(1) 没有存放操作系统的磁盘引导控制块的信息为空 (2) <code>UFS</code> 称为 <strong>引导块</strong> &amp; <code>NTFS</code> 称为 <strong>分区引导扇区</strong></li>
+</ul>
+</li>
+<li>卷控制块<ul>
+<li>定义：存放每个分区的详细信息 (块数量，块大小，空闲 <code>FCB</code> 和 空闲块)</li>
+<li>细节：<code>UFS</code> 称为 <strong>超级块</strong> &amp; <code>NTFS</code> 仍然称为卷控制块并且存放在 <strong>主控文件表</strong> 中</li>
+</ul>
+</li>
+<li>目录结构 &amp; 文件控制块<ul>
+<li>定义：每个目录结构中都存放文件控制块的指针 -&gt; 文件控制块实际存放在磁盘中的某个位置</li>
+<li>细节：<code>NTFS</code> 中将 <strong>目录结构</strong> 同样存放在 <strong>主控文件表</strong> 中并且 <strong>文件控制块</strong> 的存放采用 <strong>关系型数据库</strong> 的方式</li>
+</ul>
+</li>
+<li>挂载表：<ul>
+<li>定义：存放当前被挂载到文件系统上的磁盘的信息</li>
+<li>细节：<a style="color:red;">挂载表在计算机启动之后就会被加载到内存中</a></li>
+</ul>
+</li>
+<li>打开文件表：(1) 系统打开文件表 (2) 进程打开文件表</li>
+</ul>
+
+        <h3 id="实现结构"   >
+          <a href="#实现结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#实现结构" class="headerlink" title="实现结构"></a>实现结构</h3>
+      <ul>
+<li><p>逻辑文件系统</p>
+<ul>
+<li><p>功能：<a style="color:red;">管理所有文件的 <strong>元数据信息</strong> (meta data)</a></p>
+<p>  注：<a style="color:red;">元数据信息就是仅包含文件的属性不包含文件信息</a> </p>
+</li>
+<li><p>过程：逻辑文件系统管理文件目录 -&gt; 文件目录中的每个条目都是元数据信息 -&gt; 每个元数据信息实际就是 <code>FCB</code></p>
+</li>
+</ul>
+</li>
+<li><p>文件组织模块：</p>
+<ul>
+<li>功能：(1) ==<a style="color:red;">将逻辑块号映射成物理块号</a>== (2) 管理磁盘中块的分配情况</li>
+<li>过程：修改逻辑文件系统传递高级指令，将逻辑块号修改成物理块号</li>
+</ul>
+</li>
+<li><p>基本文件系统：(1) 接收文件组织模块传递的指令并交付给 I/O 控制层 (2) 负责 <code>DMA</code> 机制的缓冲区管理：磁盘向内存中传输数据之前先开辟内存缓冲区 (3) 缓存常用的文件系统的元数据</p>
+</li>
+<li><p>I/O 控制层</p>
+<ul>
+<li><p>组成：==设备驱动程序 + 中断控制程序 + 设备控制器==</p>
+</li>
+<li><p>功能：接收高层指令操控具体 I/O 设备</p>
+</li>
+<li><p>过程：</p>
+<p>  (1) <strong>设备驱动程序</strong> 接收 <strong>基本文件系统</strong> 传递的 <strong>高级命令</strong> 并将其转换为 <strong>机器指令</strong></p>
+<p>  (2) 设备驱动程序将机器指令交付给 <strong>设备控制器</strong></p>
+<p>  (3) 设备控制器根据机器指令操控具体的 I/O 设备</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>文件系统分层会增大操作系统的开销降低操作系统的性能</li>
+<li><a style="color:red;"><strong>I/O 控制层</strong> 和 <strong>基本文件系统</strong> 的代码可以复用在不同的文件系统 &amp; 不同的文件系统拥有不同的 <strong>逻辑文件系统</strong> 和 <strong>文件组织模块</strong></a></li>
+<li><code>UNIX</code> 使用 <code>UFS</code> (<code>UNIX File System</code>) &amp; <code>Windows</code> 使用 <code>NTFS</code> (<code>Windows NT File System</code>) &amp; <code>Linux</code> 使用 <code>ext</code> (<code>Extended File System</code>)</li>
+<li><a style="color:red;">现代操作系统基本都支持多种文件系统</a> (思考：多个文件系统要怎么实现呢？提供给用户的接口应该是统一的，那么目录结构也应该统一才对)</li>
+</ul>
+</li>
+<li><p>虚拟文件系统</p>
+</li>
+</ul>
+<p><img src="https://i1.xpic.jp/file/xpicjp/2021/07/05/f01ad08104791bb17392f3aae6bb9ce1.png" alt="f01ad08104791bb17392f3aae6bb9ce1.png"></p>
+
+        <h3 id="实现操作"   >
+          <a href="#实现操作" class="heading-link"><i class="fas fa-link"></i></a><a href="#实现操作" class="headerlink" title="实现操作"></a>实现操作</h3>
+      <ul>
+<li><p>创建文件</p>
+<ul>
+<li>逻辑文件系统为新文件分配一个空闲的 <code>FCB</code> 并初始化 <code>FCB</code></li>
+<li>逻辑文件系统向低层的机构发出指令将磁盘中的 <strong>目录结构加载到内存中</strong></li>
+<li>逻辑文件系统将新的 <code>FCB</code> 更新到目录结构中再写回到磁盘中</li>
+</ul>
+</li>
+<li><p>打开文件</p>
+<ul>
+<li><p>确定当前文件是否已经被打开</p>
+<p>  (1) 如果当前文件没有被打开 -&gt; 将该文件的 <code>FCB</code> 复制到系统打开文件表中 -&gt; 在该 <strong>进程打开文件表</strong> 中 <strong>创建条目</strong> 并指向 <strong>系统打开文件表</strong> 中的该文件 </p>
+<p>  (2) 如果当前文件已经被打开 -&gt; 在该 <strong>进程打开文件表</strong> 中 <strong>创建条目</strong> 并指向 <strong>系统打开文件表</strong> 中的该文件 </p>
+</li>
+<li><p><a style="color:red;">每个进程打开该文件都需要在系统打开文件表的计数器上增加一</a></p>
+</li>
+</ul>
+</li>
+<li><p>读文件</p>
+</li>
+<li><p>写文件</p>
+</li>
+</ul>
+<p><img src="https://i1.xpic.jp/file/xpicjp/2021/07/05/051d4aab50f20c3d82c6b83460e755df.png" alt="051d4aab50f20c3d82c6b83460e755df.png"></p>
+
+        <h3 id="实现目录"   >
+          <a href="#实现目录" class="heading-link"><i class="fas fa-link"></i></a><a href="#实现目录" class="headerlink" title="实现目录"></a>实现目录</h3>
+      <ul>
+<li>线性列表<ul>
+<li>实现：目录条目 = ==文件名称 + FCB 指针==</li>
+<li>优点 &amp; 缺点：<ul>
+<li>优点：实现简单</li>
+<li>缺点：查找文件是 ==线性搜索==，效率非常低</li>
+</ul>
+</li>
+<li>优化方式：(1) 形成有序列表使用二叉搜索 (2) 使用平衡树 (3) 使用缓存</li>
+<li>重用目录：(1) 将目录条目的名称改为空白 (2) 增加比特位标识使用情况或者表结构记录当前空闲条目 (3) 将目录结构最后一条复制到暂时不使用的位置并且清除最后一条</li>
+</ul>
+</li>
+<li>哈希列表<ul>
+<li>实现：(1) <a style="color:red;">基于线性列表实现</a> (2) 构建哈希表：每个文件名称都对应一个哈希值 &amp; 线性列表中的文件名称被更换成哈希值</li>
+<li>优点 &amp; 缺点<ul>
+<li>优点：搜索加速 (<a style="color:red;">哈希表代替了线性搜索 -&gt; 本质就是缓存</a>)</li>
+<li>缺点：(1) 哈希表大小受限 (2) 可能出现哈希冲突 </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="实现分配"   >
+          <a href="#实现分配" class="heading-link"><i class="fas fa-link"></i></a><a href="#实现分配" class="headerlink" title="实现分配"></a>实现分配</h3>
+      <ul>
+<li><p>前提：</p>
+<ul>
+<li><a style="color:red;">操作系统仅对同一文件系统采用一种分配方法</a></li>
+<li>操作系统的视角：磁盘空间由复数个块组成 -&gt; 最小的存储单元是块</li>
+<li>磁盘的视角：最小的存储单元是扇区 -&gt; 每个块包含多个扇区</li>
+</ul>
+</li>
+<li><p>连续分配</p>
+<ul>
+<li><p>定义：每个文件在磁盘空间中占有一组连续的物理块</p>
+</li>
+<li><p>优点：</p>
+<p>  (1) <a style="color:red;">寻道时间最短 &amp; 寻道数量最少</a>：所有的块(扇区)几乎都分布的磁道的数量不多，磁头寻道的时间就少</p>
+<p>  (2) <a style="color:red;">支持顺序访问和直接访问</a></p>
+</li>
+<li><p>缺点：</p>
+<p>  (1) <a style="color:red;">难以确定文件实际大小</a>：空间如果分配过大会导致 <strong>内部碎片</strong> &amp; 空间如果分配过小会导致文件后续难以扩展</p>
+<p>  (2) <a style="color:red;">可能产生外部碎片</a>：每个块可能存放的是不同文件的数据 -&gt; 导致产生无法存放任何数据的孔</p>
+</li>
+<li><p>解决方式：</p>
+<ul>
+<li><p>(1) 重新启动程序并且重新分配空间 (2) 开辟更大的空间并且将当前的空间内容复制过去 (缺点：非常耗时)</p>
+</li>
+<li><p>扩展文件系统：开辟新的空间作为文件的扩展空间使用 &amp; 并且记录扩展空间的地址、块数</p>
+<p>  <a style="color:red;">注：扩展空间分配过大仍然会导致内部碎片 &amp; 扩展空间分配过小会导致扩展是低效的</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>非连续分配</p>
+<ul>
+<li><p>链接分配</p>
+<ul>
+<li><p>定义：(1) 每个文件在磁盘空间中占有的物理块是分散的 (2) 每个物理块都具有下一个物理块的块号 (指针)</p>
+</li>
+<li><p>优点：(1) <a style="color:red;">不会产生外部碎片</a> (每个块都是专属于一个文件的) (2) <a style="color:red;">不会产生文件扩展问题</a>：(文件扩展时只需要链接空闲块就行)</p>
+</li>
+<li><p>缺点：</p>
+<p>  (1) <a style="color:red;">仅支持顺序访问</a> 解决方式：文件分配表</p>
+<p>  (2) <a style="color:red;">每个块存放数据 + 指针两种信息</a> 导致文件实际占用的空间大于文件本身的大小 </p>
+<p>  ​     解决方式：采用 <strong>簇</strong> 为磁盘最小存储单位，每个簇包含多个块，每个簇使用一个指针</p>
+<p>  (3) <a style="color:red;">不具有可靠性</a>：指针出现损坏或者错误就会导致文件数据丢失</p>
+<p>  ​     解决方式：(1) 采用双向链表 (即使出现指针错误也能勉强找到文件的块) (2) 每块存储文件名称和逻辑块号 (即使指针错误也可以利用这两个参数找到) (3) 文件分配表</p>
+</li>
+<li><p>文件分配表：</p>
+<ul>
+<li><p>定义：(1) <strong>每个磁盘块都对应一个条目</strong> &amp; 使用 <strong>块号索引条目</strong> (2) 每个条目包含下一个物理块的块号 (指针)</p>
+<p>  注：只需要通过物理块就可以找到对应的数据了也就是说物理块号就是磁盘地址</p>
+</li>
+<li><p>优点：(1) <a style="color:red;">改善随机访问的时间</a> (2) 指针的的损坏不会导致数据丢失</p>
+</li>
+<li><p>缺点：(1) 过大的文件会导致 <code>FAT</code> 很大 (2) <code>FAT</code> 可能导致大量的寻道时间</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>索引分配</p>
+<ul>
+<li>定义：(1) 每个文件拥有 ==索引块== (包含所有物理块的块号) (2) 系统通过索引块获取索引进而获取物理块</li>
+<li>优点：(1) <a style="color:red;">支持直接访问和顺序访问</a> (2) <a style="color:red;">不会产生外部碎片问题</a></li>
+<li>缺点：索引需要的空间很大</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="实现空间管理"   >
+          <a href="#实现空间管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#实现空间管理" class="headerlink" title="实现空间管理"></a>实现空间管理</h3>
+      <ul>
+<li>位向量</li>
+<li>链表</li>
+<li>组</li>
+<li>计数</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/11/os/file-system/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/">http://example.com/2021/09/11/os/file-system/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/11/os/memory/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">内存管理</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/11/os/overview/%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__text">操作系统-概述</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">
+          文件管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.1.</span> <span class="toc-text">
+          文件系统接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.3.</span> <span class="toc-text">
+          目录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5-1"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">
+          概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">
+          结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD"><span class="toc-number">1.1.4.</span> <span class="toc-text">
+          挂载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB"><span class="toc-number">1.1.5.</span> <span class="toc-text">
+          共享</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.</span> <span class="toc-text">
+          文件系统实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          实现结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.3.</span> <span class="toc-text">
+          实现操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%9B%AE%E5%BD%95"><span class="toc-number">1.2.4.</span> <span class="toc-text">
+          实现目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%88%86%E9%85%8D"><span class="toc-number">1.2.5.</span> <span class="toc-text">
+          实现分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.6.</span> <span class="toc-text">
+          实现空间管理</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

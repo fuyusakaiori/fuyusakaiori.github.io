@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="系统调用        定义：系统调用是进程调用操作系统提供的服务的接口   注：系统调用的实现通常使用 汇编语言 或者 C&#x2F;C++ 编写  类型：(1) 进程管理 (2) 文件管理 (3) I&#x2F;O 管理 (4) 信息维护 (5) 进程通信 (6) 保护  执行过程：  进程 传递 系统调用需要的 参数 进程执行陷入指令从用户态切换到内核态 操作系统根据 系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="系统调用">
+<meta property="og:url" content="http://example.com/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="系统调用        定义：系统调用是进程调用操作系统提供的服务的接口   注：系统调用的实现通常使用 汇编语言 或者 C&#x2F;C++ 编写  类型：(1) 进程管理 (2) 文件管理 (3) I&#x2F;O 管理 (4) 信息维护 (5) 进程通信 (6) 保护  执行过程：  进程 传递 系统调用需要的 参数 进程执行陷入指令从用户态切换到内核态 操作系统根据 系">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/14/0b3f495bf0efb637ad324e08b8f757fa.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/14/425e0c07d210a2d991496432557eb2ed.png">
+<meta property="article:published_time" content="2021-09-18T07:11:42.408Z">
+<meta property="article:modified_time" content="2021-10-21T07:08:06.875Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/14/0b3f495bf0efb637ad324e08b8f757fa.png"><title>系统调用 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">系统调用</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="系统调用"   >
+          <a href="#系统调用" class="heading-link"><i class="fas fa-link"></i></a><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h1>
+      <ul>
+<li><p>定义：<a style="color:red;">系统调用是进程调用操作系统提供的服务的接口</a></p>
+<p>  <a style="color:red;">注：系统调用的实现通常使用 汇编语言 或者 C/C++ 编写</a></p>
+</li>
+<li><p>类型：(1) 进程管理 (2) 文件管理 (3) I/O 管理 (4) 信息维护 (5) 进程通信 (6) 保护</p>
+</li>
+<li><p>执行过程：</p>
+<ul>
+<li>进程 <strong>传递</strong> 系统调用需要的 <strong>参数</strong></li>
+<li>进程执行陷入指令从用户态切换到内核态</li>
+<li>操作系统根据 <strong>系统调用接口</strong> 查找相应的系统调用</li>
+<li>操作系统执行系统调用的实现（操作系统提供的服务）</li>
+<li>系统调用执行完毕后提供给进程返回值 (<a style="color:red;">中断处理程序将处理器从操作系统交付给进程</a>)</li>
+</ul>
+</li>
+<li><p>传递参数：</p>
+<ul>
+<li><p>“值传递”：参数 <strong>较少</strong> 时可以直接存放在 ==寄存器==中</p>
+</li>
+<li><p>“引用传递”：参数 <strong>非常多</strong> 时 ==内存== 中开辟空间(栈空间)存放参数，寄存器中仅存放这块 <strong>空间的地址</strong></p>
+<p>  注：Linux &amp; UNIX 采用的就是引用传递</p>
+</li>
+<li><p>栈传递：<strong>不限制</strong> 参数的数量每次需要参数时都执行 ==出栈== 操作，填充参数时执行 ==压栈== 操作</p>
+<p>  注：Java 虚拟机采用的就是栈结构</p>
+</li>
+</ul>
+</li>
+<li><p>系统调用接口</p>
+<ul>
+<li><p>定义：系统调用接口使用表结构索引具体的系统调用</p>
+<p>  <a style="color:red;">表结构以 数字编号 + 系统调用 进行构建</a></p>
+</li>
+<li><p>执行过程：</p>
+<ol>
+<li>用户程序需要使用系统调用</li>
+<li>==系统调用接口== 根据表结构 ==索引== 当前需要使用的 ==系统调用的编号==</li>
+<li>系统调用使用操作系统提供的服务完成任务</li>
+<li>==系统调用接口== 最后 ==返回== 给用户程序系统调用的 ==返回值和状态==</li>
+</ol>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/14/0b3f495bf0efb637ad324e08b8f757fa.png" alt="0b3f495bf0efb637ad324e08b8f757fa.png" style="zoom:80%;" /></li>
+<li><p>库函数(API)</p>
+<ul>
+<li><p>引入目的：</p>
+<ol>
+<li>系统调用通常涉及的参数实在太多，并不方便应用程序员的使用</li>
+<li>通常一个简单的程序也需要使用非常多的系统的调用，对于应用程序员来说也是非常难以使用的</li>
+</ol>
+</li>
+<li><p>定义：操作系统提供的函数，供用户程序直接使用，简化程序的编写，直接使用操作系统已经实现的功能</p>
+<p>  <a style="color:red;">(1) 库函数运行在用户态中，系统调用运行在内核态中 (2) 库函数可能使用系统调用也可能不使用</a></p>
+</li>
+<li><p>API 类型：(1) Win32 API (2) POSIX API (3) Java API</p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/14/425e0c07d210a2d991496432557eb2ed.png" alt="425e0c07d210a2d991496432557eb2ed.png" style="zoom:80%;" />
+
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">http://example.com/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/18/os/overview/%E5%8E%86%E5%8F%B2/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">操作系统-操作系统历史</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/18/os/overview/%E7%BB%93%E6%9E%84/"><span class="paginator-prev__text">操作系统-操作系统结构</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">
+          系统调用</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

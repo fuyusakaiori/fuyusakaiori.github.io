@@ -1,0 +1,485 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="内存分配        前提：操作系统也存放在内存中：通常存放在低内存，也可以存放在高内存 细节： 决定操作系统存放位置的因素是 &#x3D;&#x3D;中断向量&#x3D;&#x3D; 的位置 操作系统可以利用 &#x3D;&#x3D;暂时的操作系统代码&#x3D;&#x3D; 在进程执行过程中动态 &#x3D;&#x3D;改变操作系统的大小&#x3D;&#x3D; 暂时的操作系统代码：操作系统中 &#x3D;&#x3D;并不常用的服务&#x3D;&#x3D; 可以暂时并不保存在内存中，空闲出来的内存用于其他目的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存分配">
+<meta property="og:url" content="http://example.com/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="内存分配        前提：操作系统也存放在内存中：通常存放在低内存，也可以存放在高内存 细节： 决定操作系统存放位置的因素是 &#x3D;&#x3D;中断向量&#x3D;&#x3D; 的位置 操作系统可以利用 &#x3D;&#x3D;暂时的操作系统代码&#x3D;&#x3D; 在进程执行过程中动态 &#x3D;&#x3D;改变操作系统的大小&#x3D;&#x3D; 暂时的操作系统代码：操作系统中 &#x3D;&#x3D;并不常用的服务&#x3D;&#x3D; 可以暂时并不保存在内存中，空闲出来的内存用于其他目的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/31/b079c193859c94e0fc6cedf22db53c3b.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/31/88d8dc80fe02d38e7b4061de126dde17.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/31/de74b20b9ecdeb21ffdc6c0b73c88174.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/04/30354ee8ae88604abe9e7a1cc99176a0.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/06/55b5853eec02aa5d94bb2d3cacd52c59.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/06/c0e23f5ef37e8264ffa00d26cbe5dc7a.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/06/ee9882da5eb63c3190fe43438af668e9.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/06/f882b58dc2a20c37022ade7744377f6d.png">
+<meta property="article:published_time" content="2021-09-18T07:31:19.287Z">
+<meta property="article:modified_time" content="2021-09-28T11:02:07.165Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/31/b079c193859c94e0fc6cedf22db53c3b.png"><title>内存分配 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">内存分配</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="内存分配"   >
+          <a href="#内存分配" class="heading-link"><i class="fas fa-link"></i></a><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h1>
+      <ul>
+<li><a style="color:red;">前提：操作系统也存放在内存中：通常存放在低内存，也可以存放在高内存</a></li>
+<li>细节：<ul>
+<li>决定操作系统存放位置的因素是 ==中断向量== 的位置</li>
+<li>操作系统可以利用 ==暂时的操作系统代码== 在进程执行过程中动态 ==改变操作系统的大小==<ul>
+<li>暂时的操作系统代码：操作系统中 ==并不常用的服务== 可以暂时并不保存在内存中，空闲出来的内存用于其他目的</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/31/b079c193859c94e0fc6cedf22db53c3b.png" alt="b079c193859c94e0fc6cedf22db53c3b.png" style="zoom:80%;" />
+
+
+        <h2 id="内存保护"   >
+          <a href="#内存保护" class="heading-link"><i class="fas fa-link"></i></a><a href="#内存保护" class="headerlink" title="内存保护"></a>内存保护</h2>
+      <ul>
+<li><p>定义：进程 <strong>禁止</strong> 访问不属于它的内存</p>
+<ul>
+<li><p>宏观：</p>
+<ul>
+<li><p>进程不可以访问其他进程的内存空间</p>
+</li>
+<li><p>进程不可以访问操作系统的内存空间</p>
+</li>
+<li><p><a style="color:red;">进程不可以无限制地占有一片内存空间</a>(不可以无限制地运行下去)</p>
+<p>  <a style="color:red;">进程如果访问了其他进程的内存空间会导致 <strong>越界中断</strong></a></p>
+</li>
+</ul>
+</li>
+<li><p>微观：</p>
+<ul>
+<li><p>进程不可以访问不属于自己逻辑空间的页面：</p>
+<p>  解释：这种错误源于调度器分配了过多帧给进程，进程页面数少于帧数，但是页表的项数和帧数是一致的，所以可能访问到无效页，但是实际上不会发生</p>
+</li>
+<li><p>进程不可以访问没有加载进入内存的页面：<a style="color:red;">进程如果访问没有加载进入内存的页面会产生</a> <a href="#%E9%A1%B5%E9%94%99">缺页中断</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>方式：</p>
+<ul>
+<li>内存管理单元</li>
+<li><a href="#%E5%88%86%E9%A1%B5%E6%A6%82%E8%BF%B0">有效-无效位</a></li>
+</ul>
+</li>
+<li><p>方式：内存管理单元确保进程不会访问不属于它的内存</p>
+<ul>
+<li>处理器提供的逻辑地址处于界限地址的范围内</li>
+<li>逻辑地址和物理地址的映射关系是正确的</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="连续分配"   >
+          <a href="#连续分配" class="heading-link"><i class="fas fa-link"></i></a><a href="#连续分配" class="headerlink" title="连续分配"></a>连续分配</h2>
+      
+        <h3 id="固定分区方法"   >
+          <a href="#固定分区方法" class="heading-link"><i class="fas fa-link"></i></a><a href="#固定分区方法" class="headerlink" title="固定分区方法"></a>固定分区方法</h3>
+      <ul>
+<li><p>定义：系统将内存区域被分为多个 ==固定大小== 的分区 （静态）</p>
+</li>
+<li><p>过程：调度程序在某个 ==分区空闲== 时可以将 ==作业队列== 中的进程调入该分区</p>
+<p>  注：每个分区同一时刻只能够运行一个进程</p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：实现简单，操作系统的开销极少</p>
+</li>
+<li><p>缺点：(1) 进程需要的内存过大导致无法运行 (2) 进程需要的内存很少导致产生 <a href="#%E7%A2%8E%E7%89%87%E9%97%AE%E9%A2%98">内部碎片问题</a></p>
+<p>  <a style="color:red;">注：固定分区方法显然是不会产生外部碎片问题的</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">确保分区能够容纳最大的进程</a></li>
+<li><a style="color:red;">多道程序系统的 <strong>最大度数</strong> 取决于分区的数量</a></li>
+<li>用于早期的 IBM OS/360 操作系统</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="可变分区方法"   >
+          <a href="#可变分区方法" class="heading-link"><i class="fas fa-link"></i></a><a href="#可变分区方法" class="headerlink" title="可变分区方法"></a>可变分区方法</h3>
+      <ul>
+<li><p>定义：系统根据进程 ==需要的内存== 和 ==内存的使用情况== 确定每个分区的大小 （动态）</p>
+<p>  <a style="color:red;">注：操作系统会采用表的数据结构记录当前内存的使用情况</a></p>
+</li>
+<li><p>空闲内存：内存中分散在不同处的多个 ==孔的== 集合</p>
+</li>
+<li><p>孔：==连续的可用的内存块称作孔==</p>
+<ul>
+<li><p>每个孔的大小可能不一样</p>
+</li>
+<li><p>各种大小不同的孔分散在内存各处</p>
+<p>  解释：所以并不因为是连续分配的方式，孔就只有一个，进程的结束和换出都有可能导致出现新的孔</p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/31/88d8dc80fe02d38e7b4061de126dde17.png" alt="88d8dc80fe02d38e7b4061de126dde17.png" style="zoom:80%;" /></li>
+<li><p>过程：系统比较 ==孔的大小== 和进程 ==需要的内存大小==：如果能够容纳该进程就为其分配内存；如果不能容纳就让该进程继续在就绪队列中等待</p>
+<p>  <a style="color:red;">1. 每个进程获得的内存大小是和自己需要的内存大小一致</a></p>
+<p>  <a style="color:red;">2. 需要的内存大小是和每个孔的大小比较而不是空闲内存</a></p>
+<p>  解释：多个孔大小之和（空闲内存）可能能够容纳一个进程，但是这些孔很可能并不是连续的，单个孔完全有可能无法容纳一个进程</p>
+</li>
+<li><p>选择孔的方式：</p>
+<ul>
+<li><p>引入：内存中分散着多个孔，可能存在多个孔都可以容纳当前的进程，如何比较并选择？</p>
+</li>
+<li><p>方式：</p>
+<ul>
+<li><p>首次适配：每次选择 ==首个== 能够容纳当前进程的孔</p>
+<p>  <a style="color:red;">1. 每次查找可以从头开始，也可以从上次首次适配结束的位置开始</a></p>
+<p>  <a style="color:red;">2. 首次适配如果从上次结束的位置开始也被称为下次适配</a></p>
+</li>
+<li><p>最优适配：每次选择能够容纳当前进程的 ==最小== 的孔</p>
+<p>  <a style="color:red;">首次适配和最优适配在执行时间和利用空间方面优于最差适配</a></p>
+</li>
+<li><p>最差适配：每次选择能够容纳当前进程的 ==最大== 的孔</p>
+</li>
+<li><p>快速适配：维护常用大小的孔链表，每次选择都从 ==孔链表== 查找能够容纳当前进程的孔</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>优点 &amp; 缺点：</p>
+<ul>
+<li>优点：避免造成 ==内部碎片== 问题</li>
+<li>缺点：容易产生 ==外部碎片== 问题</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="碎片问题"   >
+          <a href="#碎片问题" class="heading-link"><i class="fas fa-link"></i></a><a href="#碎片问题" class="headerlink" title="碎片问题"></a>碎片问题</h3>
+      <ul>
+<li><p>定义：==无法容纳任何进程== 的孔被称作碎片</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li>外部碎片：空闲内存能够容纳一个进程，但是构成空闲内存的各个孔 ==并不连续== 且都不能 ==单独容纳进程==，这些孔都被称为外部碎片</li>
+<li>内存碎片：进程获取的内存超过需要的内存，多余出来的空闲内存被称为内部碎片</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/31/de74b20b9ecdeb21ffdc6c0b73c88174.png" alt="de74b20b9ecdeb21ffdc6c0b73c88174.png" style="zoom:80%;" /></li>
+<li><p>解决方式：</p>
+<ul>
+<li><p>外部碎片：</p>
+<ul>
+<li><p>压缩：<a style="color:red;">移动所有的进程使得所有的非连续孔组成连续的空闲内存</a></p>
+<p>  <a style="color:red;">注：只有采用动态地址绑定才可以采用压缩的方式</a></p>
+<p>  解释：压缩需要改变进程的基地址，而只有动态绑定可以改变进程的基地址</p>
+</li>
+<li><p><a href="#%E5%88%86%E9%A1%B5">分页</a></p>
+</li>
+</ul>
+</li>
+<li><p>内存碎片：<a style="color:red;"></a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="非连续分配"   >
+          <a href="#非连续分配" class="heading-link"><i class="fas fa-link"></i></a><a href="#非连续分配" class="headerlink" title="非连续分配"></a>非连续分配</h2>
+      
+        <h3 id="分页"   >
+          <a href="#分页" class="heading-link"><i class="fas fa-link"></i></a><a href="#分页" class="headerlink" title="分页"></a>分页</h3>
+      
+        <h4 id="分页概述"   >
+          <a href="#分页概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#分页概述" class="headerlink" title="分页概述"></a>分页概述</h4>
+      <ul>
+<li><p>定义：将 ==物理内存==和 ==逻辑内存==（虚拟内存）分为 ==大小相等== 的块</p>
+</li>
+<li><p>概念：</p>
+<ul>
+<li><p>帧：系统将物理内存分为大小相等的块，每块称为帧</p>
+</li>
+<li><p>帧表：记录 ==已分配帧== 和 ==空闲帧== 的数据结构</p>
+</li>
+<li><p>页：系统将逻辑地址空间分为大小相等的块，每块称为页</p>
+<ul>
+<li><p>页码：每个页都具有的编号</p>
+</li>
+<li><p>页偏移：页中的 <strong>每个逻辑地址</strong> 相对于 <strong>页地址</strong> 的偏移量</p>
+<p>  (1) 页地址：每页的第一个逻辑地址就是页地址（其实之前画图已经提到了）</p>
+<p>  (2) 偏移量最大值 = 每页的逻辑地址数量</p>
+</li>
+</ul>
+</li>
+<li><p>页表：记录每个页和每个帧的 ==映射关系== 的数据结构</p>
+<p>  <a style="color:red;"> 每个页和帧的大小都是 <strong>相等的</strong> 且由 <strong>硬件</strong> 决定的</a></p>
+</li>
+<li><p>页面大小</p>
+<ul>
+<li>从 <strong>页表大小</strong> 考虑</li>
+<li>从 <strong>I/O负载</strong> 考虑</li>
+<li>从 <strong>碎片</strong> 考虑</li>
+<li>从 <strong>局部性</strong> 考虑</li>
+</ul>
+</li>
+<li><p>有效-无效位：</p>
+<ul>
+<li>判断索引的页号是否存在于逻辑空间中：<em>这种情况几乎不会出现</em></li>
+<li><a style="color:red;">判断当前页是否加载进入内存中</a>(主要)：如果没有加载进入就会被标记为 <strong>无效（不可访问）</strong>；如果加载进入就会被标记为 <strong>有效（可以访问）</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>查找过程：</p>
+<ol>
+<li><p>处理器将 <strong>逻辑地址</strong> 交付给内存管理单元</p>
+</li>
+<li><p>内存管理单元根据 <strong>页面大小</strong> 计算得到 <strong>页号 + 页偏移量</strong></p>
+</li>
+<li><p>内存管理单元查询 <strong>页表</strong> 找到页码对应的 <strong>映射关系</strong></p>
+</li>
+<li><p>内存管理单元检查 映射关系的 <strong>有效-无效位</strong> </p>
+<ul>
+<li>如果有效-无效位是 <strong>有效</strong> 的：跳转到第 5 步</li>
+<li>如果有效-无效位是 <strong>无效</strong> 的：处理 <a href="#%E9%A1%B5%E9%94%99">页错误</a></li>
+</ul>
+</li>
+<li><p>内存管理单元利用 <strong>帧号</strong> 和 <strong>页偏移量</strong> 计算得到 <strong>物理地址</strong></p>
+</li>
+<li><p>内存管理单元将内存中的内容交付给处理器</p>
+</li>
+</ol>
+<pre><code>&lt;a style=&quot;color:red;&quot;&gt;公式：帧号 * 页面大小 + 页偏移量&lt;/a&gt;
+</code></pre>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><a style="color:red;">分页将程序员视图的内存和物理内存完全分离</a></p>
+<p>  解释：在程序员眼中所有的内存都是连续，而在实际的存储中进程的可能在内存中是分散存储的</p>
+</li>
+<li><p><a style="color:red;">分页不会产生外部碎片问题，但是会造成内部碎片问题</a></p>
+<p>  解释：页和帧的大小是固定的，但是进程需要的内存大小可能 ==无法被页大小整除== ，导致多余的内存仍然需要一页保存，造成内部碎片</p>
+<p>  每页大小为 2^11^ B 进程需要的大小是 2^14^ + 114 B，显然剩下的内存仍然需要一页来保存</p>
+</li>
+<li><p><a style="color:red;">处理器能够访问的逻辑地址空间可以大于实际的物理内存</a></p>
+<p>  解释：64 位操作系统能够，但是物理内存小于 2^64^ B：因为并不是进程的每页都会立刻加载到内存中去，可能只有最后一页加载进入了，处理器使用的是</p>
+<p>  ​          逻辑地址，但是实际访问的是内存管理单元映射之后的物理地址</p>
+</li>
+<li><p><a style="color:red;">每个进程都拥有单独的页表；并且在进程控制块保存页表指针</a></p>
+</li>
+<li><p><a style="color:red;">页表通常都是存储在操作系统的 <strong>内核</strong> 中</a></p>
+</li>
+<li><p>部分处理器内核支持多种页大小（Solaris）</p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/06/04/30354ee8ae88604abe9e7a1cc99176a0.png" alt="30354ee8ae88604abe9e7a1cc99176a0.png" style="zoom:80%;" />
+
+
+        <h4 id="帧分配"   >
+          <a href="#帧分配" class="heading-link"><i class="fas fa-link"></i></a><a href="#帧分配" class="headerlink" title="帧分配"></a>帧分配</h4>
+      <ul>
+<li><p>定义：为每个进程分配物理帧</p>
+</li>
+<li><p>方式：</p>
+<ul>
+<li><p>固定分配</p>
+<ul>
+<li><p>平均分配：每个进程都获取 ==相同数量== 的物理帧</p>
+</li>
+<li><p>按进程大小分配：大进程获取的物理帧数量多，小进程获取的物理帧数量少<br>  $$<br>  s_i: \text{表示每个进程的大小};s = \sum{s_i} \text{表示所有进程的大小之和}; m: \text{表示物理帧的数量} \<br>   \text{公式: 分配的物理帧数量} = \frac{s_i}{s} * m<br>  $$</p>
+</li>
+</ul>
+</li>
+<li><p>优先级分配：具有 ==高优先级== 的进程可以被分配更多物理帧</p>
+</li>
+</ul>
+</li>
+<li><p>细节：<a style="color:red;">每个进程被分配的最小帧数是由计算机体系结构决定的；被分配的最大帧数是由 <strong>可用物理内存</strong> 决定的</a></p>
+</li>
+<li><p>策略：</p>
+<ul>
+<li>全局分配</li>
+<li>局部分配</li>
+</ul>
+</li>
+<li><p>颠簸</p>
+</li>
+</ul>
+
+        <h4 id="页表保存"   >
+          <a href="#页表保存" class="heading-link"><i class="fas fa-link"></i></a><a href="#页表保存" class="headerlink" title="页表保存"></a>页表保存</h4>
+      <ul>
+<li><p>引入：页表中每项记录了逻辑地址和物理地址的映射关系 -&gt; 显然这些映射关系需要在实际的硬件设备上保存</p>
+</li>
+<li><p>硬件实现：</p>
+<ul>
+<li><p>寄存器：使用高速逻辑电路构造的寄存器用于保存页表</p>
+<ul>
+<li>优点：处理器获取页表中的映射关系的 ==速度非常快==</li>
+<li>缺点：寄存器存储的映射关系 ==数量相对较少==</li>
+</ul>
+<p>  <a style="color:red;">1. 修改和加载寄存器中的映射关系只能够利用特权指令完成</a></p>
+<p>  <a style="color:red;">2. 寄存器仍然是设计在处理器内部的</a></p>
+</li>
+<li><p>内存：内存中分配相应的空间用于保存页表</p>
+<ul>
+<li><p>优点：相比于寄存器存储的映射关系数量增加很多</p>
+</li>
+<li><p>缺点：造成 ==二次访问== 问题</p>
+<p>  解释：处理器首先会访问存放在内存中的页表获取到映射关系，然后需要再次访问内存获取数据，相当于获取一次有效数据，两次访问内存</p>
+</li>
+</ul>
+<p>  <a style="color:red;">处理器中设计页表基地址寄存器（PTBR）用于保存页表的在内存中的物理地址；设计页表长度寄存器（PTLR）用于保存页表长度</a></p>
+</li>
+<li><p>转换表缓冲区(TLB)：使用高速缓冲硬件存放页表中部分 ==常用的映射关系==（所有的映射关系仍然是保存在内存中）</p>
+<ul>
+<li><p>优点：(1) 解决二次访问问题 (2) ==提升== 访问页表映射关系的 ==速度==</p>
+</li>
+<li><p>缺点：(1) 访问 TLB 中不存在的映射关系时，仍然需要去内存中查询 -&gt; 这种情况称为 ==TLB未命中== (2) 造价比较昂贵</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>TLB 中重要的内核映射关系都是 ==固定== 的；其余映射关系都是可以采用 ==替换策略== 进行替换的</p>
+</li>
+<li><p>TLB 在上下文切换时也需要更新为当前进程常用的映射关系 -&gt; <a style="color:red;">TLB 中的所有映射关系都是属于同一进程的同一张页表</a></p>
+<p>  注：部分 TLB 允许维护不同进程的常用映射关系</p>
+</li>
+<li><p><a style="color:red;">现代操作系统提供多级 TLB</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>访问时间：<a style="color:red;">(TLB 访问时间 + 内存访问时间) * 命中率 +  (TLB 访问时间 + 内存访问时间 * 2) * 未命中率​</a></p>
+<p>  (1) 处理器首先去 TLB 中查询是否存在相应的映射关系</p>
+<p>  ​     -&gt; 如果存在，则称命中 TLB，然后处理器还需要从内存中去获取相应的数据（所以记得加上内存时间）</p>
+<p>  ​     -&gt; 如果不存在，则称未命中 TLB</p>
+<p>  (2) 处理器再去内存中查找相应的映射关系，查找到之后再次访问内存获得相应的数据</p>
+</li>
+</ul>
+
+        <h4 id="页表结构"   >
+          <a href="#页表结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#页表结构" class="headerlink" title="页表结构"></a>页表结构</h4>
+      <ul>
+<li><p>引入：</p>
+<ul>
+<li>现代计算机通常都是 <strong>32位</strong> 或者 <strong>64位</strong> 的操作系统，支持的最大逻辑地址为 2^32^ 或 2^64^ </li>
+<li>如果每张页表大小为 2^12^ B，那么一共会有 2^20^ 或者 2^52^ 页，这些页面如果全部 <strong>连续存储</strong> 在内存中显然也不是很合理</li>
+<li>所以希望采用一定的结构将页表分散存储在内存中</li>
+</ul>
+</li>
+<li><p>分层分页：</p>
+<ul>
+<li><p>定义：将页表再次进行分页</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/06/06/55b5853eec02aa5d94bb2d3cacd52c59.png" alt="55b5853eec02aa5d94bb2d3cacd52c59.png" style="zoom:80%;" /></li>
+<li><p>查找方式：</p>
+<ol>
+<li>内存管理单元首先查找 <strong>外部页表</strong> (高级页表)</li>
+<li>内存管理单元再根据外部页表再索引到 <strong>内部页表</strong> (低级页表)</li>
+<li>内存管理单元最后根据内存页表索引到 <strong>内存中的数据</strong></li>
+</ol>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">多级页表并不是所有级别的页表都存储在内存中</a>：通常只有高级页表存储在内存中，利用高级页表查询到低级页表时，才会将低级页表载入内存</li>
+<li><a style="color:red;">多级页表并不适用于 64 位操纵系统</a>：需要分的页实在太多，导致多级页表的访问效率非常低</li>
+<li>多级分页后逻辑地址也会相应地做出分化；页表中的表项不会发生变化</li>
+</ul>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/06/06/c0e23f5ef37e8264ffa00d26cbe5dc7a.png" alt="c0e23f5ef37e8264ffa00d26cbe5dc7a.png" style="zoom:80%;" /></li>
+<li><p>哈希分页：</p>
+<ul>
+<li><p>定义：设计哈希函数将虚拟页号映射到哈希表相应的位置中去</p>
+</li>
+<li><p>核心：<a style="color:red;">哈希表采用 <strong>数组链表</strong> 实现</a>：每个哈希表中每个数组元素实际上都是一个页表</p>
+</li>
+<li><p>查找方式：</p>
+<ul>
+<li><p>内存管理单元用虚拟页号和链表中的第一个元素进行匹配 </p>
+<p>  -&gt; 匹配成功，则就是用这个元素的物理地址</p>
+<p>  -&gt; 匹配失败，则继续遍历使用接下来的元素的物理地址</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><a style="color:red;">每个表项新增一项内容</a>：指向下一个节点的指针</li>
+<li>64 位操作系统需要使用 <strong>聚簇页表</strong></li>
+</ul>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/06/06/ee9882da5eb63c3190fe43438af668e9.png" alt="ee9882da5eb63c3190fe43438af668e9.png" style="zoom:80%;" /></li>
+<li><p>倒置页表：</p>
+<ul>
+<li><p>定义：倒置页表仅维护 <strong>真正存在</strong> 于物理内存中的页对应的映射关系</p>
+<p>  解释：在之后的虚拟内存中会看到，并不是所有的进程的页面都会被加载进入内存中，操作系统没有必要去维护不存在于内存中的页面的映射关系</p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/06/06/f882b58dc2a20c37022ade7744377f6d.png" alt="f882b58dc2a20c37022ade7744377f6d.png" style="zoom:80%;" />
+
+<ul>
+<li><p>核心：<a style="color:red;">整个操作系统仅维护 <strong>一张页表</strong>；页表的表项新增 <strong>进程标识符</strong></a></p>
+</li>
+<li><p>缺陷：</p>
+<ul>
+<li><p><a style="color:red;">需要额外维护不存在于内存中的页面的映射关系(外部页表)</a>：</p>
+<p>  解释：因为进程可能在运行过程中需要使用到没有加载到内存中页面，如果没有这个页表那就根本找不到在磁盘上的页面</p>
+</li>
+<li><p>查找时间相对增多，实现共享页面较为困难</p>
+</li>
+</ul>
+</li>
+<li><p>细节：<a style="color:red;">倒置页表是通过减少不必要的表项来降低页表大小</a>而不是通过分散存储</p>
+</li>
+</ul>
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/u010953266/article/details/42774117" >倒置页表</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+</li>
+</ul>
+
+        <h3 id="分段"   >
+          <a href="#分段" class="heading-link"><i class="fas fa-link"></i></a><a href="#分段" class="headerlink" title="分段"></a>分段</h3>
+      </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">http://example.com/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/18/os/process/%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">进程加载</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/"><span class="paginator-prev__text">虚拟内存</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-number">1.</span> <span class="toc-text">
+          内存分配</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E4%BF%9D%E6%8A%A4"><span class="toc-number">1.1.</span> <span class="toc-text">
+          内存保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E7%BB%AD%E5%88%86%E9%85%8D"><span class="toc-number">1.2.</span> <span class="toc-text">
+          连续分配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E5%88%86%E5%8C%BA%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          固定分区方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%88%86%E5%8C%BA%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          可变分区方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A2%8E%E7%89%87%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.3.</span> <span class="toc-text">
+          碎片问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E8%BF%9E%E7%BB%AD%E5%88%86%E9%85%8D"><span class="toc-number">1.3.</span> <span class="toc-text">
+          非连续分配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E9%A1%B5"><span class="toc-number">1.3.1.</span> <span class="toc-text">
+          分页</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E6%A6%82%E8%BF%B0"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">
+          分页概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%A7%E5%88%86%E9%85%8D"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">
+          帧分配</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E8%A1%A8%E4%BF%9D%E5%AD%98"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">
+          页表保存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">
+          页表结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%AE%B5"><span class="toc-number">1.3.2.</span> <span class="toc-text">
+          分段</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

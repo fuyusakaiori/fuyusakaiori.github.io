@@ -1,0 +1,366 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="概述                           计算机组成        硬件  体系结构 原始计算机体系结构&#x3D;&#x3D;控制器 + 运算器 + 存储器 + 输入设备 + 输出设备&#x3D;&#x3D; 原始计算机体系结构又称为 冯 · 诺依曼 结构 冯 · 诺依曼三大贡献 提出软硬件分离的思想 设计完成计算机体系结构 提出二进制编码     现代计算机体系结构：&#x3D;&#x3D;处理器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统-概述">
+<meta property="og:url" content="http://example.com/2021/09/11/os/overview/%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="概述                           计算机组成        硬件  体系结构 原始计算机体系结构&#x3D;&#x3D;控制器 + 运算器 + 存储器 + 输入设备 + 输出设备&#x3D;&#x3D; 原始计算机体系结构又称为 冯 · 诺依曼 结构 冯 · 诺依曼三大贡献 提出软硬件分离的思想 设计完成计算机体系结构 提出二进制编码     现代计算机体系结构：&#x3D;&#x3D;处理器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/08/4783d9362285a8e044c3d181c1154aed.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/14/118a18629d3d2ddb6292d8f235bff9a5.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/09/1183697fe3f8607eb44539036f38b07f.png">
+<meta property="article:published_time" content="2021-09-11T10:51:30.821Z">
+<meta property="article:modified_time" content="2021-10-21T07:07:48.363Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/06/08/4783d9362285a8e044c3d181c1154aed.png"><title>操作系统-概述 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/11/os/overview/%E6%A6%82%E8%BF%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">操作系统-概述</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-11</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
+      
+        <h2 id="计算机组成"   >
+          <a href="#计算机组成" class="heading-link"><i class="fas fa-link"></i></a><a href="#计算机组成" class="headerlink" title="计算机组成"></a>计算机组成</h2>
+      <ul>
+<li><p>硬件</p>
+<ul>
+<li>体系结构<ul>
+<li>原始计算机体系结构==控制器 + 运算器 + 存储器 + 输入设备 + 输出设备==<ol>
+<li><a style="color:red;">原始计算机体系结构又称为 冯 · 诺依曼 结构</a></li>
+<li>冯 · 诺依曼三大贡献<ul>
+<li>提出软硬件分离的思想</li>
+<li>设计完成计算机体系结构</li>
+<li>提出二进制编码</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>现代计算机体系结构：==处理器 + 存储器 + 输入设备 + 输出设备==<ol>
+<li><a style="color:red;">处理器 = 控制器 + 运算器</a></li>
+<li><a style="color:red;">现代计算机体系结构都是将 处理器 + 存储器 + 各种设备控制器 通过总线连接在一起</a></li>
+<li><a style="color:red;">现代计算机是以存储器为中心</a></li>
+</ol>
+</li>
+</ul>
+</li>
+<li>组成：<a href="#%E5%A4%84%E7%90%86%E5%99%A8">处理器</a> + [I/O 设备](#I/O 设备) + <a href="#%E5%AD%98%E5%82%A8%E5%99%A8">存储器</a></li>
+</ul>
+</li>
+<li><p>BIOS：基础输入输出系统</p>
+</li>
+<li><p>==操作系统==：</p>
+<ul>
+<li>向下管理计算机硬件资源</li>
+<li>向上提供用户所需的服务</li>
+<li>运行在==内核态==下的程序的集合</li>
+</ul>
+<p>  <a style="color:red;">简而言之操作系统完成承上启下的过程</a></p>
+</li>
+<li><p>软件（应用程序）：定义利用计算机资源解决用户的实际问题的方式</p>
+</li>
+<li><p>用户</p>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/06/08/4783d9362285a8e044c3d181c1154aed.png" alt="4783d9362285a8e044c3d181c1154aed.png" style="zoom:80%;" />
+
+
+        <h2 id="操作系统定义"   >
+          <a href="#操作系统定义" class="heading-link"><i class="fas fa-link"></i></a><a href="#操作系统定义" class="headerlink" title="操作系统定义"></a>操作系统定义</h2>
+      <ul>
+<li><p>引入</p>
+<ul>
+<li><p>操作系统是什么？解释：操作系统扮演了底层硬件和应用程序（用户）的中间角色</p>
+</li>
+<li><p>为什么要引入操作系统？解释：提供给用户一种==高效便捷==执行程序的方式 </p>
+<p>  -&gt; 不使用操作系统的话，所有的应用软件就会直接在硬件上运行，无论是在编写，运行，移植等方面都有非常多的不方便</p>
+</li>
+</ul>
+</li>
+<li><p>完整定义：</p>
+<ul>
+<li>向下管理计算机硬件资源 -&gt; 自底向上</li>
+<li>向上提供用户所需要的服务 -&gt; 自顶向下</li>
+<li>管理分配计算机资源</li>
+<li>控制相互竞争的程序正确执行</li>
+<li>运行在==内核态==下的==程序集合==</li>
+</ul>
+</li>
+<li><p>目的：提供给用户一种 <strong>高效便捷</strong> 利用硬件资源执行程序的方式 </p>
+</li>
+<li><p>细节</p>
+<ol>
+<li><p><a style="color:red;">操作系统是计算机中最基本的软件</a></p>
+</li>
+<li><p>内核和操作系统：</p>
+<ul>
+<li>内核是操作系统的核心部分：提供硬件抽象层；管理系统的进程、内存、文件，决定着系统的性能和稳定性</li>
+<li>操作系统是在内核上的延伸：提供为用户服务的软件（数据库，编辑器等等）</li>
+<li><a style="color:red;">操作系统 = 内核 + 系统程序（可以认为操作系统就是内核）</a></li>
+</ul>
+</li>
+<li><p>运行机制：</p>
+<ul>
+<li>内核态（特权模式，系统模式，监视模式）：操作系统运行在内核态</li>
+<li>用户态：<a style="color:red;">系统程序和应用程序都运行在用户态</a></li>
+<li>注：(1) 操作系统采用一个比特位来表示 <strong>内核态(0)</strong> 和 <strong>用户态(1)</strong> (2) 应用程序或者系统程序执行 <strong>系统调用</strong> 或者 <strong>陷入指令</strong></li>
+</ul>
+</li>
+<li><p>程序分类：(1) 操作系统 (2) 系统程序 (3) 应用程序</p>
+<ul>
+<li><a style="color:red;">系统程序不属于操作系统的一部分</a>：围绕着操作系统设计的配套程序</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+
+        <h2 id="操作系统组成部分"   >
+          <a href="#操作系统组成部分" class="heading-link"><i class="fas fa-link"></i></a><a href="#操作系统组成部分" class="headerlink" title="操作系统组成部分"></a>操作系统组成部分</h2>
+      
+        <h3 id="进程管理"   >
+          <a href="#进程管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h3>
+      <ul>
+<li><p>进程定义：==正在执行的程序==</p>
+</li>
+<li><p>进程管理任务</p>
+<ul>
+<li>进程的 <strong>创建</strong> 和 <strong>删除</strong></li>
+<li>进程的 <strong>停止</strong> 和 <strong>恢复</strong></li>
+<li>进程的 <strong>同步</strong> 和 <strong>通信</strong></li>
+<li>进程的 <strong>调度</strong></li>
+<li>进程的 <strong>死锁</strong> 处理</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>进程是主动的实体；程序是被动的实体</p>
+<p>  <a style="color:red;">进程和程序不是相同的概念</a></p>
+</li>
+<li><p>进程的执行需要某种资源（CPU 时间，I/O 设备，内存…）</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="存储管理"   >
+          <a href="#存储管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h3>
+      
+        <h4 id="主存管理"   >
+          <a href="#主存管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#主存管理" class="headerlink" title="主存管理"></a>主存管理</h4>
+      <ul>
+<li><p>主存定义：具有巨大容量的字节数组，每个字节都具有 ==绝对地址== </p>
+</li>
+<li><p>主存管理任务</p>
+<ul>
+<li>记录某块内存地址正在被谁使用</li>
+<li>决定哪些进程会调入或者调出内存</li>
+<li>分配和释放内存空间</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>主存是被处理器和磁盘共享的交互媒介</p>
+</li>
+<li><p>主存是处理器唯一可以直接访问的大容量存储器</p>
+<p>  <a style="color:red;">处理器必须根据 <strong>绝对地址</strong> 获取对应的指令或者数据</a></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="二级存储管理"   >
+          <a href="#二级存储管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#二级存储管理" class="headerlink" title="二级存储管理"></a>二级存储管理</h4>
+      <ul>
+<li>二级存储管理任务<ul>
+<li>空闲内存管理</li>
+<li>存储分配：如何为文件分配合适的存储空间</li>
+<li>硬盘调度（长期调度）</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="文件管理"   >
+          <a href="#文件管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h4>
+      <ul>
+<li><p>引入：</p>
+<ul>
+<li>每种二级存储介质（硬盘，光盘，磁带）都具有自己独特的组织结构和特点</li>
+<li>每种存储介质的底层异构性导致操作系统并不方便直接管理这些硬件</li>
+<li>操作系统需要提供一种统一的抽象接口屏蔽底层的异构性，对存储介质进行统一的管理</li>
+</ul>
+</li>
+<li><p>文件定义：创建者定义的一系列相关数据的集合</p>
+</li>
+<li><p>文件管理任务：</p>
+<ul>
+<li>文件的创建和删除（.jpg，.png…）</li>
+<li>目录的创建和删除（java.lang）</li>
+<li>支持使用 ==源语== 操作文件和目录</li>
+<li>支持文件 ==映射== 到二级存储设备中</li>
+<li>提供文件备份机制</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>映射：文件管理的目的是为了统一管理不同的存储介质 -&gt; 每个文件需要对应的存储介质中的存储内容</li>
+<li>备份机制：存储介质本身是 ==不可靠== 的 -&gt; 文件管理需要保证文件的安全性</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="I-O-管理"   >
+          <a href="#I-O-管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#I-O-管理" class="headerlink" title="I/O 管理"></a>I/O 管理</h3>
+      <ul>
+<li><p>I/O 管理任务</p>
+<ul>
+<li><p>提供 ==缓冲缓存系统== ：==协调== 不同的 I/O 设备之间的读写速率</p>
+<p>  解释：不同的 I/O 设备的读写速率相差较大</p>
+</li>
+<li><p>提供 I/O 设备 ==驱动程序接口==</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="安全机制"   >
+          <a href="#安全机制" class="heading-link"><i class="fas fa-link"></i></a><a href="#安全机制" class="headerlink" title="安全机制"></a>安全机制</h3>
+      <ul>
+<li><p>安全机制定义：用于控制用户和进程对于系统资源的访问</p>
+</li>
+<li><p>安全机制任务：</p>
+<ul>
+<li><p>防止进程与进程之间产生干扰 </p>
+</li>
+<li><p>防止进程直接干扰操作系统</p>
+</li>
+<li><p>防止进程无限进行下去</p>
+</li>
+<li><p>分辨已授权的用户和未授权的用户</p>
+</li>
+</ul>
+</li>
+<li><p>模式位：</p>
+<ul>
+<li><p>定义：用于表示当前处理器处于何种运行模式</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>用户模式：采用比特位 ==1== 表示 (<a style="color:red;">用户进程和系统进程运行在用户模式下</a>)</p>
+</li>
+<li><p>内核模式：采用比特位 ==0== 表示 (<a style="color:red;">操作系统相关的进程必须运行在内核模式下</a>)</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="命令行解释程序"   >
+          <a href="#命令行解释程序" class="heading-link"><i class="fas fa-link"></i></a><a href="#命令行解释程序" class="headerlink" title="命令行解释程序"></a>命令行解释程序</h3>
+      <ul>
+<li><p>定义：获取用户输入的相关命令并且使用 <strong>系统程序</strong> 或者 <strong>系统调用</strong> 提供相关的服务</p>
+<p>  <a style="color:red;">注：命令行的实现不一定会使用系统调用</a></p>
+</li>
+<li><p>命令行程序的实现方式：</p>
+<ul>
+<li>选择在操作系统 ==内核== 中实现 (系统调用实现)</li>
+<li>选择作为 ==系统程序== 实现</li>
+</ul>
+</li>
+<li><p>命令的实现方式：</p>
+<ul>
+<li><p>命令行解释程序中完成每个命令的具体实现</p>
+</li>
+<li><p>命令行解释程序只规定命令；命令的具体实现交由系统程序实现</p>
+<p>  <a style="color:red;">命令行解释程序体积更小，新增命令也更加灵活</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ol start="2">
+<li>命令行解释程序在操作系统启动的时候 ==伴随启动== </li>
+<li>命令行解释程序也称为 Shell<ul>
+<li>Windows：Powershell</li>
+<li>Linux &amp; UNIX：C shell Kornshell</li>
+<li>每个操作系统可以拥有多个命令行解释程序；也可以使用第三方设计的命令行解释程序（Windows Terminal）</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+
+        <h2 id="操作系统服务"   >
+          <a href="#操作系统服务" class="heading-link"><i class="fas fa-link"></i></a><a href="#操作系统服务" class="headerlink" title="操作系统服务"></a>操作系统服务</h2>
+      <ul>
+<li><p>用户界面：</p>
+<ul>
+<li>命令行界面：每条指令依次执行</li>
+<li>批处理界面：多条命令汇编成文件执行</li>
+<li>图形用户界面</li>
+</ul>
+</li>
+<li><p>程序执行：程序可以被加载到内存中被调度执行以及正常结束</p>
+</li>
+<li><p>I/O 操作：程序运行需要使用 I/O 设备获取相应的资源</p>
+</li>
+<li><p>文件操作：程序运行需要对文件进行读写操作</p>
+</li>
+<li><p>通信：多个进程之间需要交换信息</p>
+<ul>
+<li><p>==共享内存==：多个进程对共享区域进行读写</p>
+<p>  <a style="color:red;">注：这里的共享内存指的是对公共内存的共享；不是代表进程之间可以共享内存</a></p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/14/118a18629d3d2ddb6292d8f235bff9a5.png" alt="118a18629d3d2ddb6292d8f235bff9a5.png" style="zoom:80%;" /></li>
+<li><p>==消息传递==：规定格式的消息在进程之间传递</p>
+</li>
+</ul>
+</li>
+<li><p>错误检测：硬件故障，程序出错等错误都需要被检测并纠正</p>
+</li>
+<li><p>资源分配：每个用户和进程都需要根据需求分配相应的资源</p>
+</li>
+<li><p>统计信息：统计每个用户和进程使用的资源类型和数量</p>
+</li>
+<li><p>保护机制：保证每个用户和进程的访问是可控的</p>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/06/09/1183697fe3f8607eb44539036f38b07f.png" alt="1183697fe3f8607eb44539036f38b07f.png" style="zoom:80%;" />
+
+
+
+
+
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/11/os/overview/%E6%A6%82%E8%BF%B0/">http://example.com/2021/09/11/os/overview/%E6%A6%82%E8%BF%B0/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/11/os/file-system/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">文件管理</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/11/linux/Linux%20%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><span class="paginator-prev__text">Linux 文件系统</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">
+          概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90"><span class="toc-number">1.1.</span> <span class="toc-text">
+          计算机组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9A%E4%B9%89"><span class="toc-number">1.2.</span> <span class="toc-text">
+          操作系统定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="toc-number">1.3.</span> <span class="toc-text">
+          操作系统组成部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">
+          进程管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.2.</span> <span class="toc-text">
+          存储管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">
+          主存管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E7%BA%A7%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">
+          二级存储管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">
+          文件管理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.3.</span> <span class="toc-text">
+          I&#x2F;O 管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6"><span class="toc-number">1.3.4.</span> <span class="toc-text">
+          安全机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%A7%A3%E9%87%8A%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.3.5.</span> <span class="toc-text">
+          命令行解释程序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.4.</span> <span class="toc-text">
+          操作系统服务</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

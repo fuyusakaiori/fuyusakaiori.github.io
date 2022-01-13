@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="程序计数寄存器        什么是程序计数寄存器？   名称：程序计数寄存器（Programmer Counter Register）  别名：PC 寄存器、程序计数器、程序钩子   定义：JVM 中的一块较小的 [内存区域]{.blue}  区别：真实计算机中的程序计数器是 [物理硬件寄存器]{.blue} 制作完成的   作用：[保存当前线程正在执行的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序计数寄存器">
+<meta property="og:url" content="http://example.com/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="程序计数寄存器        什么是程序计数寄存器？   名称：程序计数寄存器（Programmer Counter Register）  别名：PC 寄存器、程序计数器、程序钩子   定义：JVM 中的一块较小的 [内存区域]{.blue}  区别：真实计算机中的程序计数器是 [物理硬件寄存器]{.blue} 制作完成的   作用：[保存当前线程正在执行的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/字节码指令.41jaaaxto960.png">
+<meta property="article:published_time" content="2021-09-24T12:46:25.000Z">
+<meta property="article:modified_time" content="2021-09-24T09:23:38.365Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/字节码指令.41jaaaxto960.png"><title>程序计数寄存器 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">程序计数寄存器</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="程序计数寄存器"   >
+          <a href="#程序计数寄存器" class="heading-link"><i class="fas fa-link"></i></a><a href="#程序计数寄存器" class="headerlink" title="程序计数寄存器"></a>程序计数寄存器</h1>
+      <blockquote>
+<p><strong>什么是程序计数寄存器？</strong></p>
+</blockquote>
+<ul>
+<li><p>名称：程序计数寄存器（Programmer Counter Register）</p>
+<ul>
+<li>别名：PC 寄存器、程序计数器、程序钩子</li>
+</ul>
+</li>
+<li><p>定义：JVM 中的一块较小的 [内存区域]{.blue}</p>
+<ul>
+<li>区别：真实计算机中的程序计数器是 [物理硬件寄存器]{.blue} 制作完成的</li>
+</ul>
+</li>
+<li><p>作用：[保存当前线程正在执行的字节码指令的地址]{.red}</p>
+<ul>
+<li>字节码指令：源代码被编译器编译后生成的就是字节码文件（包含字节码指令）</li>
+<li>字节码指令地址：每个字节码指令都具有自己的地址，便于执行引擎选择执行</li>
+<li>编译器：C/C++ 的编译器是 GCC，Java 的编译器是的 Javac</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/字节码指令.41jaaaxto960.png" alt="字节码指令" style="zoom:80%;" /></li>
+<li><p>指令地址：</p>
+<ul>
+<li><p>执行方法是 Java 方法：程序计数会保存该方法对应的指令地址 </p>
+</li>
+<li><p>执行的方法是 Native 方法：[程序计数器将会被置为空 （Undefined）]{.red}</p>
+<p>  :::info</p>
+<p>  简单来说 Native 方法就是本地方法，是不采用 Java 实现的外部方法，之后在本地方法栈详细介绍</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>实质：</p>
+<ul>
+<li><p>程序计数器是 Java 虚拟机中 [运行速度最快，空间较小的内存区域]{.red}</p>
+</li>
+<li><p>Java 虚拟机中的程序计数器是对处理器中的程序计数器的抽象模拟</p>
+</li>
+</ul>
+</li>
+<li><p>特点：：</p>
+<ul>
+<li><p>[每个线程都拥有独立的程序计数器]{.red}</p>
+</li>
+<li><p>[每个线程都是不可以访问其余线程的空间的：线程间不可以直接相互通信]{.red}</p>
+<p>  :::danger</p>
+<p>  注：操作系统中进程中的每个线程都是直接相互通信的，进程之间才是相互隔离的</p>
+<p>  :::</p>
+</li>
+<li><p>[程序计数器区域没有垃圾回收机制也没有 OutOfMemory 异常]{.red}</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>为什么要使用程序计数寄存器？</strong></p>
+</blockquote>
+<ul>
+<li>前提：Java 多线程采用线程轮流切换，分配处理器执行时间的方式实现的（时间片轮转法？）<ul>
+<li>第一个原因：多线程切换<ul>
+<li>其余线程抢占当前线程的处理器使用权执行任务</li>
+<li>其余线程执行任务结束之后，之前被抢占的线程想要继续执行</li>
+<li>[如果没有程序计数器加以保存]{.blue}，那么之前被抢占的线程就不可能知道从哪里开始继续执行了</li>
+</ul>
+</li>
+<li>第二个原因：方法调用（不准确）<ul>
+<li>被调用的方法执行结束了，执行引擎需要借助 [返回地址]{.red} 才能够回到此前的位置</li>
+<li>返回地址就是获取的当前程序计数器的值，确保方法调用结束后执行引擎能够返回</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>程序计数器为什么是线程私有的呢？</strong></p>
+</blockquote>
+<ul>
+<li>其余线程抢占当前线程的处理器使用权执行任务</li>
+<li>其余线程执行任务结束之后，之前被抢占的线程想要继续执行</li>
+<li>[如果所有线程共享同一个程序计数器，那么上一个线程存入程序计数器的字节码指令地址就会被下一个线程 <strong>覆盖</strong>]{.blue}</li>
+<li>那么之前被抢占的线程就不可能知道从哪里开始继续执行了</li>
+</ul>
+<p>:::info</p>
+<p>参考博客：</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/leaf_0303/article/details/78953669" >JVM 程序计数器</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/">http://example.com/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">垃圾回收-概述</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__text">概述</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">
+          程序计数寄存器</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

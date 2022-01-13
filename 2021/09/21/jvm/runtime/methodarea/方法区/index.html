@@ -1,0 +1,420 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="方法区                           概述        定义：虚拟机中独立于堆空间的较大存储空间  作用：[存放所有和 类相关的信息 ]{.red}  实现方式：  永久代（PermSpace）：[方法区使用的虚拟机的内存]{.red} 元空间（MetaSpace）：[方法区直接使用操作系统提供的物理内存]{.red}    +++d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="方法区">
+<meta property="og:url" content="http://example.com/2021/09/21/jvm/runtime/methodarea/%E6%96%B9%E6%B3%95%E5%8C%BA/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="方法区                           概述        定义：虚拟机中独立于堆空间的较大存储空间  作用：[存放所有和 类相关的信息 ]{.red}  实现方式：  永久代（PermSpace）：[方法区使用的虚拟机的内存]{.red} 元空间（MetaSpace）：[方法区直接使用操作系统提供的物理内存]{.red}    +++d">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/JDK-6-方法区.669ebsb2dx00.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/JDK-7-方法区.4iqixiimvnc0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/JDK-8-方法区.5ajphdnv5uo0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/元空间溢出.srnryv3fg1c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/永久代溢出.jrbirrpd1dc.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/动态生成溢出.2y4bjza6lj00.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/符号引用.4di2d7wlqb60.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解析过程.4qqc3n55wjg0.png">
+<meta property="article:published_time" content="2021-09-21T12:46:25.000Z">
+<meta property="article:modified_time" content="2021-09-24T12:50:06.055Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/JDK-6-方法区.669ebsb2dx00.png"><title>方法区 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/21/jvm/runtime/methodarea/%E6%96%B9%E6%B3%95%E5%8C%BA/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">方法区</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-21</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="方法区"   >
+          <a href="#方法区" class="heading-link"><i class="fas fa-link"></i></a><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h1>
+      
+        <h2 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
+      <ul>
+<li><p>定义：虚拟机中独立于堆空间的较大存储空间</p>
+</li>
+<li><p>作用：[存放所有和 <strong>类相关的信息</strong> ]{.red}</p>
+</li>
+<li><p>实现方式：</p>
+<ul>
+<li>永久代（PermSpace）：[方法区使用的虚拟机的内存]{.red}</li>
+<li>元空间（MetaSpace）：[方法区直接使用操作系统提供的物理内存]{.red}</li>
+</ul>
+<p>  +++danger 为什么要采用元空间实现方法区而不是永久代呢？</p>
+<p>  ① 官方文档中的解释非常模糊：因为被收购的 JRockit 采用的元空间实现方法区，所以整合 HotSpot 和 JRockit 虚拟机时也采用元空间实现</p>
+<p>  ② 实际的原因应该是这样的：</p>
+<p>  永久代使用的是虚拟机内存，操作系统分配给虚拟机内存是非常有限的，只要方法区加载过多的类，就非常容易造成 OutOfMemoryError 异常</p>
+<p>  元空间直接使用操作系统的内存，只要加载的类的数量不超过操作系统的内存大小就行，显然没有那么容易出现 OutOfMemoryError 异常</p>
+<p>  +++</p>
+</li>
+<li><p>历史：</p>
+<ul>
+<li><p>[JDK 6：方法区采用永久代实现，静态变量和字符串常量池都存放在方法区中]{.blue}</p>
+</li>
+<li><p>[JDK 7：方法区依旧采用永久代实现，静态变量和字符串常量池移动到堆空间中]{.blue}</p>
+</li>
+<li><p>[JDK 8：方法区改用元空间实现，静态变量和字符串常量池依旧存放在堆空间中]{.blue}</p>
+<p>  :::info</p>
+<p>  注：从 JDK 7 开始就打算逐渐采用元空间替代永久代了</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>特点：</p>
+<ul>
+<li>方法区和堆区都不需要连续的内存空间，都可以采用固定容量或者动态扩展</li>
+<li>[方法区是线程共享区域]{.red}</li>
+<li>[方法区 <strong>存在垃圾回收机制</strong>，也存在 OutOfMemoryError 异常]{.red}</li>
+<li>[方法区有两种具体的实现方式：永久代和元空间]{.red}</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="存储信息"   >
+          <a href="#存储信息" class="heading-link"><i class="fas fa-link"></i></a><a href="#存储信息" class="headerlink" title="存储信息"></a>存储信息</h3>
+      <blockquote>
+<p><strong>方法区中存储的类型信息是从哪里获得的?</strong></p>
+</blockquote>
+<ul>
+<li>过程：<ul>
+<li>前端编译器将源代码编译成字节码文件</li>
+<li>虚拟机利用 IO 流读取字节码文件</li>
+<li>虚拟机利用 [字节码文件和运行时信息]{.blue} 构建 Klass 对象存储类型信息</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>方法区中的存储的是什么?</strong></p>
+</blockquote>
+<p>:::warning</p>
+<p>如果不了解 <a href="">OOP-Klass</a> 模型的读者，请先了解后再继续阅读</p>
+<p>:::</p>
+<ul>
+<li><p>核心：[Klass 对象]{.red}</p>
+<ul>
+<li><p>每个 Klass 对象包含了 [类相关的字节码信息和运行时的信息]{.blue}</p>
+</li>
+<li><p>字节码文件存储的信息仅是方法区中信息的一部分</p>
+<p>  其余信息必须等到类被加载到虚拟机中之后才能够得到（诸如类加载器信息，虚方法表）</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>每个 Klass 对象又包含什么信息呢?</strong></p>
+</blockquote>
+<ul>
+<li>图示</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/JDK-6-方法区.669ebsb2dx00.png" alt="JDK-6-方法区" style="zoom:80%;" />
+
+<ul>
+<li><p>类相关信息</p>
+<ul>
+<li><p>类型信息：</p>
+<ul>
+<li>类的全限定名：包名 + 类名（java.lang.Object）</li>
+<li>类的修饰符：访问权限、是否静态（static）、是否可变（final）</li>
+<li>继承的父类：父类的名称也必须使用全限定名</li>
+<li>实现的所有接口：接口的名称也必须是全限定名</li>
+</ul>
+</li>
+<li><p>字段信息：字段的名称 + 字段的类型 + 字段的修饰符</p>
+</li>
+<li><p>静态变量：静态变量的名称 + 静态变量的类型 + 静态变量的访问权限</p>
+<ul>
+<li><p>[静态变量在没有对象的情况下依旧可以访问]{.green}</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodComponent</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 实例变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line">    <span class="comment">// 静态变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String string = <span class="string">&quot;初始值&quot;</span>;</span><br><span class="line">    <span class="comment">// 测试静态变量</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 即使对象为 null 依旧是可以访问静态变量的</span></span><br><span class="line">        MethodComponent methodComponent = <span class="keyword">null</span>;</span><br><span class="line">        System.out.println(methodComponent.string);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>[如果静态变量是引用类型的话，引用存放在方法区中，对象存放在堆区中]{.blue}</p>
+</li>
+</ul>
+</li>
+<li><p>方法信息：方法签名 + 方法返回值 + 方法访问权限 + 方法参数 + 局部变量表 + 操作数栈大小 + 异常信息表</p>
+</li>
+<li><p>[方法表]{.red}</p>
+<ul>
+<li>[虚方法表：存放该类自身的和继承的所有虚方法以实现方法分派]{.blue}</li>
+<li>[接口方法表：存放该类实现的所有接口提供的方法以实现方法分派]{.blue}</li>
+<li>[生成时间：方法表在类加载阶段被初始化（连接阶段）]{.blue}</li>
+</ul>
+</li>
+<li><p>[类加载器]{.red}</p>
+<ul>
+<li>定义：记录当前类是被哪个类加载器加载进入虚拟机的</li>
+<li>生成时间：[类加载器的相关信息也是在类加载阶段被初始化的（加载阶段）]{.blue}</li>
+</ul>
+</li>
+<li><p>[Class 对象的引用]{.red}</p>
+<ul>
+<li><p>定义：保留对 Class 对象的引用确保反射能够找到 Class 对象</p>
+<p>  [对象中保存是的类元数据（Klass 对象）的指针，只有类元数据中记录 Class 对象的引用，反射才能够找到 Class对象]{.blue}</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0">运行时常量池</a>：字面量（字符串常量池、其余常量）、符号引用 </p>
+<ul>
+<li>[每个 Klass 对象都拥有一个运行时常量池，也就意味每个类都拥有独立的运行时常量池]{.red}</li>
+<li>[非字符串类型的常量的值会在编译期间就写入字节码文件中，所以认为常量在编译期间就被赋值]{.red}</li>
+</ul>
+</li>
+<li><p>即时编译生成的代码缓存</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>上述提到的信息真的都存放在方法区中吗?</strong></p>
+</blockquote>
+<ul>
+<li><p>JDK 6 版本之前方法区确实按照这些信息进行存放</p>
+</li>
+<li><p>JDK 7 版本将 [静态变量、字符串常量池全部移动到堆空间中]{.red}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/JDK-7-方法区.4iqixiimvnc0.png" alt="JDK-7-方法区" style="zoom:80%;" /></li>
+<li><p>JDK 8 版本没有变动静态变量、字符串常量池的位置，[只是改用元空间实现]{.red}</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/JDK-8-方法区.5ajphdnv5uo0.png" alt="JDK-8-方法区" style="zoom:80%;" /></li>
+</ul>
+<p>+++danger 为什么要将字符串常量池移动到堆区中呢？</p>
+<p>+++</p>
+
+        <h3 id="方法区大小"   >
+          <a href="#方法区大小" class="heading-link"><i class="fas fa-link"></i></a><a href="#方法区大小" class="headerlink" title="方法区大小"></a>方法区大小</h3>
+      <ul>
+<li>采用永久代实现的方法区<ul>
+<li>方法区初始大小：20.75 MB</li>
+<li>方法区最大容量：32位虚拟机最大容量为 64MB，64位虚拟机最大容量为 82MB</li>
+<li>设置方法区大小的命令：<ul>
+<li>[XX:PermSize=size 更改方法区的初始大小值]{.blue}</li>
+<li>[XX:MaxPermSize=size 更改方法区的最大容量]{.blue}</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>[方法区的设置的最大容量不可以超过虚拟机的最大内存]{.red}</li>
+<li>方法区存放的类信息的大小超过了方法区的最大容量，就会抛出 OutOfMemoryError 异常</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>采用元空间实现的方法区<ul>
+<li>元空间初始大小：21 MB（[取决于不同的操作系统]{.red}）</li>
+<li>元空间最大容量：[默认没有上限值，取决于操作系统提供的物理内存大小]{.red}</li>
+<li>设置方法区大小的命令<ul>
+<li>[XX:MetaspaceSize=size 更改方法区的初始大小值]{.blue}</li>
+<li>[XX:MaxMetaspaceSize=size 更改方法区的最大容量]{.blue}</li>
+</ul>
+</li>
+<li>细节：[每次方法区触发垃圾回收机制时，都会根据释放的空间大小来动态地改变方法区的大小]{.red}<ul>
+<li>[如果垃圾回收释放的空间较少，那么方法区的容量将会提升]{.blue}</li>
+<li>[如果垃圾回收释放的空间较多，那么方法区的容量就会相应减少]{.blue}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="方法区溢出"   >
+          <a href="#方法区溢出" class="heading-link"><i class="fas fa-link"></i></a><a href="#方法区溢出" class="headerlink" title="方法区溢出"></a>方法区溢出</h3>
+      <ul>
+<li><p>原因：内存泄露或者内存溢出</p>
+</li>
+<li><p>内存泄露：[不再使用的类或者被废弃的常量没有得到回收]{.red}</p>
+</li>
+<li><p>内存溢出</p>
+<ul>
+<li><p>情况：① 加载大量的类（Jar 包）② 服务器（Tomcat）部署工程过多 ③ 反射/动态代理生成太多的类</p>
+</li>
+<li><p>测试：</p>
+<ul>
+<li><p>[加载的类的数量过多造成的溢出]{.red}</p>
+<ul>
+<li><p>自定义类加载器加载大量类</p>
+<p>测试代码</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 虚拟机参数：</span></span><br><span class="line"><span class="comment">// JDK 7：-XX:PermSize=10m -XX:MaxPermSize=10m</span></span><br><span class="line"><span class="comment">// JDK 8：-XX:MetaspaceSize=10m -XX:MaxMetaspaceSize=10m</span></span><br><span class="line"><span class="comment">// 关闭指针压缩：-XX:-UseCompressedClassPointers</span></span><br><span class="line"><span class="comment">// 该类继承类加载器：所以该类自身就是个类加载器了</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodArea</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 加载大量类使得方法区溢出</span></span><br><span class="line">        MethodArea methodArea = <span class="keyword">new</span> MethodArea();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            ClassWriter classWriter = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</span><br><span class="line">            <span class="comment">// 获取 Object 的字节码文件</span></span><br><span class="line">            classWriter.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC, <span class="string">&quot;Class&quot;</span> + i, <span class="keyword">null</span>, <span class="string">&quot;java/lang/Object&quot;</span>, <span class="keyword">null</span>);</span><br><span class="line">            <span class="comment">// 将 Object 的字节码文件转换成字节数组保存</span></span><br><span class="line">            <span class="keyword">byte</span>[] bytes = classWriter.toByteArray();</span><br><span class="line">            <span class="comment">// 将字节数组转换成 Class 对象, 方法区中会生成对应的 Klass 对象</span></span><br><span class="line">            methodArea.defineClass(<span class="string">&quot;Class&quot;</span>+i, bytes, <span class="number">0</span>, bytes.length);</span><br><span class="line">            <span class="comment">// Klass 对象数量过多导致方法区溢出, Class 对象是存放在堆区中的</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>测试结果</p>
+<p>JDK 8 版本：如果不关闭指针压缩，抛出的异常就是 Compressed class space，指针压缩都没有办法省出空间了</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/元空间溢出.srnryv3fg1c.png" alt="元空间溢出" style="zoom:80%;" />
+
+<p>JDK 7 版本：① 需要更换运行环境 ② 不需要手动关闭压缩指针 ③ 记得更换虚拟机命令 ④ ClassWriter 类需要重新导入（所属包不一样）</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/永久代溢出.jrbirrpd1dc.png" alt="永久代溢出" style="zoom:80%;" /></li>
+<li><p>反射/动态代理加载的类过多</p>
+<p>测试代码：可以了解下代理模式（动态代理 + 静态代理）</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodArea</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 测试生成的代理类数量</span></span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 动态代理</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">            enhancer.setSuperclass(OOMObject.class);</span><br><span class="line">            enhancer.setUseCache(<span class="keyword">false</span>);</span><br><span class="line">            enhancer.setCallback(</span><br><span class="line">                    (MethodInterceptor) (o, method, objects, methodProxy)</span><br><span class="line">                                                -&gt; methodProxy.invokeSuper(o, objects));</span><br><span class="line">            enhancer.create();</span><br><span class="line">            System.out.println(++count);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMObject</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>测试结果</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/动态生成溢出.2y4bjza6lj00.png" alt="动态生成溢出" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[运行时常量池造成的溢出]{.blue}</p>
+<p>:::warning</p>
+<p>运行时常量池造成的溢出仅会在 JDK 6 之前的版本出现</p>
+<p>:::</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="垃圾回收"   >
+          <a href="#垃圾回收" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3>
+      <blockquote>
+<p><strong>方法区进行垃圾回收的前提</strong></p>
+</blockquote>
+<ul>
+<li>前提：[虚拟机规范中没有明确规定方法区必须实现垃圾回收机制]{.green}<ul>
+<li>大多数的垃圾回收器都支持对方法区进行垃圾回收</li>
+<li>部分垃圾回收器（[如 ZGC 垃圾回收器]{.red}）不支持方法区的垃圾回收</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>为什么最好支持对方法区进行垃圾回收呢?</strong></p>
+</blockquote>
+<ul>
+<li>核心：[避免对方法区造成过大的内存压力从而导致的内存泄露或者内存溢出]{.red}<ul>
+<li>许多采用反射和动态代理的框架，以及频繁自定义类加载器框架中会使得大量类被加载进入虚拟机<ul>
+<li>采用反射和动态代理的框架：Spring、Mybatis</li>
+<li>频繁自定义类加载器的框架：Tomcat、OSGi</li>
+</ul>
+</li>
+<li>大量的类被加载进入虚拟机而无法被卸载的话就容易造成 OutOfMemoryError 异常</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>方法区垃圾回收的对象以及条件</strong></p>
+</blockquote>
+<ul>
+<li>回收对象：[常量池中废弃的各种类型的常量和不再使用的类]{.red}</li>
+<li>回收条件<ul>
+<li>常量回收条件：[常量不再被任何地方引用]{.red}</li>
+<li>类回收条件：<ul>
+<li>[该类所有的实例及其派生子类的实例全部都被回收完成]{.red}</li>
+<li>[加载该类的类加载器已经被回收（非常难以达成）]{.red}</li>
+<li>[该类对应的 Class 对象已经被回收，无法再使用反射获取类信息]{.red}</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>[没有被引用的常量可以立刻被回收]{.red}</li>
+<li>[满足回收条件的类仅仅只是允许被回收，具体是否回收取决于虚拟机自身]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="运行时常量池"   >
+          <a href="#运行时常量池" class="heading-link"><i class="fas fa-link"></i></a><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h2>
+      <blockquote>
+<p><strong>什么是运行时常量池?</strong></p>
+</blockquote>
+<ul>
+<li>定义：存放编译期生成的各种字面量和符号引用的池子<ul>
+<li>字节码文件将所有常量存放在 [常量池]{.red} 中</li>
+<li>字节码文件被加载进入虚拟机后，虚拟机将常量池单独提取出来成为运行时常量池</li>
+</ul>
+</li>
+<li>特点：[具有动态性：可以在进程运行期间将常量添加进入运行时常量池（String.intern()）]{.red}</li>
+</ul>
+<blockquote>
+<p><strong>运行时常量池存放哪些常量呢?</strong></p>
+</blockquote>
+<ul>
+<li><p>字面量</p>
+<ul>
+<li><p>基本数据类型声明的变量</p>
+</li>
+<li><p>[采用非创建对象的方式声明的字符串]{.red}</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基本数据类型常量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> first = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> second = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">double</span> third = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">short</span> fourth = <span class="number">10</span>;</span><br><span class="line"><span class="comment">// 字符串字面量: 字符串本身就是常量</span></span><br><span class="line"><span class="keyword">private</span> String str = <span class="string">&quot;初始值&quot;</span>;</span><br><span class="line"><span class="comment">// 采用对象的创建方式, 字符串就不是字面量了</span></span><br><span class="line"><span class="keyword">private</span> String strObj = <span class="keyword">new</span> String(<span class="string">&quot;另一个初始值&quot;</span>);</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>符号引用 &amp; 直接引用</p>
+<ul>
+<li><p>符号引用：</p>
+<ul>
+<li><p>定义：[表示类型信息和名称的 <strong>字符串</strong>]{.red}</p>
+</li>
+<li><p>表示内容：</p>
+<ul>
+<li>类和接口的全限定名称</li>
+<li>字段的名称和类型</li>
+<li>方法的名称和类型</li>
+</ul>
+</li>
+<li><p>实例测试</p>
+<p>  测试代码</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SymbolReferrence</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span></span>&#123;</span><br><span class="line">        methodB();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>  字节码（methodA 方法）</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span> aload_0</span><br><span class="line"><span class="comment">// #2 是符号引用所在的索引，在常量池中找到对应的符号引用</span></span><br><span class="line"><span class="number">1</span> invokevirtual #<span class="number">2</span> </span><br><span class="line"><span class="number">4</span> <span class="keyword">return</span></span><br></pre></td></tr></table></div></figure>
+
+<p>  常量池（省略了每条索引之后的注释）</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 根据字节码指令提供的索引，在常量池中找到对应的符号引用</span></span><br><span class="line">#<span class="number">2</span> = Methodref          #<span class="number">3.</span>#<span class="number">21</span></span><br><span class="line"><span class="comment">// 2. 该符号引用告诉我们去找另外两个索引 #3 #21</span></span><br><span class="line">#<span class="number">3</span> = Class              #<span class="number">22</span></span><br><span class="line">#<span class="number">21</span> = NameAndType       #<span class="number">13</span>:#<span class="number">6</span></span><br><span class="line"><span class="comment">// 3. 上面两个符号索引告诉我们接着找其他的索引</span></span><br><span class="line"><span class="comment">// 4. #22 被解析出来了，对应的就是方法所在的类的名字</span></span><br><span class="line">#<span class="number">22</span> = Utf8               chapter09/SymbolReferrence</span><br><span class="line"><span class="comment">// 5 #13 #6 也被相应的解析出来了，方法的返回值和名称    </span></span><br><span class="line">#<span class="number">6</span> = Utf8               ()V</span><br><span class="line">#<span class="number">13</span> = Utf8               methodB</span><br></pre></td></tr></table></div></figure>
+
+<p>  完整流程</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/符号引用.4di2d7wlqb60.png" alt="符号引用" style="zoom:80%;" />
+
+<p>  <strong>总结：符号引用就是用来表示类、方法、字段、接口的相关信息的字符串</strong></p>
+</li>
+<li><p>细节</p>
+<ul>
+<li>虚拟机是无法直接利用符号引用找到类或者方法在内存中的具体的位置，必须解析成直接引用</li>
+<li>[符号引用可以在两个阶段被解析：类加载的解析阶段，方法执行时的动态链接阶段]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>直接引用：</p>
+<ul>
+<li>定义：[类、方法、字段、接口在虚拟机内存中的实际地址]{.red}</li>
+<li>细节：<ul>
+<li>符号引用解析成的直接引用会直接替换原有的符号引用，存在方法区中</li>
+<li>虚拟机能够直接使用的地址，用于访问类、方法、字段、接口的相关信息</li>
+</ul>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解析过程.4qqc3n55wjg0.png" alt="解析过程" style="zoom:80%;" /></li>
+</ul>
+<p>  :::primary</p>
+<p>  参考：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.zhihu.com/question/30300585/answer/51335493" >JVM里的符号引用如何存储？</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>  :::</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>为什么需要运行时常量池呢?</strong></p>
+</blockquote>
+<ul>
+<li>核心：[避免字节码膨胀：减小字节码文件的大小]{.red}</li>
+<li>原因：<ul>
+<li>如果每个类在被编译的时候都把自己继承的类和实现的接口的详细信息都写入字节码</li>
+<li>那么显然就会导致 [字节码的容量非常大]{.red}，因为继承的类和实现的接口也有自己相应的继承实现关系</li>
+<li>为了避免这个问题字节码膨胀，显然将用符号引用来代替表示继承的类和实现的接口是非常合适的，不需要记录详细信息</li>
+<li>那么既然使用了符号引用，显然需要一块空间来存储符号引用，所以采用运行时常量池来存储符号引用</li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/21/jvm/runtime/methodarea/%E6%96%B9%E6%B3%95%E5%8C%BA/">http://example.com/2021/09/21/jvm/runtime/methodarea/%E6%96%B9%E6%B3%95%E5%8C%BA/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/21/jvm/runtime/methodarea/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">字符串常量池</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/20/jvm/runtime/heapspace/%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98/"><span class="paginator-prev__text">堆空间-直接内存</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-number">1.</span> <span class="toc-text">
+          方法区</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
+          概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          存储信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA%E5%A4%A7%E5%B0%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          方法区大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA%E6%BA%A2%E5%87%BA"><span class="toc-number">1.1.3.</span> <span class="toc-text">
+          方法区溢出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">1.1.4.</span> <span class="toc-text">
+          垃圾回收</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-number">1.2.</span> <span class="toc-text">
+          运行时常量池</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

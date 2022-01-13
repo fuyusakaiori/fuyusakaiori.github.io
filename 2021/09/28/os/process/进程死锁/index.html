@@ -1,0 +1,460 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="进程死锁                           死锁概述        定义：同组中的 &#x3D;&#x3D;每个进程&#x3D;&#x3D; 正在等待某个 &#x3D;&#x3D;只能够由同组其他进程&#x3D;&#x3D; 执行的事件发生，称 &#x3D;&#x3D;操作系统&#x3D;&#x3D; 处于死锁状态   死锁指的是操作系统的状态而不是某个进程的状态  &#x3D;&#x3D;必要条件&#x3D;&#x3D;  条件内容：  互斥(mutual exclusion)：&#x3D;&#x3D;至少存在一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程死锁">
+<meta property="og:url" content="http://example.com/2021/09/28/os/process/%E8%BF%9B%E7%A8%8B%E6%AD%BB%E9%94%81/index.html">
+<meta property="og:site_name" content="天鹅绒房间">
+<meta property="og:description" content="进程死锁                           死锁概述        定义：同组中的 &#x3D;&#x3D;每个进程&#x3D;&#x3D; 正在等待某个 &#x3D;&#x3D;只能够由同组其他进程&#x3D;&#x3D; 执行的事件发生，称 &#x3D;&#x3D;操作系统&#x3D;&#x3D; 处于死锁状态   死锁指的是操作系统的状态而不是某个进程的状态  &#x3D;&#x3D;必要条件&#x3D;&#x3D;  条件内容：  互斥(mutual exclusion)：&#x3D;&#x3D;至少存在一个">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/26/4d0ac0dd7ecf5358a72c5cae66cb6a61.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/26/9fb25f2b47b8d709f57518079094e271.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/26/a50e2bf8e69302e79e11dd128c00064e.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/26/600acd2964e4bf2de660adb3e4e69f6f.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/26/213310f2ad02a48c56f77269f427c5b4.png">
+<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/27/1770ebff969afcef1aeacc6acba8b7d2.png">
+<meta property="article:published_time" content="2021-09-28T10:59:51.349Z">
+<meta property="article:modified_time" content="2021-09-28T11:01:07.146Z">
+<meta property="article:author" content="Fuyusakaiori">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/05/26/4d0ac0dd7ecf5358a72c5cae66cb6a61.png"><title>进程死锁 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/28/os/process/%E8%BF%9B%E7%A8%8B%E6%AD%BB%E9%94%81/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: true,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">进程死锁</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h3 id="进程死锁"   >
+          <a href="#进程死锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#进程死锁" class="headerlink" title="进程死锁"></a>进程死锁</h3>
+      
+        <h4 id="死锁概述"   >
+          <a href="#死锁概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁概述" class="headerlink" title="死锁概述"></a>死锁概述</h4>
+      <ul>
+<li><p>定义：同组中的 ==每个进程== 正在等待某个 ==只能够由同组其他进程== 执行的事件发生，称 ==操作系统== 处于死锁状态</p>
+<p>  <a style="color:red;">死锁指的是操作系统的状态而不是某个进程的状态</a></p>
+</li>
+<li><p>==必要条件==</p>
+<ul>
+<li><p>条件内容：</p>
+<ul>
+<li>互斥(mutual exclusion)：==至少存在一个== 资源实例 ==不能共享==</li>
+<li>持有并等待(hold and wait)：拥有进程的资源申请新的资源时 ==必须等待该资源的释放==</li>
+<li>不可抢占(no preemption)：被其他进程使用的资源不可以被抢占使用</li>
+<li>循环等待(circular wait)： 存在一个进程链，使得每个进程都占有下一个进程所需的至少一种资源</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/26/4d0ac0dd7ecf5358a72c5cae66cb6a61.png" alt="4d0ac0dd7ecf5358a72c5cae66cb6a61.png"></p>
+</li>
+<li><p>细节：<a style="color:red;">四个条件是死锁发生的必要条件而不是充分条件</a></p>
+<p>  解释：死锁发生时必定满足上述四个条件；四个条件同时存在时不能保证死锁一定发生，可能还需要更多的条件</p>
+<p>  <a style="color:red;">注：不满足四个条件中的其中之一就不可能发生死锁</a></p>
+</li>
+</ul>
+</li>
+<li><p>资源：</p>
+<ul>
+<li><p>资源分类：</p>
+</li>
+<li><p>资源实例</p>
+</li>
+<li><p>资源分配图</p>
+<ul>
+<li>边：分配边 + 申请边</li>
+<li>点：进程节点 + 资源节点</li>
+<li>资源实例：每个资源中的原点</li>
+</ul>
+<p>  <a style="color:red;">单实例资源图中存在环一定会导致死锁发生；多实例资源图中存在环不一定导致死锁发生</a></p>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/26/9fb25f2b47b8d709f57518079094e271.png" alt="9fb25f2b47b8d709f57518079094e271.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h4 id="死锁处理"   >
+          <a href="#死锁处理" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁处理" class="headerlink" title="死锁处理"></a>死锁处理</h4>
+      
+        <h5 id="死锁预防-amp-避免"   >
+          <a href="#死锁预防-amp-避免" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁预防-amp-避免" class="headerlink" title="死锁预防 &amp; 避免"></a>死锁预防 &amp; 避免</h5>
+      <ul>
+<li>定义：制定相应的 ==协议或者规则== 阻止死锁的发生</li>
+</ul>
+
+        <h6 id="死锁预防"   >
+          <a href="#死锁预防" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁预防" class="headerlink" title="死锁预防"></a>死锁预防</h6>
+      <ul>
+<li><p>核心：<a style="color:red;">直接确保四个必要条件至少一个不发生</a></p>
+</li>
+<li><p>方式：</p>
+<ul>
+<li><p>阻止互斥：<a style="color:red;">允许资源被进程共享</a></p>
+<p>  注：通过阻止互斥发生来预防死锁是不现实的 -&gt; <a style="color:red;">大多数的资源都是不共享的</a></p>
+</li>
+<li><p>阻止持有并等待：</p>
+<ul>
+<li><p>两种方式：</p>
+<ol>
+<li><p><a style="color:red;">每个进程在进入处理器执行前申请并获得所有需要的资源</a></p>
+<p> 解释：不允许在执行过程中再申请资源，即使释放资源再申请也不行</p>
+</li>
+<li><p><a style="color:red;">每个进程在执行过程中申请资源必须先释放拥有的资源</a></p>
+<p> 解释：并不需要在执行前就获取所有资源，只不过再次申请资源前需要先释放拥有的资源</p>
+</li>
+</ol>
+</li>
+<li><p>缺陷：</p>
+<ol>
+<li><p>进程 ==长时间占用== 某种资源但是暂时并没有使用</p>
+</li>
+<li><p>进程申请的资源被其余进程占用导致进程处于 ==饥饿状态==</p>
+<p> 注：饥饿和死锁是有区别的</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>阻止不可抢占：某个进程在申请资源后没有得到满足就必须 ==释放拥有的资源== 提供给其他进程使用</p>
+<p>  解释：因为当前进程没有获得必需的资源那么就无法运行，那么进程当前拥有的资源也是没有意义的，就应该允许其余进程抢占（释放）</p>
+<p>  <a style="color:red;">注：阻止不可抢占容易导致释放资源的进程丢失之前的任务进度（处理器和寄存器可以），进程间反复的相互抢占资源会导致进程的执行被无限推迟</a></p>
+</li>
+<li><p>阻止循环等待：每个资源递增编号，每个进程只能按照编号的顺序 ==递增申请== 每项资源</p>
+<p>  解释：P<del>1</del> 拥有资源 R<del>1</del> 后才可以申请 R<del>2</del>，获得 R<del>2</del> 之后才可以申请 R<del>3</del>；P<del>2</del> 如果拥有 R<del>3</del> ，此时是不允许申请 R<del>1</del>，除非释放 R<del>3</del> 资源</p>
+<p>  <a style="color:red;">1. 进程只可以顺序申请比自己拥有的资源编号大的资源；如果申请资源编号小的，必须释放自己拥有的资源</a></p>
+<p>  2 资源的编号必须尽可能考虑到资源使用的顺序，否则会出现先申请编号较大的资源，再申请编号较小的资源的情况 -&gt; 资源利用效率较低</p>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/26/a50e2bf8e69302e79e11dd128c00064e.png" alt="a50e2bf8e69302e79e11dd128c00064e.png"></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>四种方式只需要采用一种就可以防止死锁的发生</li>
+<li><a style="color:red;">可以确保操作系统永远不会出现死锁的状态 &lt;-&gt; 导致操作系统效率变低</a></li>
+</ul>
+</li>
+</ul>
+
+        <h6 id="死锁避免"   >
+          <a href="#死锁避免" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁避免" class="headerlink" title="死锁避免"></a>死锁避免</h6>
+      <ul>
+<li><p>定义：每个进程交付 ==必要信息== 给操作系统，操作系统利用相应的算法 ==动态检查== 资源分配的状态</p>
+<p>  必要信息：进程需要申请的资源，想要如何申请资源…</p>
+</li>
+<li><p>核心：<a style="color:red;">利用死锁算法避免死锁的发生</a></p>
+</li>
+<li><p>安全状态：操作系统可以按照 ==特定的顺序== 为进程分配资源并且避免死锁发生，称操作系统处于 ==安全状态==</p>
+<ul>
+<li><p>解释：每个进程需要按照特定的顺序执行，即等待其余进程执行结束释放资源后再继续执行 -&gt; &lt;P<del>0</del> P<del>1</del> P<del>2</del>&gt; =&gt; &lt;P<del>1</del> P<del>2</del> P<del>0</del>&gt;(执行顺序)</p>
+</li>
+<li><p>安全序列：进程执行的特定顺序就是安全序列 &amp; 非安全状态：不存在这样的特定序列</p>
+</li>
+<li><p><a style="color:red;">安全状态不会安全状态一定不会出现死锁状态</a></p>
+</li>
+<li><p><a style="color:red;">非安全状态不一定导致死锁状态；死锁状态一定属于非安全状态</a></p>
+<blockquote>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/196811537.html?qbl=relate_question_0&word=%B7%C7%B0%B2%C8%AB%D7%B4%CC%AC%BA%CD%CB%C0%CB%F8%D7%B4%CC%AC" >死锁和非安全状态</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/26/600acd2964e4bf2de660adb3e4e69f6f.png" alt="600acd2964e4bf2de660adb3e4e69f6f.png"></p>
+</li>
+<li><p>算法：</p>
+<ul>
+<li><p>资源分配图法：<a style="color:red;">仅适用于单实例的资源</a></p>
+<ul>
+<li><p>核心：引入 ==需求边==：需求边表示进程在将来某个时刻可能会需要的资源</p>
+</li>
+<li><p>规定：进程在执行前在图中的所有边都是需求边；进程在获取到相应资源后由 ==需求边转为分配边== ；进程结束后 ==分配边再次变为需求边==</p>
+</li>
+<li><p>检测：如果需求边在转为分配边后会产生环，那么操作系统就不会给当前的进程分配该资源</p>
+<p>  <a style="color:red;">检测环是否存在可以使用拓扑排序检测</a></p>
+</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/26/213310f2ad02a48c56f77269f427c5b4.png" alt="213310f2ad02a48c56f77269f427c5b4.png"></p>
+</li>
+<li><p>银行家算法：<a style="color:red;">适用于多实例的资源</a></p>
+<ul>
+<li><p>数据结构：</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Available[n]</code></td>
+<td>该数组每个元素表示每种不同类型资源的 ==可分配== 的资源实例数量</td>
+</tr>
+<tr>
+<td><code>Max[n][m]</code></td>
+<td>该数组第一个参数表示每个不同的进程；第二个参数表示每个进程正常运行需要的每种类型的 ==全部== 资源实例数</td>
+</tr>
+<tr>
+<td><code>Allocation[n][m]</code></td>
+<td>该数组第一个参数表示每个不同的进程；第二个参数表示每个进程 ==已经被分配== 的每种类型的资源实例数</td>
+</tr>
+<tr>
+<td><code>Need[n][m]</code></td>
+<td>该数组第一个参数表示每个不同的进程；第二个参数表示每个进程 ==还需要== 的每种类型的资源实例数</td>
+</tr>
+</tbody></table></div>
+<p>  <a style="color:red;">Need = Max - Allocation；之后提到的 Request 并不是 Need</a></p>
+</li>
+<li><p>安全性算法</p>
+<ol>
+<li><p>定义并初始化变量：</p>
+<p> 定义 <code>Work[]</code> &amp; <code>Finish[]</code> 数组；令 <code>Work = Available</code> &amp; <code>Finish[i] = false (i=0,1,2...n)</code></p>
+<p> 问题：为什么不直接使用 <code>Availalbe</code> 变量?</p>
+</li>
+<li><p>循环遍历进程集合，判断进程还需要的资源实例数和可分配的资源实例数的关系</p>
+<ul>
+<li><p><code>Finish[i] = true</code> 证明该进程已经执行过并且结束了，开始遍历下一个进程</p>
+</li>
+<li><p><code>Finish[i] = false</code>  </p>
+<p>  <code>Need[i]</code> ≤ <code>Work[i]</code> 就执行第 3 步</p>
+<p>  <code>Need[i]</code> ＞ <code>Work[i]</code> 就略过当前进程，开始遍历下一个进程</p>
+</li>
+<li><p>如果没有下一个进程可以遍历了就执行第 4 步</p>
+</li>
+</ul>
+</li>
+<li><p>进程获取资源并执行，执行结束后释放资源</p>
+</li>
+</ol>
+<pre><code>`Work[i] = Work[i] + Allocation[i]` 更新当前可以分配的资源实例数
+
+`Finish[i]` = `true`
+</code></pre>
+<ol start="4">
+<li>如果 <code>Finish[]</code> 数组中所有元素都为 <code>true</code>，证明系统处于安全状态；如果存在至少一个 <code>false</code> 元素，证明系统处于不安全状态</li>
+</ol>
+</li>
+<li><p>资源分配算法</p>
+<ul>
+<li><p>引入：</p>
+<p>  安全性算法只能够判断进程依靠当前拥有的资源是否可以正常执行</p>
+<p>  如果进程需要更多的资源才能够正常进行，显然就需要申请资源，那么安全性算法显然就是不够用的</p>
+</li>
+<li><p>过程：引入变量 <code>Request[n]</code>：表示当前进程申请的每种类型的资源实例数量</p>
+<ol>
+<li>判断进程 ==申请== 的资源实例数量和 ==还需要== 的资源实例数量<ul>
+<li><code>Request[i]</code> ≤ <code>Need[i]</code> 就执行第 2 步</li>
+<li><code>Request[i]</code> ＞ <code>Need[i]</code> 将会提示出错；进程申请的资源实例数量超过了正常执行还需要的资源实例数</li>
+</ul>
+</li>
+<li>判断进程 ==申请== 的资源实例数量和 ==可分配== 的资源实例数量<ul>
+<li><code>Request[i]</code> ≤ <code>Available[i]</code> 就执行第 3 步</li>
+<li><code>Request[i]</code> ＞ <code>Available[i]</code> 证明当前可分配资源不足以支撑进程的执行，该进程就需要 ==等待==</li>
+</ul>
+</li>
+<li>操作系统 ==假设== 分配给进程相应的资源实例数量<ul>
+<li><code>Available[i]</code> = <code>Available[i]</code> - <code>Request[i]</code></li>
+<li><code>Need[i]</code> = <code>Need[i]</code> - <code>Request[i]</code></li>
+<li><code>Allocation[i]</code> = <code>Allocation[i]</code> + <code>Request[i]</code></li>
+</ul>
+</li>
+<li><a style="color:red;">执行安全性算法判断在进程申请资源后系统是否处于安全状态</a><ul>
+<li>如果系统处于安全状态，那么系统就真正将资源分配给进程</li>
+<li>如果系统处于非安全状态，那么系统就恢复原来的资源分配状态，并且让该进程处于 ==等待==</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>细节：</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>死锁避免 &amp; 死锁预防：</p>
+<ul>
+<li><p>死锁预防：死锁预防是从一开始就不允许进程进行某种操作（比如破坏循环等待就不允许申请编号小的资源）</p>
+</li>
+<li><p>死锁避免：死锁避免则是在一定程度上允许这些操作，通过设计好的算法在运行过程中协调进程，避免死锁的发生</p>
+</li>
+<li><p><a style="color:red;">死锁避免允许四个必要条件一起发生 &lt;-&gt; 死锁预防根本不会允许四个条件一起发生</a></p>
+<p>  解释：因为即使四个必要条件一起发生也不一定会导致死锁的出现，所以死锁避免只要采用相应的算法避免就好</p>
+</li>
+<li><p>死锁避免限制条件弱，但是难以实现相应的算法 &lt;-&gt; 死锁预防限制条件强，容易实现相应的限制</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="死锁检测-amp-恢复"   >
+          <a href="#死锁检测-amp-恢复" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁检测-amp-恢复" class="headerlink" title="死锁检测 &amp; 恢复"></a>死锁检测 &amp; 恢复</h5>
+      <ul>
+<li>定义：检测系统是否处于死锁状态并且能够从死锁状态中恢复</li>
+</ul>
+
+        <h6 id="死锁检测"   >
+          <a href="#死锁检测" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁检测" class="headerlink" title="死锁检测"></a>死锁检测</h6>
+      <ul>
+<li><p>核心：<a style="color:red;">并不是阻止死锁发生的算法，只能够用于检测死锁是否发生</a></p>
+</li>
+<li><p>算法：</p>
+<ul>
+<li><p>等待图：<a style="color:red;">仅适用于单实例的资源</a></p>
+<ul>
+<li><p>核心：去除资源分配图中的所有资源节点，仅剩下进程节点</p>
+</li>
+<li><p>规定：只有当 P<del>i</del> -&gt;R<del>j</del> &amp;&amp; R<del>j</del> -&gt; P<del>k</del> 时，两个进程之间才会存在边</p>
+</li>
+<li><p>检测：仍然检测等待图中是否存在环结构 </p>
+<p>  <a style="color:red;">检测环是否存在可以使用拓扑排序检测</a></p>
+</li>
+</ul>
+<p>  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/27/1770ebff969afcef1aeacc6acba8b7d2.png" alt="1770ebff969afcef1aeacc6acba8b7d2.png"></p>
+</li>
+<li><p>类银行家算法：<a style="color:red;">适用于多实例的资源</a></p>
+<ul>
+<li><p>数据结构：和之前的银行家算法有些微区别</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Available[n]</code></td>
+<td>该数组每个元素表示每种不同类型资源的 ==可分配== 的资源实例数量</td>
+</tr>
+<tr>
+<td><code>Allocation[n][m]</code></td>
+<td>该数组第一个参数表示每个不同的进程；第二个参数表示每个进程 ==已经被分配== 的每种类型的资源实例数</td>
+</tr>
+<tr>
+<td><code>Request[n][m]</code></td>
+<td>该数组的每个元素表示每个进程 ==申请== 的资源实例数量</td>
+</tr>
+</tbody></table></div>
+</li>
+<li><p>过程：</p>
+<ol>
+<li><p>定义并初始化变量，根据</p>
+<p> 定义 <code>Work[]</code> &amp; <code>Finish[]</code> 数组；令 <code>Work = Available</code></p>
+<p> 如果 <code>Allocation[i]</code> = 0  就令  <code>Finish[i]</code> = <code>true</code></p>
+<p> 如果 <code>Allocation[i]</code> ≠ 0 就令 <code>Finish[i]</code> = <code>false</code></p>
+<p> <a style="color:red;">如果当前进程没有被分配任何资源，那么该进程不可能是造成死锁的原因，相当于破坏了持有并等待的条件</a></p>
+</li>
+<li><p>循环遍历进程集合，判断每个进程申请的资源实例数量和可分配的资源实例数量</p>
+<p> <code>Request[i]</code> ≤ <code>Work</code> 证明当前资源足够支撑该进程运行；令 <code>Finish[i]</code> = <code>true</code> ；再执行第 3 步</p>
+<p> <a style="color:red;">如果申请的资源大于可分配的，也不可以立刻断言当前系统处于死锁，如果之后有进程执行结束释放资源，说不定当前进程就可以执行了</a></p>
+</li>
+<li><p>操作系统 ==假设== 分配给进程相应的资源实例数量</p>
+<p> <code>Work</code> = <code>Work</code> + <code>Allocation[i]</code></p>
+</li>
+<li><p>循环遍历 <code>Finish[]</code> ，如果存在元素值仍未 <code>false</code>，<a style="color:red;">证明当前系统处于死锁状态</a>（注意不是非安全状态）</p>
+<p> <a style="color:red;">这里是直接断言系统处于死锁状态，而不是非安全状态，因为多个进程同时提出申请，的确非常容易造成死锁</a></p>
+</li>
+</ol>
+</li>
+<li><p>细节：</p>
+<ol>
+<li>死锁避免银行家算法 vs 死锁检测银行家算法<ul>
+<li>死锁避免：每次 ==只有一个进程== 提出申请，然后执行安全性检测，如果不安全就会驳回进程的申请</li>
+<li>死锁检测：所有进程都可以 ==同时== 提出申请，这就很容易直接造成死锁，该算法是利用所有进程的申请在计算</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>细节：死锁检测通常都是配合而死锁恢复一起使用</p>
+</li>
+</ul>
+
+        <h6 id="死锁恢复"   >
+          <a href="#死锁恢复" class="heading-link"><i class="fas fa-link"></i></a><a href="#死锁恢复" class="headerlink" title="死锁恢复"></a>死锁恢复</h6>
+      <ul>
+<li><p>资源抢占</p>
+<ul>
+<li><p>核心：<a style="color:red;">允许进程抢占资源打破死锁</a></p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>回滚：被抢占资源的进程需要回滚到到足够打破死锁的状态</p>
+<p>  <a style="color:red;">进程在回滚的过程中会不断地释放资源</a> (主动释放资源)</p>
+</li>
+<li><p>牺牲进程：选择被抢占资源的进程，尽可能使得代价最小 (被动释放资源)</p>
+</li>
+<li><p>饥饿：不能够无限次地选择同一个进程被抢占资源</p>
+<p>  <a style="color:red;">通常将进程回滚的次数作为考虑牺牲进程的因素</a></p>
+</li>
+</ul>
+<p>  注：资源抢占的核心，就是一个进程释放资源，一个进程获取这个释放的资源，考虑上述的三个细节仅仅只是能够更好抢占，避免抢占造成严重后果</p>
+</li>
+</ul>
+</li>
+<li><p>进程终止</p>
+<ul>
+<li><p>核心：<a style="color:red;">终止造成死锁的进程来打破死锁</a></p>
+</li>
+<li><p>方式</p>
+<ul>
+<li><p>终止 ==所有== 进程：（几乎类似于重启系统） </p>
+<ul>
+<li><p>缺陷：==代价== 非常大，容易导致被终止的进程之前的 ==任务进程丢失==</p>
+<p>  代价：这里的代价应该是对于进程而言的，因为可能会造成很多有效数据的丢失</p>
+</li>
+</ul>
+</li>
+<li><p>终止 ==部分== 进程</p>
+<ul>
+<li><p>方式：每次终止一个进程后都需要继续调用死锁检测算法判断当前系统是否仍处于死锁</p>
+<p>  解释：需要不断尝试当前系统是否处于死锁状态，如果仍然处于死锁状态，也需要继续死锁检测算法寻找造成死锁的进程</p>
+</li>
+<li><p>缺陷： ==代价== 非常大</p>
+<p>  代价：这里的代价应该是在每次都要执行死锁检测算法确定终止进程所造成的开销</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h5 id="忽略"   >
+          <a href="#忽略" class="heading-link"><i class="fas fa-link"></i></a><a href="#忽略" class="headerlink" title="忽略"></a>忽略</h5>
+      <ul>
+<li><p>定义：操作系统认为死锁不可能在系统中发生</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>Linux &amp; Windows 等大多数现代操作系统都是采用 ==忽略死锁== 的方式</p>
+<p>  <a style="color:red;">每个应用程序需要编写相应的算法避免和其他进程之间发生死锁，而不是依靠操作系统来避免</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/28/os/process/%E8%BF%9B%E7%A8%8B%E6%AD%BB%E9%94%81/">http://example.com/2021/09/28/os/process/%E8%BF%9B%E7%A8%8B%E6%AD%BB%E9%94%81/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/10/19/juc/juc-basic/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">线程-基础知识</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/28/os/process/%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5/"><span class="paginator-prev__text">进程同步</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%AD%BB%E9%94%81"><span class="toc-number">1.</span> <span class="toc-text">
+          进程死锁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
+          死锁概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E5%A4%84%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">
+          死锁处理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E9%A2%84%E9%98%B2-amp-%E9%81%BF%E5%85%8D"><span class="toc-number">1.2.1.</span> <span class="toc-text">
+          死锁预防 &amp; 避免</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E9%A2%84%E9%98%B2"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">
+          死锁预防</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E9%81%BF%E5%85%8D"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">
+          死锁避免</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B-amp-%E6%81%A2%E5%A4%8D"><span class="toc-number">1.2.2.</span> <span class="toc-text">
+          死锁检测 &amp; 恢复</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E6%A3%80%E6%B5%8B"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">
+          死锁检测</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E6%81%A2%E5%A4%8D"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">
+          死锁恢复</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BF%BD%E7%95%A5"><span class="toc-number">1.2.3.</span> <span class="toc-text">
+          忽略</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">107</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">31</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
