@@ -279,95 +279,6 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
   <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/IDEA 插件查看字节码文件.17xxsmn7pfkw.png" alt="IDEA 插件查看字节码文件" style="zoom:80%;" /></li>
 </ul>
-</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/">程序计数寄存器</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span></div></header><div class="post-body"><div class="post-excerpt">
-        <h1 id="程序计数寄存器"   >
-          <a href="#程序计数寄存器" class="heading-link"><i class="fas fa-link"></i></a><a href="#程序计数寄存器" class="headerlink" title="程序计数寄存器"></a>程序计数寄存器</h1>
-      <blockquote>
-<p><strong>什么是程序计数寄存器？</strong></p>
-</blockquote>
-<ul>
-<li><p>名称：程序计数寄存器（Programmer Counter Register）</p>
-<ul>
-<li>别名：PC 寄存器、程序计数器、程序钩子</li>
-</ul>
-</li>
-<li><p>定义：JVM 中的一块较小的 [内存区域]{.blue}</p>
-<ul>
-<li>区别：真实计算机中的程序计数器是 [物理硬件寄存器]{.blue} 制作完成的</li>
-</ul>
-</li>
-<li><p>作用：[保存当前线程正在执行的字节码指令的地址]{.red}</p>
-<ul>
-<li>字节码指令：源代码被编译器编译后生成的就是字节码文件（包含字节码指令）</li>
-<li>字节码指令地址：每个字节码指令都具有自己的地址，便于执行引擎选择执行</li>
-<li>编译器：C/C++ 的编译器是 GCC，Java 的编译器是的 Javac</li>
-</ul>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/字节码指令.41jaaaxto960.png" alt="字节码指令" style="zoom:80%;" /></li>
-<li><p>指令地址：</p>
-<ul>
-<li><p>执行方法是 Java 方法：程序计数会保存该方法对应的指令地址 </p>
-</li>
-<li><p>执行的方法是 Native 方法：[程序计数器将会被置为空 （Undefined）]{.red}</p>
-<p>  :::info</p>
-<p>  简单来说 Native 方法就是本地方法，是不采用 Java 实现的外部方法，之后在本地方法栈详细介绍</p>
-<p>  :::</p>
-</li>
-</ul>
-</li>
-<li><p>实质：</p>
-<ul>
-<li><p>程序计数器是 Java 虚拟机中 [运行速度最快，空间较小的内存区域]{.red}</p>
-</li>
-<li><p>Java 虚拟机中的程序计数器是对处理器中的程序计数器的抽象模拟</p>
-</li>
-</ul>
-</li>
-<li><p>特点：：</p>
-<ul>
-<li><p>[每个线程都拥有独立的程序计数器]{.red}</p>
-</li>
-<li><p>[每个线程都是不可以访问其余线程的空间的：线程间不可以直接相互通信]{.red}</p>
-<p>  :::danger</p>
-<p>  注：操作系统中进程中的每个线程都是直接相互通信的，进程之间才是相互隔离的</p>
-<p>  :::</p>
-</li>
-<li><p>[程序计数器区域没有垃圾回收机制也没有 OutOfMemory 异常]{.red}</p>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p><strong>为什么要使用程序计数寄存器？</strong></p>
-</blockquote>
-<ul>
-<li>前提：Java 多线程采用线程轮流切换，分配处理器执行时间的方式实现的（时间片轮转法？）<ul>
-<li>第一个原因：多线程切换<ul>
-<li>其余线程抢占当前线程的处理器使用权执行任务</li>
-<li>其余线程执行任务结束之后，之前被抢占的线程想要继续执行</li>
-<li>[如果没有程序计数器加以保存]{.blue}，那么之前被抢占的线程就不可能知道从哪里开始继续执行了</li>
-</ul>
-</li>
-<li>第二个原因：方法调用（不准确）<ul>
-<li>被调用的方法执行结束了，执行引擎需要借助 [返回地址]{.red} 才能够回到此前的位置</li>
-<li>返回地址就是获取的当前程序计数器的值，确保方法调用结束后执行引擎能够返回</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p><strong>程序计数器为什么是线程私有的呢？</strong></p>
-</blockquote>
-<ul>
-<li>其余线程抢占当前线程的处理器使用权执行任务</li>
-<li>其余线程执行任务结束之后，之前被抢占的线程想要继续执行</li>
-<li>[如果所有线程共享同一个程序计数器，那么上一个线程存入程序计数器的字节码指令地址就会被下一个线程 <strong>覆盖</strong>]{.blue}</li>
-<li>那么之前被抢占的线程就不可能知道从哪里开始继续执行了</li>
-</ul>
-<p>:::info</p>
-<p>参考博客：</p>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/leaf_0303/article/details/78953669" >JVM 程序计数器</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p>:::</p>
 </div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/">执行引擎-概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-25</span></span></div></header><div class="post-body"><div class="post-excerpt">
         <h1 id="概述"   >
           <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
@@ -1813,4 +1724,462 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-</div></div></article></section><nav class="paginator"><div class="paginator-inner"><a class="extend prev" rel="prev" href="/page/5/"><i class="fas fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/"><i class="fas fa-angle-right"></i></a></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">33</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/23/jvm/runtime/heapspace/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA/">堆空间-对象创建</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-23</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-23</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="对象创建"   >
+          <a href="#对象创建" class="heading-link"><i class="fas fa-link"></i></a><a href="#对象创建" class="headerlink" title="对象创建"></a>对象创建</h1>
+      
+        <h2 id="对象的组成部分"   >
+          <a href="#对象的组成部分" class="heading-link"><i class="fas fa-link"></i></a><a href="#对象的组成部分" class="headerlink" title="对象的组成部分"></a>对象的组成部分</h2>
+      <ul>
+<li><p>对象头（Header）</p>
+</li>
+<li><p>实例数据（Instance Data）</p>
+</li>
+<li><p>对齐填充（Padding）</p>
+</li>
+</ul>
+
+        <h3 id="对象头"   >
+          <a href="#对象头" class="heading-link"><i class="fas fa-link"></i></a><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h3>
+      <blockquote>
+<p><strong>对象头图示</strong></p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/对象组成.3wxv6lvcr740.png" alt="对象组成" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>对象头详解</strong></p>
+</blockquote>
+<ul>
+<li><p>[Mark Word]{.red}：</p>
+<ul>
+<li><p>定义：采用 32位/64位 的 Bitmap 数据结构存储对象的运行时相关信息</p>
+<p>  :::info</p>
+<p>  32位虚拟机的 Bitmap 数据结构就是32位的，64位的虚拟机的 Bitmap 就是64位的</p>
+<p>  :::</p>
+</li>
+<li><p>组成：</p>
+<ul>
+<li>问题：对象的运行时相关信息数据量特别多，超过了 Bitmap 数据结构所能承载的容量，那要怎么解决这个问题呢？</li>
+<li>方式：[Mark Word 被设计成为动态的数据结构：根据对象不同的锁状态确定 Mark Word 存储的具体内容]{.red}</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li>[未锁定状态和偏向锁状态的标志位是一样的，所以这两个锁还需要使用 1bit 来进行区分]{.blue}</li>
+<li>各个不同的锁不在此细讲，因为涉及到并发编程</li>
+</ul>
+</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/Mark-Word.39jpbualpio0.png" alt="Mark-Word" style="zoom:80%;" /></li>
+<li><p>[类型指针]{.red}</p>
+<ul>
+<li><p>定义：[指向该对象所属的类型元数据（Klass 对象）的指针]{.red}</p>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>[对象可以通过类型元数据指针找到其所属的类，但是并不是所有对象都必须保存该指针]{.red}</p>
+<p>  比如在使用反射中，你可以使用对象获取 Class 对象也可以使用类或者方法获取 Class 对象</p>
+</li>
+<li><p>[首先明确 Klass 对象不是 Class 对象]{.red}</p>
+<p>  详细了解：[OOP-Klass模型](#OOP-Klass 模型)</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数组长度：用于记录数组长度的部分（[只有数组才有这部分内容]{.red}）</p>
+</li>
+</ul>
+
+        <h3 id="实例数据"   >
+          <a href="#实例数据" class="heading-link"><i class="fas fa-link"></i></a><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h3>
+      <ul>
+<li><p>定义：存储对象中所有的有效信息</p>
+</li>
+<li><p>组成：我们在程序中 [定义各种类型的 <strong>实例变量</strong> 以及从父类继承的 <strong>实例变量</strong> ]{.red}</p>
+<p>  +++warning 对象的实例数据仅包含各种各样的实例变量，并不包含方法信息</p>
+<p>  ① 每个类都可以拥有非常多的对象，每个对象仅有数据字段不同，使用的方法肯定是完全相同的</p>
+<p>  ② 所以让每个堆中的对象都记录虚方法表显然是不合适的，浪费堆内存空间</p>
+<p>  ③ 既然对象中并不保存方法信息，那么到底哪里保存方法相关的信息呢？这个就涉及到 OOP-Klass 模型了</p>
+<p>  +++</p>
+</li>
+<li><p>存储顺序：[长度相同的变量总是优先分配在一起]{.red}</p>
+<ul>
+<li>虚拟机默认分配策略：<ul>
+<li>double &amp; long 一起分配（8B）</li>
+<li>int &amp; float 一起分配（4B）</li>
+<li>char &amp; short 一起分配（2B）</li>
+<li>byte &amp; boolean 一起分配（1B）</li>
+<li>referrence 最后分配（4B）</li>
+</ul>
+</li>
+<li>虚拟机的分配策略还会受到  [变量的定义顺序]{.blue} 和 [分配策略参数]{.blue} 的影响</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="对其填充"   >
+          <a href="#对其填充" class="heading-link"><i class="fas fa-link"></i></a><a href="#对其填充" class="headerlink" title="对其填充"></a>对其填充</h3>
+      <ul>
+<li>前提：<ul>
+<li>Java 虚拟机要求对象的大小必须是 8字节 的整数倍</li>
+<li>对象大小不是 8字节 整数倍时就会采用对其填充的方式变为 8 字节整数倍</li>
+</ul>
+</li>
+<li>定义：为对象填充某些数据使得其大小为 8字节 的整数倍</li>
+<li>细节：[对其填充本身没有什么含义，但是会引发一系列的问题]{.blue}</li>
+</ul>
+<blockquote>
+<p><strong>对象头组成代码演示</strong></p>
+</blockquote>
+<p>:::info</p>
+<p>① 使用 jol 工具类就可以查看对象在内存中的布局</p>
+<p>② 使用 lombok 插件可以简化对象类的编写</p>
+<p>:::</p>
+<blockquote>
+<p>对象代码</p>
+</blockquote>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> chapter08;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@ToString</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    Integer age;</span><br><span class="line">    String name;</span><br><span class="line">    Boolean gender;</span><br><span class="line">    String work;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>测试代码</strong></p>
+</blockquote>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person person = <span class="keyword">new</span> Person(<span class="number">16</span>, <span class="string">&quot;冬坂五百里&quot;</span>, <span class="keyword">true</span>, <span class="string">&quot;开机兵&quot;</span>);</span><br><span class="line">    <span class="comment">// 貌似只有使用到了哈希码才会生成, 否则在 MarkWord 中是看不到的</span></span><br><span class="line">    printfObject(person);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 工具方法: 输出对象的内存布局</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printfObject</span><span class="params">(Person person)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 输出对象头</span></span><br><span class="line">    System.out.println(ClassLayout.parseInstance(person).toPrintable());</span><br><span class="line">    System.out.println(GraphLayout.parseInstance(person).toPrintable());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p><strong>测试结果</strong></p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/对象组成演示.4scx77d5pr00.png" alt="对象组成演示" style="zoom:80%;" />
+
+
+
+
+        <h2 id="OOP-Klass-模型"   >
+          <a href="#OOP-Klass-模型" class="heading-link"><i class="fas fa-link"></i></a><a href="#OOP-Klass-模型" class="headerlink" title="OOP-Klass 模型"></a>OOP-Klass 模型</h2>
+      <p>:::primary</p>
+<p>参考博客：</p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/linxdcn/article/details/73287490" >【理解HotSpot虚拟机】对象在jvm中的表示：OOP-Klass模型</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_26000415/article/details/88061403" >oop-klass内存模型</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>什么是 OOP-Klass 模型</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：OOP 模型 + Klass 模型</p>
+</li>
+<li><p>OOP 模型（Ordinary Object Pointer）：</p>
+<ul>
+<li>定义：[存储 Java 对象所有实例数据的模型]{.red}</li>
+<li>创建时间：创建对象时（<a href="#%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B%E5%8C%96">对象实例化</a>）就会相应的创建 OOP 对象</li>
+<li>组成：对象头 + 实例数据 + 数组长度</li>
+<li>存储位置：[堆空间]{.red}</li>
+</ul>
+<p>  :::info</p>
+<p>  说白了，OOP 就是我们创建对象后，堆空间存储对象相关数据的模型</p>
+<p>  :::</p>
+</li>
+<li><p>Klass 模型：</p>
+<ul>
+<li>定义：[存储 Java 类的所有元数据信息]{.red}</li>
+<li>创建时间：类加载阶段</li>
+<li>组成：运行时常量池、成员变量、方法信息（vtable 虚方法表 + itable 类实现的接口的函数表）</li>
+<li>存储位置：[方法区]{.red}</li>
+<li>细节：[反射机制中的 Class 对象是依靠 Klass 对象生成的：Class 对象相当于是 Klass 对象的镜像文件]{.red}</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>为什么要使用 OOP-Klass 模型</strong></p>
+</blockquote>
+<ul>
+<li><p>问题：</p>
+<ul>
+<li>HotSpot 是采用 C++ 编写的运行 Java 程序的虚拟机</li>
+<li>[那么 Java 的类如何才能够被 C++ 编写的虚拟机解析呢？]{.blue}</li>
+</ul>
+</li>
+<li><p>方式：</p>
+<ul>
+<li><p>最简单的方式：为了每个 Java 类都生成对应的 C++ 类，[这意味着每个 Java 对象中也必须包含虚方法表]{.blue}</p>
+<p>  :::info</p>
+<p>  ① Java 中默认所有的方法都是虚方法，而 C++ 中必须使用关键字 virtual 声明方法才行</p>
+<p>  ② Java 的虚方法的数量显然会比 C++ 中的虚方法使用更加频繁，数量更多，为每个对象都保存虚方法表显然是不明智的</p>
+<p>  :::</p>
+</li>
+<li><p>采用的方式：利用 OOP-Klass 模型</p>
+<ul>
+<li><p>OOP 模型只用于存储对象的相关数据</p>
+</li>
+<li><p>[Klass 模型用于存储类的元数据信息，用于被 C++ 解析，]{.blue}</p>
+<p>  [所以可以认为 Klass 对象是 C++ 中类的表现形式，和 Java 中的类相对应]{.blue}</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>原因：[为了 Java 编写的类能够被虚拟机解析，同时也为了压缩堆空间中对象的大小]{.red}</p>
+</li>
+</ul>
+
+        <h2 id="对象大小计算"   >
+          <a href="#对象大小计算" class="heading-link"><i class="fas fa-link"></i></a><a href="#对象大小计算" class="headerlink" title="对象大小计算"></a>对象大小计算</h2>
+      <p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/149678226" >jvm压缩指针原理以及32g内存压缩指针失效详解</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<ul>
+<li>不同位数的虚拟机<ul>
+<li>32 位虚拟机：<ul>
+<li>对象头：[类元数据指针 4B + Mark Word 4B]{.blue}</li>
+<li>实例数据：[引用类型大小占据 4B，基本类型不变]{.blue}</li>
+<li>对其填充：确保对象大小为8的整数倍</li>
+</ul>
+</li>
+<li>64 位虚拟机：<ul>
+<li>对象头：[类元数据指针 8B + Mark Word 8B]{.blue}</li>
+<li>实例数据：[引用类型大小占据 8B，基本类型不变]{.blue}</li>
+<li>对其填充：确保对象大小为8的整数倍</li>
+</ul>
+</li>
+<li>问题：<ul>
+<li>64位虚拟机下的对象大小是32位虚拟机的对象的2倍，由于对齐填充，实际是1.5倍</li>
+<li>[对象增大导致对象占用的堆内存更多，触发垃圾回收机制更加频繁]{.red}</li>
+<li>[对象增大同时导致处理器能够缓存的对象变少，处理器缓存的命中率降低]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>指针压缩<ul>
+<li>定义：[压缩 OOP 对象的大小]{.red}<ul>
+<li>压缩对象头信息：对象头从 16B 压缩到 12B（主要就是压缩了类型指针）</li>
+<li>压缩对象引用：对象引用（不是类型指针）从 8B 压缩到 4B</li>
+<li>压缩数组类型：数组从 24B 压缩到 16B</li>
+</ul>
+</li>
+<li>作用：[减轻堆内存的分配对象的压力]{.red}</li>
+<li>细节：JDK 6 之后默认开启指针压缩</li>
+</ul>
+</li>
+</ul>
+<p>+++danger 为什么不推荐让虚拟机内存超过 32G？</p>
+<p>+++</p>
+
+        <h2 id="对象的实例化"   >
+          <a href="#对象的实例化" class="heading-link"><i class="fas fa-link"></i></a><a href="#对象的实例化" class="headerlink" title="对象的实例化"></a>对象的实例化</h2>
+      <p>:::warning</p>
+<p>前提：需要对反射机制、克隆机制、序列化机制有所了解，才能够明白这些机制是如何创建对象的</p>
+<p>:::</p>
+<blockquote>
+<p><strong>对象的实例化方式图示</strong></p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/对象实例化方式.5iqes5rp0540.png" alt="对象实例化方式" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>对象实例化方式具体实现</strong></p>
+</blockquote>
+<ul>
+<li><p>[关键字 new 创建对象]{.red}</p>
+<ul>
+<li><p>使用方式：</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Object object = <span class="keyword">new</span> Object();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>变形：（设计模式的运用）</p>
+<ul>
+<li><a href="">单例模式</a>：使用静态方法创建对象</li>
+<li><a href="">工厂模式/建造者模式</a>：使用普通方法创建对象</li>
+</ul>
+</li>
+<li><p>细节：[最常见的创建对象的方式]{.blue}</p>
+</li>
+</ul>
+</li>
+<li><p>[反射机制创建对象]{.red}</p>
+<ul>
+<li><p>[直接利用反射类对象创建类对象]{.blue}</p>
+<ul>
+<li><p>使用方式：</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateObject</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> </span></span><br><span class="line"><span class="function">        IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 获得 Student 类对应的反射类对象</span></span><br><span class="line">        Class&lt;Student&gt; studentClass = Student.class;</span><br><span class="line">        <span class="comment">// 利用反射类对象创建 Student 类对象</span></span><br><span class="line">        Student student = studentClass.newInstance();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>细节：</p>
+<ul>
+<li>[直接利用反射类创建对象仅能够调用 <strong>公共的空参构造器创建</strong>]{.red}</li>
+<li>[JDK 9 之后该方式被标记为已过时]{.green}</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/反射创建对象API(1).2tr9r2dz4ts0.png" alt="反射创建对象API(1)" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>[利用反射类对象获取类的构造器创建对象]{.blue}</p>
+<ul>
+<li><p>使用方式：</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateObject</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> </span></span><br><span class="line"><span class="function">        IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 获得 Student 类对应的反射类对象</span></span><br><span class="line">        Class&lt;Student&gt; studentClass = Student.class;</span><br><span class="line">        <span class="comment">// 利用反射类对象获取构造器后创建 Student 类对象</span></span><br><span class="line">        Student student = studentClass.getConstructor().newInstance();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">    <span class="comment">// 显示声明空参构造器</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>细节：[利用构造器类创建对象可以使用有参或者无参的构造器，并且构造器的权限时任意的]{.red}</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>  +++ 对比这两种方法，想想为什么直接利用反射类创建对象被废弃了?</p>
+<p>  +++</p>
+</li>
+<li><p>[克隆创建对象]{.red}</p>
+<ul>
+<li><p>使用方式</p>
+<ul>
+<li><p>[浅克隆]{.blue}：</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateObject</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> throw CloneNotSupportedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Student student = <span class="keyword">new</span> Student();</span><br><span class="line">        Student student_clone = (Student)student.clone();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ① 一定要实现 Cloneable 接口</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Cloneable</span></span>&#123;</span><br><span class="line">    <span class="comment">// ② 一定要重写 clone 方法：因为 Student 不是 Object 的子类</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>[深克隆：本质实现还是采用的反序列化机制，就不在这里演示了]{.blue}</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+</li>
+</ul>
+</li>
+<li><p>[反序列化创建对象]{.red}</p>
+<ul>
+<li><p>使用方式：</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 反序列化创建对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateObject</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> IOException, ClassNotFoundException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        <span class="comment">// 1.创建对象输出流</span></span><br><span class="line">        ObjectOutputStream  oos = <span class="keyword">new</span> ObjectOutputStream(</span><br><span class="line">                <span class="keyword">new</span> BufferedOutputStream(baos));</span><br><span class="line">        <span class="comment">// 2.序列化对象</span></span><br><span class="line">        oos.writeObject(<span class="keyword">new</span> Student(<span class="number">10</span>));</span><br><span class="line">        <span class="comment">// 3.刷新缓存，否则你是无法将对象写入流中的（血的教训）</span></span><br><span class="line">        oos.flush();</span><br><span class="line">        <span class="comment">// 4.创建对象输入流：对象输入流必须在序列化对象之后创建，否则对象输入流会创建失败（血的教训）</span></span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(</span><br><span class="line">            <span class="keyword">new</span> BufferedInputStream(</span><br><span class="line">                <span class="keyword">new</span> ByteArrayInputStream(</span><br><span class="line">                    baos.toByteArray())));</span><br><span class="line">        <span class="comment">// 5. 反序列化对象</span></span><br><span class="line">        Student student = (Student) ois.readObject();</span><br><span class="line">        <span class="comment">// 6.测试是否创建成功</span></span><br><span class="line">        System.out.println(student.count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 0.序列化类必须实现序列化接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Serializable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> count;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(<span class="keyword">int</span> count)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.count = count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+<li><p>细节：[网络编程中接收传输数据创建对象最常使用的方式]{.blue}</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h2 id="对象的创建过程"   >
+          <a href="#对象的创建过程" class="heading-link"><i class="fas fa-link"></i></a><a href="#对象的创建过程" class="headerlink" title="对象的创建过程"></a>对象的创建过程</h2>
+      <p>:::primary</p>
+<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40634846/article/details/106300702" >Java的指针碰撞简介</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<blockquote>
+<p><strong>对象创建过程图示</strong></p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/对象创建过程.ctt8ofhx6gg.png" alt="对象创建过程" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>具体的对象创建过程</strong></p>
+</blockquote>
+<ul>
+<li><p>[对象对应的类是否已经被加载进入虚拟机内存]{.red}</p>
+<ul>
+<li><p>[虚拟机定位到类在元空间运行时常量池中的符号引用]{.blue}</p>
+</li>
+<li><p>[虚拟机再判断类是否已经经历加载、连接、初始化三个过程]{.blue}</p>
+<ul>
+<li>如果类已经被类加载器加载，接着创建对象就行</li>
+<li>如果类没有被类加载器加载，那么虚拟机就会查找类对应的字节码文件<ul>
+<li>如果查找到相应的字节码文件，就加载该类并且创建对应的 Class 对象即可</li>
+<li>如果没有查找到对应的字节码文件，那么就会抛出异常</li>
+</ul>
+</li>
+</ul>
+<p>  :::info</p>
+<p>  ① 动态链接是将符号引用转化成直接引用的过程，实际上就是虚拟机查找类在内存中地址的过程</p>
+<p>  ② 虚拟机能找到类的内存地址那就是加载了，找不到那就是没有加载</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>[为对象分配内存空间]{.red}</p>
+<ul>
+<li><p>堆内存规整</p>
+<ul>
+<li>定义：所有被对象使用过的内存存放在一边，没有被使用的内存存放在另一边</li>
+<li>分配算法：指针碰撞（Bump The Pointer）</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/指针碰撞.2ghfaw61x39c.png" alt="指针碰撞" style="zoom:80%;" />
+
+<ul>
+<li><p>几个问题：</p>
+<p>  +++ 为什么要叫做指针碰撞呢？指针是有了，碰撞在哪里呢？</p>
+<p>  +++</p>
+<p>  +++danger 如果对象超过或者小于固定的内存块大小呢?</p>
+<p>  +++</p>
+</li>
+</ul>
+</li>
+<li><p>堆内存不规整</p>
+<ul>
+<li>定义：被对象使用的过内存和没有使用的内存交错分布</li>
+<li>分配算法：空闲列表（Free List）（类似于操作系统中的非连续分配方式）<ul>
+<li>维护一个用于记录空闲内存块的列表</li>
+<li>每次都从列表中查找一个足够大的内存块分配给对象</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>  :::info</p>
+<p>  ① [对象的大小在类加载的过程就已经被确定好了]{.red}：每个对象都是类的实例嘛，类的大小也就基本等同于对象的大小</p>
+<p>  ② [对象的分配方式取决于堆内存是否规整，堆内存是否规整取决于垃圾回收器是否具有压缩整理功能]{.red}</p>
+<p>  ③ [对象中拥有引用类型的实例变量，那么仅分配引用的空间（4字节）]{.red}</p>
+<p>  :::</p>
+</li>
+<li><p>[确保分配内存安全]{.red}</p>
+<ul>
+<li>问题：[多个线程同时创建对象造成的并发问题]{.blue}<ul>
+<li>前一个线程刚创建对象完毕，但是还没有来得及将引用指向对象，就切换成另外一个线程</li>
+<li>另一个线程也要创建对象，刚好和前一个线程使用同一块区域，导致其创建对象覆盖掉前一个线程创建的对象</li>
+</ul>
+</li>
+<li>方式<ul>
+<li>[对分配内存空间的行为采用同步机制处理]{.blue}：虚拟机实际采用 CAS 配上失败重试的方式保证分配操作的原子性</li>
+<li>[不同线程在互不干扰的区域中分配对象]{.blue}：虚拟机实际采用 TLAB 来实现分配过程的安全性</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[初始化对象的 <strong>实例变量</strong>]{.red}：实例变量会被设置成类型 [默认值]{.red}</p>
+<p>  :::info</p>
+<p>  类中的类变量早在类加载阶段就已经初始化完成了，所以这里只涉及实例变量</p>
+<p>  :::</p>
+</li>
+<li><p>[初始化对象的对象头]{.red}</p>
+</li>
+<li><p>[执行对象的构造函数]{.red}</p>
+</li>
+</ul>
+
+        <h2 id="对象的访问定位"   >
+          <a href="#对象的访问定位" class="heading-link"><i class="fas fa-link"></i></a><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h2>
+      <ul>
+<li><p>访问定位：虚拟机栈中的对象引用寻找到对象在堆空间中的实例数据的过程</p>
+</li>
+<li><p>方式</p>
+<ul>
+<li><p>句柄访问</p>
+<ul>
+<li>句柄：[对象实例数据指针 + 对象类元数据信息指针]{.red}</li>
+<li>存储：堆空间中划分一块区域用于存储所有对象的句柄</li>
+<li>引用：[指向句柄在堆空间中的地址]{.red}</li>
+<li>访问过程：引用需要先找到句柄在堆空间中的位置后，再根据句柄确定对象的实例数据或者类元信息</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/句柄访问.6xtbodd7hao0.png" alt="句柄访问" style="zoom:80%;" /></li>
+<li><p>直接指针访问</p>
+<ul>
+<li>引用：[直接指向对象在堆空间中的地址]{.red}</li>
+<li>访问过程：引用直接就可以根据地址找到对象</li>
+<li>细节：[HotSpot 虚拟机实际采用的就是直接指针访问的方式定位对象]{.blue}</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/直接指针访问.4eqkkn6unpm0.png" alt="直接指针访问" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>对比</p>
+<ul>
+<li>句柄访问<ul>
+<li>优点：[对象在堆空间中的位置发生改变，只需要改变句柄的地址就行，对象引用的地址不需要改变]{.red}<ul>
+<li>对于程序员来讲这个地址改变就是彻底不可见了，因为引用地址不会随着对象的地址而改变</li>
+<li>[适用于对象地址频繁在堆空间中发生变化的情况]{.red}</li>
+</ul>
+</li>
+<li>缺点：[每次访问对象都会增加一次寻址的开销]{.green}</li>
+<li>细节：[对象类元数据指针不再存放在对象实例数据中，也就意味着没有存放在对象头中]{.red}</li>
+</ul>
+</li>
+<li>直接指针访问<ul>
+<li>优点：[每次访问对象仅花费一次寻址的开销]{.red}</li>
+<li>缺点：[对象在堆空间中的位置发生改变，需要直接修改对象引用]{.green}<ul>
+<li>对于频繁再堆空间中地址发生变化的对象是非常不利的</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></div></article></section><nav class="paginator"><div class="paginator-inner"><a class="extend prev" rel="prev" href="/page/5/"><i class="fas fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/"><i class="fas fa-angle-right"></i></a></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
