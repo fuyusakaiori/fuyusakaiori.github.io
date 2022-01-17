@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg">
 <meta property="article:published_time" content="2022-01-13T03:17:23.006Z">
-<meta property="article:modified_time" content="2022-01-13T06:38:13.965Z">
+<meta property="article:modified_time" content="2022-01-17T08:00:51.162Z">
 <meta property="article:author" content="Fuyusakaiori">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg"><title>MySQL 基础架构 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2022/01/13/database/mysql/structure/MySQL%20%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
@@ -34,7 +34,7 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><div class="sticky-top" data-popover="置顶文章" data-popover-pos="up"><span class="sticky-top__icon"><i class="fas fa-thumbtack"></i></span></div><h1 class="post-title">MySQL 基础架构</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-01-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-01-13</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><div class="gallery"><img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg"></div>
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><div class="sticky-top" data-popover="置顶文章" data-popover-pos="up"><span class="sticky-top__icon"><i class="fas fa-thumbtack"></i></span></div><h1 class="post-title">MySQL 基础架构</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-01-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-01-17</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><div class="gallery"><img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg"></div>
         <h1 id="MySQL-基础架构"   >
           <a href="#MySQL-基础架构" class="heading-link"><i class="fas fa-link"></i></a><a href="#MySQL-基础架构" class="headerlink" title="MySQL 基础架构"></a>MySQL 基础架构</h1>
       
@@ -53,28 +53,183 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li>Server 层包括 <strong>连接器、查询缓存、分析器、优化器、执行器</strong> 等</li>
 <li>Server 层涵盖大多数核心服务功能：<ul>
 <li>内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能（存储过程、触发器、视图等）</li>
-<li>事务和索引并不是所有引擎都支持，所以并不是在 Server 层实现而是在 Engine 层实现</li>
-<li>日志则是部分在 Engine 层实现（redo log、undo log），部分在 Server 层实现（binlog）</li>
+<li><a style="color:#d98787;">事务和索引并不是所有引擎都支持，所以并不是在 Server 层实现而是在 Engine 层实现</a></li>
+<li><a style="color:#d98787;">日志则是部分在 Engine 层实现（redo log、undo log），部分在 Server 层实现（binlog）</a></li>
 </ul>
 </li>
-<li>Server 层具有的功能是所用引擎都可以使用的，Engine 层的功能则是每个引擎特有的功能</li>
+<li>Server 层具有的功能是所用引擎共享的，Engine 层的功能则是每个引擎特有的功能</li>
 </ul>
 
         <h3 id="连接器"   >
           <a href="#连接器" class="heading-link"><i class="fas fa-link"></i></a><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h3>
-      
+      <p><strong>连接器的功能</strong></p>
+<ul>
+<li>连接器主要负责建立客户端或者应用程序和数据库之间的连接，并对建立的连接进行管理和维护<ul>
+<li><a style="color:#d98787;">连接的建立通常依赖于 TCP/IP 协议（任何平台下都提供的方式）、Unix 域套接字、管道这三种方式</a></li>
+<li>应用程序和数据库建立连接通常会采用数据库连接池进行管理和维护</li>
+</ul>
+</li>
+<li>连接器还负责对建立连接的客户端进行权限验证，确保客户端访问的内容不会超出其权限范围内<ul>
+<li>MySQL 执行过程中总共存在三次权限验证：分别在连接器、分析器和执行器进行权限验证<ul>
+<li>连接器：<strong>主要验证用户的身份，也就是其账号密码是否正确</strong></li>
+<li>分析器：<strong>主要验证用户对数据库的访问权限，是粗粒度的验证过程</strong>（precheck）</li>
+<li>执行器：<strong>主要验证对表、字段、触发器等内容的验证，是更加细粒度的验证过程</strong></li>
+</ul>
+</li>
+<li>权限验证完毕后就会读取权限，权限在被读取之后就不会发生变化，<strong>无论该用户的权限是否被修改</strong>，只有重新启动后才会刷新权限</li>
+</ul>
+</li>
+</ul>
+<p><strong>建立连接的详细过程</strong></p>
+<p>① 建立连接的命令：</p>
+<p>如果不使用端口号和 IP 地址进行连接，那么就默认使用的 Unix 域套接字和数据库进行连接；相反，如果使用端口号和 IP 地址进行连接，那么就是使用的 TCP/IP 协议进行的连接</p>
+<p>此外，强烈建议不要在输入命令的时候附带密码，容易导致密码泄露（譬如在 Linux 系统下，可以使用 history 命令查看所有执行过的命令）</p>
+<ul>
+<li><strong>Unix 域套接字连接无法进行网络通信，要求数据库和客户端必须在同一台服务器上</strong></li>
+<li>Unix 域套接字主要用于同一台主机上的进程间通信，而无法用于网络通信，它实际上是 Socket 机制的衍生，相对于传统的 Socket 套接字，在进程间通信的效率更高</li>
+</ul>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 建立连接的命令</span></span><br><span class="line">mysql <span class="operator">-</span>h$ip <span class="operator">-</span>P$port <span class="operator">-</span>u$root <span class="operator">-</span>p</span><br></pre></td></tr></table></div></figure>
+
+<p>② 建立连接的命令输入完成之后，连接器就开始工作：</p>
+<p>首先，在使用远程连接的情况下，客户端和服务器端需要通过 TCP 三次握手建立连接</p>
+<p>然后连接器开始验证输入的用户名和密码是否正确，对你的身份进行验证</p>
+<ul>
+<li><strong>如果输入的用户名和密码存在错误，那么就会抛出 <code>Access denied for user</code>，提示用户名或者密码错误</strong></li>
+<li><strong>如果输入的用户名和密码正确，那就会读取权限，并将权限确定下来；直到下次连接的时候才会重新刷新权限</strong></li>
+</ul>
+<p>③ 连接建立完成之后，连接器就会对建立的连接进行维护和管理：</p>
+<p>连接建立完成之后，如果没有后续的操作，那么连接器就会将其设置为空闲状态；如果太长的时间都没有任何动静，那么连接器就会自动断开这个连接；在连接断开之后，客户端必须重新建立和数据库之间的连接，否则会收到 <code>Lost connection to MySQL server during query</code> 错误</p>
+<ul>
+<li><p>连接的状态可以通过 <code>show processlist;</code>  命令查看，可以看到当前数据库系统存在的连接数量及其状态</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2022/01/17/7841330a3c1ce4e265bc20d6af9618dc.png" alt="7841330a3c1ce4e265bc20d6af9618dc.png" style="zoom: 50%;" /></li>
+<li><p>连接自动断开的阈值可以通过设置 <code>wait_timeout</code> 参数进行改变，默认阈值是 8 小时（<code>show like variables wait_timeout</code> 可以查看当前的阈值）</p>
+  <img src="https://i1.xpic.jp/file/xpicjp/2022/01/17/d1b8fb9e4071f9fc65a4a1ba6f04e940.png" alt="d1b8fb9e4071f9fc65a4a1ba6f04e940.png" style="zoom:67%;" /></li>
+<li><p><strong>空闲连接除了依赖 MySQL 连接器的管理，还可以使用数据库连接池作为中间层对其进行管理，从而避免空闲连接过多导致内存占用过大的情况</strong></p>
+</li>
+</ul>
+<p><strong>连接的类型</strong></p>
+<p>① MySQL 中存在两种连接类型，分为长连接和短连接，这两种连接类型和 HTTP 中的长连接和短连接并不相同：</p>
+<ul>
+<li>HTTP 中的长连接和短连接是可以进行配置的，可以明确的选择启用长连接还是短连接</li>
+<li>但是 MySQL 中并不能明确的配置，而是根据你连接持续的时间认定的，是一个比较“感性”的分类<ul>
+<li>如果仅查询几次之后就立刻断开连接，那么就认定这个连接是短连接</li>
+<li>如果长期持续使用这个连接进行查询，那么就认定这个是长连接</li>
+</ul>
+</li>
+</ul>
+<p>② 长连接和短连接如何选择呢？</p>
+<ul>
+<li>短连接就意味着需要 <strong>频繁地建立连接，而建立连接的过程是非常复杂的，这样就会造成不必要的性能开销</strong></li>
+<li>虽然长连接避免了频繁建立连接带来的性能开销，但是 <strong>如果存在大量的长连接就会导致内存溢出（OOM），从而导致 MySQL 宕机重启</strong></li>
+</ul>
+<p>③ 针对长连接存在的问题通常有两种解决方案：</p>
+<ul>
+<li>定期断开连接，或者在 <strong>执行一个占用大量内存的查询之后</strong>，断开相应的连接<ul>
+<li>MySQL 执行过程中会将大量的数据绑定在连接对象中，所以占用内存的查询，最终会导致连接的内存增大，容易造成内存溢出</li>
+</ul>
+</li>
+<li>MySQL 5.7 之后可以采用 <code>mysql_reset_connection</code> 函数重新初始化数据库连接<ul>
+<li><strong>该函数执行之后不需要重新连接和权限验证，只会初始化连接的相关信息</strong></li>
+<li>相关信息主要包括将事务重新设置为自动提交模式、释放表锁、关闭临时表等等</li>
+</ul>
+</li>
+</ul>
+
         <h3 id="查询缓存"   >
           <a href="#查询缓存" class="heading-link"><i class="fas fa-link"></i></a><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h3>
-      
+      <p><a style="color:#d98787;">查询缓存在 MySQL 8.0 之后就完全删除，不再使用查询缓存这个功能</a></p>
+<p><strong>查询缓存的功能</strong></p>
+<ul>
+<li>查询缓存中将&lt;SQL 语句，查询结果&gt;以 key-value 的形式进行存储，从而加快 SQL 语句的执行速度</li>
+</ul>
+<p><strong>查询缓存的执行过程</strong></p>
+<p>首先，SQL 语句会被 <strong>同时传递给查询缓存和分析器</strong>，然后 MySQL 就开始在查询缓存中搜索是否存在对应的键值对</p>
+<ul>
+<li>如果查询缓存中存在 SQL 对应的键值对，<strong>那么就立刻返回对应的结果并且暂停分析器中对 SQL 语句的分析</strong></li>
+<li>如果查询缓存中没有 SQL 对应的键值对，那么就需要继续执行分析器之后的过程，并且在查询到结果之后将其缓存再查询缓存中</li>
+</ul>
+<p>如果查询缓存的命中率很高，那么 MySQL 的执行效率也会相应的变高，但是实际上查询缓存的命中率非常低，根本没有对 MySQL 的执行效率做出多大的提升</p>
+<p><strong>查询缓存存在的问题</strong></p>
+<ul>
+<li><p><a style="color:#d98787;">查询的 SQL 语句必须和查询缓存中的 SQL 语句完全相同，包括传入的字段和限制条件，否则就查询不到</a></p>
+  <figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 相似的 SQL 语句，但是并不是完全相同的</span></span><br><span class="line"><span class="keyword">select</span> name, age <span class="keyword">from</span> T <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">select</span> name, age <span class="keyword">from</span> T <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">2</span>;</span><br></pre></td></tr></table></div></figure></li>
+<li><p><a style="color:#d98787;">表中存储的内容发生了更新，那么该表对应的查询缓存就会被完全清空，这样可能导致刚完成缓存立刻被清空</a></p>
+<p>  表中的内容更新导致缓存清空，主要是因为 SQL 语句对应的结果变化了，所以只能够清空缓存，否则缓存的结果就是错误的</p>
+</li>
+</ul>
+<p>基于以上两个原因，通常都不会使用 MySQL 的查询缓存，只有在表内容长期不更新的情况下（如系统配置表），才会开启查询缓存</p>
+<p><strong>查询缓存的设置</strong></p>
+<p>① 查询缓存是否可用</p>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;have_query_cache&#x27;</span>;</span><br></pre></td></tr></table></div></figure>
+
+<p>② 查询缓存是否开启</p>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询当前缓存的状态</span></span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;query_cache_type&#x27;</span>;</span><br><span class="line"><span class="comment">-- 设置当前缓存的状态</span></span><br><span class="line"><span class="keyword">set</span> session query_cache_type<span class="operator">=</span><span class="keyword">value</span>;</span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li>off（0）：表示完全关闭查询缓存，任何表都不可以使用</li>
+<li>on（1）：表示开启查询缓存，所有表都默认使用</li>
+<li>demand（2）：表示开启查询缓存，但是所有表默认不使用，可以根据需要指定 SQL 语句使用缓存</li>
+</ul>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 强制指定 SQL 语句使用查询缓存</span></span><br><span class="line"><span class="keyword">select</span> SQL_CACHE <span class="operator">*</span> <span class="keyword">from</span> T <span class="keyword">where</span> id<span class="operator">=</span><span class="number">10</span>；</span><br></pre></td></tr></table></div></figure>
+
+<p>③ 查询缓存配置的大小</p>
+<p>缓存的默认大小是 1M</p>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询缓存大小</span></span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;query_cache_size&#x27;</span>;</span><br><span class="line"><span class="comment">-- 设置缓存大小</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> query_cache_size <span class="operator">=</span> <span class="keyword">value</span>;</span><br></pre></td></tr></table></div></figure>
+
+<p>④ 缓存的最大查询结果</p>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 超过阈值的查询结果也是不会存储在查询缓存中的</span></span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;query_cache_limit&#x27;</span>;</span><br><span class="line"><span class="comment">-- 设置最大查询缓存</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> query_cache_limit <span class="operator">=</span> <span class="keyword">value</span>;</span><br></pre></td></tr></table></div></figure>
+
+<p>⑤ 查询所有和缓存相关的变量</p>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> varibles <span class="keyword">like</span> <span class="string">&#x27;%query_cache%&#x27;</span></span><br></pre></td></tr></table></div></figure>
+
+
         <h3 id="分析器"   >
           <a href="#分析器" class="heading-link"><i class="fas fa-link"></i></a><a href="#分析器" class="headerlink" title="分析器"></a>分析器</h3>
-      
+      <p><strong>分析器的功能</strong></p>
+<ul>
+<li>分析器主要功能就是对 SQL 语句进行分析，识别客户端需要完成的功能是什么</li>
+</ul>
+<p><strong>分析的详细过程</strong></p>
+<figure class="highlight sql"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 样例1</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> id<span class="operator">=</span><span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 样例2</span></span><br><span class="line">elect <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> id<span class="operator">=</span><span class="number">2</span>;</span><br></pre></td></tr></table></div></figure>
+
+<p>首先，分析器会对 SQL 语句进行 <strong>词法分析</strong>，也就是分析每个词语的含义是什么。对于上面这个 SQL 语句，就会依次提取每个单词，然后分析其含义，比如 <code>select</code> 就表示这是个查询语句，然后 <code>t</code> 就表示查询的表是哪一张；</p>
+<p>然后分析器会再对 SQL 语句进行 <strong>语法分析</strong>，也就是分析组成 SQL 语句的词语是否符合 SQL 的语法规则</p>
+<ul>
+<li>如果符合语法规则，那么就会直接交给优化器进行优化</li>
+<li>如果不符合语法规则，那么你就会收到 <code>You have an error in your SQL syntax</code> 错误，并且要尤其关注 <code>use near</code> 之后的部分，它将会提示你的 SQL 语句出错的部分</li>
+</ul>
+
         <h3 id="优化器"   >
           <a href="#优化器" class="heading-link"><i class="fas fa-link"></i></a><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3>
-      
+      <p><strong>优化器的功能</strong></p>
+<ul>
+<li>优化器在知道 SQL 语句的含义之后，就会针对需要完成的功能进行优化，从而选择最优的执行方案<ul>
+<li>使用不同的索引会导致查询的速度不同，优化器就会决定选择哪种索引，从而使查询速度最快</li>
+<li>多张表相联的时候，优化器会决定多张表的连接顺序，从而是查询速度最快</li>
+</ul>
+</li>
+</ul>
+<p>优化器具体如何选择索引，则涉及到索引的知识，暂时不在这里展开。不过 <strong>选择的原则始终都是保证在读取表中的内容的时候，尽可能减少扫描的行数</strong></p>
+
         <h3 id="执行器"   >
           <a href="#执行器" class="heading-link"><i class="fas fa-link"></i></a><a href="#执行器" class="headerlink" title="执行器"></a>执行器</h3>
-      
+      <p><strong>执行器的功能</strong></p>
+<ul>
+<li>执行器会对用户进行权限验证，也就是验证用户对该表、字段等内容是否存在访问权限</li>
+<li>执行器会打开需要使用的表，根据表定义中使用的存储引擎去调用相应接口，最后依靠存储引擎执行相应功能</li>
+</ul>
+<p><strong>执行的详细过程</strong></p>
+<p>首先，执行器经从分析器中得知需要使用的表结构，所以会验证当前的用户对将要访问的表结构是否具有合理的权限</p>
+<ul>
+<li>如果该用户对将要访问的表没有权限，那么就会返回没有权限的错误</li>
+<li>如果该用户拥有相应的权限，那么执行器就会开始执行这个 SQL 语句</li>
+</ul>
+<p>在权限验证成功之后，执行器就会去调用表定义中使用到的存储引擎，然后去调用对应的存储引擎接口，最后交由存储引擎执行相应的功能，读取相应的数据</p>
+
+        <h3 id="补充内容"   >
+          <a href="#补充内容" class="heading-link"><i class="fas fa-link"></i></a><a href="#补充内容" class="headerlink" title="补充内容"></a>补充内容</h3>
+      <p>① 数据库文件的数据是存储在磁盘中的，所以在查询数据的时候需要存储引擎先从磁盘中读取内容，然后加载到内存中，然后从内存中查询到相应的数据；下次再次查询的时候，就只需要从内存中查询就可以了，不需要再读取磁盘了</p>
+
         <h2 id="Engine-层"   >
           <a href="#Engine-层" class="heading-link"><i class="fas fa-link"></i></a><a href="#Engine-层" class="headerlink" title="Engine 层"></a>Engine 层</h2>
       
@@ -116,11 +271,12 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
           查询缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%99%A8"><span class="toc-number">1.2.4.</span> <span class="toc-text">
           分析器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="toc-number">1.2.5.</span> <span class="toc-text">
           优化器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E5%99%A8"><span class="toc-number">1.2.6.</span> <span class="toc-text">
-          执行器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Engine-%E5%B1%82"><span class="toc-number">1.3.</span> <span class="toc-text">
+          执行器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E5%86%85%E5%AE%B9"><span class="toc-number">1.2.7.</span> <span class="toc-text">
+          补充内容</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Engine-%E5%B1%82"><span class="toc-number">1.3.</span> <span class="toc-text">
           Engine 层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">
           基本功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%BC%95%E6%93%8E"><span class="toc-number">1.3.2.</span> <span class="toc-text">
           常用引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#InnoDB"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">
           InnoDB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MYISAM"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">
           MYISAM</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Memory"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">
           Memory</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NDB"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">
-          NDB</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+          NDB</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">106</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

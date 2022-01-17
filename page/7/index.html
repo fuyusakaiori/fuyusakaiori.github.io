@@ -30,445 +30,7 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/23/jvm/runtime/heapspace/%E6%A6%82%E8%BF%B0/">堆空间-概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-23</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-23</span></span></div></header><div class="post-body"><div class="post-excerpt">
-        <h1 id="堆空间"   >
-          <a href="#堆空间" class="heading-link"><i class="fas fa-link"></i></a><a href="#堆空间" class="headerlink" title="堆空间"></a>堆空间</h1>
-      
-        <h2 id="概述"   >
-          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
-      <blockquote>
-<p><strong>什么是堆空间?</strong></p>
-</blockquote>
-<ul>
-<li><p>定义：虚拟机中 [最大的存储空间]{.red}</p>
-</li>
-<li><p>作用：[存放所有被创建的对象和数组的空间]{.red}</p>
-<p>  +++danger 对象一定被分配在堆空间中吗？</p>
-<p>  <a href="#%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90">逃逸分析</a></p>
-<p>  +++</p>
-</li>
-<li><p>特点：</p>
-<ul>
-<li><p>[堆空间可以处于物理上并不连续的内存空间中]{.red}</p>
-<ul>
-<li><p>物理上不连续：操作系统采用了虚拟内存技术，所以分配给虚拟机的内存显然是不连续的</p>
-</li>
-<li><p>逻辑上连续：虚拟机的使用者并不关心实际内存是怎么存储的，从表面上看来就是连续的</p>
-</li>
-<li><p>[如果创建的是大对象通常会要求使用连续的堆空间]{.red}</p>
-<p>  :::info</p>
-<p>  大对象：需要占用的堆内存非常大的对象，诸如数组对象 new byte[1024 * 1024 * 1024]</p>
-<p>  :::</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间实际占用内存.69fin0iqv300.png" alt="堆空间实际占用内存" style="zoom:80%;" /></li>
-</ul>
-</li>
-<li><p>[堆空间中的对象的销毁不取决于方法是否结束，而是取决于垃圾回收机制]{.red}</p>
-</li>
-<li><p>[堆空间既存在垃圾回收机制，也存在 OutOfMemoryError 异常]{.red}</p>
-</li>
-<li><p>[堆空间是所有线程共享的区域：线程可以互相访问彼此创建的对象和数组]{.red}</p>
-</li>
-<li><p>[堆空间主要管理数据的存储，所以存储的是对象和数组的实际数据]{.red}</p>
-</li>
-</ul>
-</li>
-</ul>
-
-        <h2 id="空间划分"   >
-          <a href="#空间划分" class="heading-link"><i class="fas fa-link"></i></a><a href="#空间划分" class="headerlink" title="空间划分"></a>空间划分</h2>
-      <ul>
-<li><p>核心：[分代思想]{.red}</p>
-</li>
-<li><p>虚拟机规范划分：新生代 + 老年代</p>
-<ul>
-<li><p>新生代：</p>
-<ul>
-<li>伊甸园区：TLAB（Thread Local Allocation Buffer） + 共享区域</li>
-<li>幸存者区：幸存者0区 + 幸存者1区</li>
-</ul>
-</li>
-<li><p>老年代</p>
-</li>
-<li><p>方法区：[逻辑上归属堆区，物理上并不属于堆区，甚至可以称为非堆区]{.red}</p>
-<p>  :::info</p>
-<p>  ① 类似于中国大陆和中国台湾的关系，逻辑上台湾归属于中国，但是目前中国大陆的政策无法管理台湾</p>
-<p>  ② 方法区和堆区实际存储的内容完全不同，所以进行区分也是正常的</p>
-<p>  :::</p>
-</li>
-</ul>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间划分.3mxvqtnctuw0.png" alt="堆空间划分" style="zoom:80%;" /></li>
-<li><p>JDK 7：[方法区采用永久代实现：使用内存是虚拟机提供的内存]{.red}</p>
-</li>
-<li><p>JDK 8：[方法区采用元空间实现：使用的内存是操作系统提供的物理内存]{.red}</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/方法区落地实现.1dqvno6ggn8g.png" alt="方法区落地实现" style="zoom:80%;" />
-
-<p>  +++danger 为什么堆空间要采用分代思想进行管理？</p>
-<p>  ① 显然堆空间即使不分代也是可以进行垃圾回收的</p>
-<p>  ② 但是如果所有的对象都被杂乱无章地放在一起，每次执行垃圾回收的时候就需要挨个查找</p>
-<p>  ③ 哪些是短生命周期的，可以回收，哪些是长生命周期的，不能回收，就相当于每次都要问一问老年代需不需要回收</p>
-<p>  ④ 这样垃圾回收的性能显然就会下降，执行了太多没有意义的操作</p>
-<p>  ⑤ 核心：优化垃圾回收机制的性能</p>
-<p>  +++</p>
-</li>
-</ul>
-
-        <h2 id="空间大小"   >
-          <a href="#空间大小" class="heading-link"><i class="fas fa-link"></i></a><a href="#空间大小" class="headerlink" title="空间大小"></a>空间大小</h2>
-      <ul>
-<li><p>堆空间大小设置</p>
-<ul>
-<li><p>特点：[堆空间大小可以是固定容量也可以是动态扩展的]{.red}</p>
-</li>
-<li><p>固定容量：虚拟机默认采用的是动态扩展，固定容量需要自行设置</p>
-<p>  +++info 如何将堆空间设置为固定容量？</p>
-<p>  ① 只需要将堆空间的的初始容量和最大容量设置为相同的即可</p>
-<p>  ② 再继续想想，为什么要将两者设置为相同？或者说为什么要使用固定容量？</p>
-<p>  +++</p>
-</li>
-<li><p>动态扩展</p>
-<ul>
-<li><p>[默认初始化容量：物理内存 / 64]{.blue}</p>
-</li>
-<li><p>[默认最大容量：物理内存 / 4]{.blue}</p>
-</li>
-<li><p>现状：大多数虚拟机都支持堆空间的动态扩展，[但是实际开发中都是采用固定容量]{.blue}</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Runtime: 运行时数据区</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 初始内存：245MB</span></span><br><span class="line">    <span class="keyword">long</span> initialMemory = Runtime.getRuntime().totalMemory(); </span><br><span class="line">    <span class="comment">// 最大内存：3625MB</span></span><br><span class="line">    <span class="keyword">long</span> maxMemory = Runtime.getRuntime().maxMemory();</span><br><span class="line">    <span class="comment">// 输出内存提示信息</span></span><br><span class="line">    System.out.println(<span class="string">&quot;堆空间初始化内存: &quot;</span> + initialMemory / <span class="number">1024</span> /<span class="number">1024</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;堆空间最大内存: &quot;</span> + maxMemory / <span class="number">1024</span> / <span class="number">1024</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算物理机的实际内存：15680MB 14500MB</span></span><br><span class="line">    System.out.println(<span class="string">&quot;物理机实际内存: &quot;</span> + initialMemory / <span class="number">1024</span> /<span class="number">1024</span> * <span class="number">64</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;物理机实际最大内存: &quot;</span> + maxMemory / <span class="number">1024</span> /<span class="number">1024</span> * <span class="number">4</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
-<li><p>问题：</p>
-<p>  +++danger 为什么要将堆空间的初始化大小和最大容量设置为相同的呢？</p>
-<p>  ① 核心：避免频繁扩展堆空间的大小，同时也避免在垃圾回收之后重新计算堆空间大小，从而提高虚拟机的执行性能</p>
-<p>  ② 此前提到大多数的虚拟机都支持堆的动态扩展，并且需要使用垃圾回收机制</p>
-<p>  ③ 如果允许堆采用动态扩展，那么每次垃圾回收之后都会重新计算堆空间大小</p>
-<p>  ④ 因为对象被回收了，堆需要的空间就没那么大了，所以需要重新计算，这显然是浪费性能的</p>
-<p>  +++</p>
-<p>  +++ 为什么计算得到的物理机内存和实际内存不一样呢？</p>
-<p>  ① Runtime.getRuntime().totalMemory();  获取的堆内存是只有正在使用的内存</p>
-<p>  ② 幸存者区只会将其中一个区用作存放对象，另外一个区空着不放对象，所以获得的内存每次就少了一部分幸存者区的内存</p>
-<p>  +++</p>
-</li>
-</ul>
-</li>
-<li><p>设置堆空间大小命令</p>
-<ul>
-<li><p>[-Xms Size 设置堆空间的初始化大小]{.blue} </p>
-  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间初始化大小</span></span><br><span class="line"><span class="comment"># 等价于 -XX:InitialHeapSize</span></span><br><span class="line"><span class="comment">#（实际上这个参数我并没有使用过，网上也没有提到如何使用，很奇怪，就连官方文档都没有提到）</span></span><br><span class="line">-Xms1m</span><br></pre></td></tr></table></div></figure></li>
-<li><p>[-Xmx Size 设置堆空间的最大容量]{.blue}：</p>
-  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间最大大小</span></span><br><span class="line"><span class="comment"># 等价于 -XX:MaxHeapSize</span></span><br><span class="line">-Xmx1m</span><br></pre></td></tr></table></div></figure></li>
-<li><p>[-Xmn Size 设置堆空间中年轻代的大小]{.blue}：堆剩下的空间就是老年代占有的</p>
-  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间中年轻代的大小</span></span><br><span class="line">-Xmn1m</span><br></pre></td></tr></table></div></figure></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>新生代和老年代大小设置</p>
-<ul>
-<li><p>默认大小比例</p>
-<ul>
-<li><p>[新生代 : 老年代 = 1 : 2]{.blue}</p>
-</li>
-<li><p>[伊甸园区 : 幸存者0区 : 幸存者1区 = 8 : 1 : 1]{.blue}</p>
-</li>
-<li><p>细节：</p>
-<ul>
-<li><p>实际开发中通常使用默认的比例设置</p>
-</li>
-<li><p>实际上虚拟机会采用 [自适应策略]{.red}，新生代和老年代的比例是 1:2，但是新生代内部的比例却不是 8:1:1</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间比例.4vqbtj0dody0.png" alt="堆空间比例" style="zoom: 67%;" /></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>设置大小比例命令</p>
-<ul>
-<li><p>[-XX:+UseAdaptiveSizePolicy：关闭虚拟机自适应策略]{.blue}</p>
-<p>  :::info</p>
-<p>  实际上这个命令并不会生效，自适应策略是无法关闭的，想要让比例为默认的8:1:1，直接设置就好</p>
-<p>  :::</p>
-</li>
-<li><p>[-XX:NewRatio=ration：设置新生代和老年代的比例大小]{.blue}</p>
-</li>
-<li><p>[-XX:SurvivorRation=ratio：设置伊甸园区和幸存者区的比例大小]{.blue}</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>  +++ 为什么两个幸存者区的比例始终为 1:1 呢？</p>
-<p>  涉及到垃圾回收算法：复制标记算法</p>
-<p>  +++</p>
-</li>
-</ul>
-
-        <h2 id="堆空间溢出"   >
-          <a href="#堆空间溢出" class="heading-link"><i class="fas fa-link"></i></a><a href="#堆空间溢出" class="headerlink" title="堆空间溢出"></a>堆空间溢出</h2>
-      <p>:::primary</p>
-<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/366840983" >来来来，聊聊7种内存泄露场景和13种解决方案</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p>警告：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/sunweiye/p/10863985.html" >jvm 内存泄露与内存溢出</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>、<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43689480/article/details/96474346" >jvm内存泄漏</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>这些博客的例子全部都是错的，但凡写的人自己试一试他写的代码就会发现错了</p>
-<p>:::</p>
-<ul>
-<li><p>异常：OutOfMemoryError</p>
-</li>
-<li><p>原因：[内存泄露或者内存溢出]{.red}</p>
-<ul>
-<li><p>内存泄露（Memory Leak）</p>
-<ul>
-<li><p>定义：[应该被垃圾回收机制清除的对象无法被顺利清除，造成空间浪费，最终可能造成 OOM 异常]{.red}</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露.2mbg5mrp49q0.png" alt="内存泄露" style="zoom:80%;" /></li>
-<li><p>情况：（这部分笔记暂时存在问题，先了解什么是内存泄露就行）</p>
-<p>  +++danger ① 静态集合类变量长期引用短生命周期的对象</p>
-<p>  测试代码</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 线程休眠: 便于观察上升曲线</span></span><br><span class="line">    Thread.sleep(<span class="number">10000</span>);</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        Object object = <span class="keyword">new</span> Object();</span><br><span class="line">        <span class="comment">// 链表不被销毁就会长期持有这个对象的引用</span></span><br><span class="line">        list.add(object);</span><br><span class="line">        <span class="comment">// 短生命周期引用不再指向对象, 链表依然持有该对象的引用</span></span><br><span class="line">        <span class="comment">// 注意: 这里将引用置为空的目的是代表这个对象我们不想再使用了</span></span><br><span class="line">        object = <span class="keyword">null</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;创建对象数量: &quot;</span> + ++count);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 线程休眠: 便于观察上升曲线</span></span><br><span class="line">    Thread.sleep(<span class="number">10000000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
-
-<p>  测试图示</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露1.i0i0025otcw.png" alt="内存泄露1" style="zoom:80%;" />
-
-<p>  测试堆内存结果</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/堆内存分析1.2caocz52qy4g.png" alt="堆内存分析1" style="zoom:80%;" />
-
-<p>  测试结论：</p>
-<ul>
-<li>每个添加进入链表的对象我们都不想继续使用，但是由于链表是静态变量，生命周期和类加载器一致，所以垃圾回收无法回收</li>
-<li>堆内存结果会再创建对象完成之后长时间保持水平线，意味着垃圾回收一直没有生效</li>
-</ul>
-<p>  :::info</p>
-<p>  疑惑：为什么将 static 关键字去掉之后依然没有触发垃圾回收机制？</p>
-<p>  :::</p>
-<p>  +++</p>
-<p>  ② [未关闭不再使用的连接资源]{.red}：创建的数据库连接、流对象等连接资源再使用之后没有合理关闭，就会造成内存泄露</p>
-<p>  ③ [未重写相应的 equals 和 hashCode 方法]{.red}</p>
-<p>  ④ 外部类引用内部类对象：</p>
-<p>  ⑤ 重写 finalize 方法不得当：</p>
-</li>
-</ul>
-</li>
-<li><p>内存溢出（Memory OverFlow）</p>
-<ul>
-<li><p>定义：[堆空间需要使用的内存超过虚拟机分配的内存，造成 OOM 异常]{.red}</p>
-</li>
-<li><p>测试：</p>
-<p>  测试代码</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 虚拟机参数设置: -Xms1m -Xmx1m</span></span><br><span class="line">    ArrayList&lt;Object&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">// 注意：尽可能将对象数量设置多点，否则不会溢出</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 循环创建对象</span></span><br><span class="line">        list.add(<span class="keyword">new</span> Object());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
-
-<p>  测试结果</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存溢出.689o51k3uf40.png" alt="内存溢出" style="zoom:80%;" /></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/22/java/reflection/%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/">反射机制</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-22</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-22</span></span></div></header><div class="post-body"><div class="post-excerpt">
-        <h1 id="反射机制"   >
-          <a href="#反射机制" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h1>
-      <p>:::warning</p>
-<ul>
-<li>反射机制是非常难解释清楚的，主要原因有如下几个<ul>
-<li>反射机制概念本身就很抽象，难以理解其概念</li>
-<li>反射机制在初学时使用的机会很少，因为初学者甚至都没有类加载的概念</li>
-<li>反射机制涉及到虚拟机中类加载的概念，在各个框架中也有很广泛的应用，没有这些的基本了解真的很难理解</li>
-</ul>
-</li>
-<li>我会尽可能将反射最基础的内容和虚拟机联系起来</li>
-</ul>
-<p>:::</p>
-<p>:::primary</p>
-<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/a745233700/article/details/82893076?ops_request_misc=&request_id=&biz_id=102&utm_term=Java%20%E5%8F%8D%E5%B0%84&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-82893076.nonecase&spm=1018.2226.3001.4187" >Java基础篇：反射机制详解</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p>:::</p>
-<blockquote>
-<p><strong>什么是类加载机制?</strong></p>
-</blockquote>
-<p>:::info</p>
-<p>详细了解：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/JVM/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" >Java 虚拟机-类加载机制</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p>:::</p>
-<blockquote>
-<p><strong>什么是反射?</strong></p>
-</blockquote>
-<ul>
-<li><p>定义：</p>
-<ul>
-<li>[虚拟机处于 <strong>运行状态</strong> 中]{.red}</li>
-<li>[对于任意一个类都能够知道这个类所有的属性和方法]{.blue}</li>
-<li>[对于任意一个对象，都能够调用它的任意一个方法]{.blue}</li>
-</ul>
-</li>
-<li><p>核心：[在进程运行期间将类 <strong>动态</strong> 地加载到虚拟机内存中使用]{.red}</p>
-</li>
-</ul>
-<blockquote>
-<p><strong>为什么要使用反射?</strong></p>
-</blockquote>
-<blockquote>
-<p><strong>如何使用反射?</strong></p>
-</blockquote>
-<blockquote>
-<p><strong>反射的原理是什么?</strong></p>
-</blockquote>
-
-        <h2 id="反射"   >
-          <a href="#反射" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射" class="headerlink" title="反射"></a>反射</h2>
-      <ul>
-<li><p>概念解释    </p>
-<ul>
-<li>Java 程序处于运行过程中</li>
-<li><strong>根据</strong> Java 程序的<strong>需要</strong></li>
-<li><strong>动态</strong>加载 .class 文件</li>
-<li>图示解释</li>
-</ul>
-</li>
-<li><p>目的解释</p>
-<ul>
-<li>更加灵活地根据需求加载 .class 文件</li>
-</ul>
-<p>  例：每个数据库系统都有不同的数据库驱动（MySQL Oracle）；</p>
-<p>  如果在编写代码的时候无法确定程序在执行的过程中究竟使用哪一套数据库驱动系统；</p>
-<p>  采用反射机制使用 Class.forName（<em>需要加载的类的全限定名</em>）加载需要使用的数据库驱动</p>
-</li>
-<li><p>Java 成为<strong>准动态</strong>语言</p>
-</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; forName(String name, <span class="keyword">boolean</span> initialize,</span><br><span class="line">                                   ClassLoader loader)</span><br><span class="line">        <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">    &#123;</span><br><span class="line">        Class&lt;?&gt; caller = <span class="keyword">null</span>;</span><br><span class="line">        SecurityManager sm = System.getSecurityManager();</span><br><span class="line">        <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Reflective call to get caller class is only needed if a security manager</span></span><br><span class="line">            <span class="comment">// is present.  Avoid the overhead of making this call otherwise.</span></span><br><span class="line">            caller = Reflection.getCallerClass();</span><br><span class="line">            <span class="keyword">if</span> (sun.misc.VM.isSystemDomainLoader(loader)) &#123;</span><br><span class="line">                ClassLoader ccl = ClassLoader.getClassLoader(caller);</span><br><span class="line">                <span class="keyword">if</span> (!sun.misc.VM.isSystemDomainLoader(ccl)) &#123;</span><br><span class="line">                    sm.checkPermission(</span><br><span class="line">                        SecurityConstants.GET_CLASSLOADER_PERMISSION);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// forName 方法会自动选择类加载器(ClassLoader)加载.class文件</span></span><br><span class="line">        <span class="keyword">return</span> forName0(name, initialize, loader, caller);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></div></figure>
-
-
-
-
-        <h3 id="反射的用途"   >
-          <a href="#反射的用途" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射的用途" class="headerlink" title="反射的用途"></a>反射的用途</h3>
-      <ul>
-<li>创建实例</li>
-<li>框架实现的原理</li>
-</ul>
-
-        <h3 id="反射主要内容"   >
-          <a href="#反射主要内容" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射主要内容" class="headerlink" title="反射主要内容"></a>反射主要内容</h3>
-      
-        <h4 id="Javac"   >
-          <a href="#Javac" class="heading-link"><i class="fas fa-link"></i></a><a href="#Javac" class="headerlink" title="Javac"></a>Javac</h4>
-      <ul>
-<li><p>基本概念：Javac 全称 Java Compiler </p>
-</li>
-<li><p>目的</p>
-<ul>
-<li><p>Java 源代码实是由 Javac.exe 执行的</p>
-<p>  也就是说我们执行 Java 程序实际上是在执行 Javac.exe</p>
-</li>
-<li><p>Javac 将由 <strong>Java 语言编写的源代码</strong> 转换成 机器能够识别的 <strong>字节码文件(.class)</strong></p>
-<p>  ![image-20210307172652963](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307172652963.png)</p>
-</li>
-</ul>
-</li>
-<li><p>使用</p>
-</li>
-</ul>
-
-        <h4 id="类加载器"   >
-          <a href="#类加载器" class="heading-link"><i class="fas fa-link"></i></a><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4>
-      <ul>
-<li><p>概念：将 C++ 和 Java 编写完成的 <strong>“类”</strong> 加载到<strong>堆中的方法区</strong>中生成 <strong>Class 对象</strong></p>
-<ul>
-<li>类：所有的类（.java）文件都被 Javac 编译成 .class 文件；所以实际类加载器加载的是 .class 文件</li>
-</ul>
-</li>
-<li><p>分类</p>
-<ul>
-<li>BootstrapClassLoader<ul>
-<li>功能：负责加载 Java 语言中的最核心的类库（java.lang.*） 和 构造 ExtClassLoader 和 APPClassLoader</li>
-<li>特点<ul>
-<li>C++编写</li>
-<li>涉及到虚拟机的本地实现细节，不能够被直接调用</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>ExtClassLoader<ul>
-<li>功能：负责加载 Java 语言中的扩展类库（javax.*）</li>
-<li>特点<ul>
-<li>Java 编写</li>
-<li>开发者可以实际调用</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>APPClassLoader<ul>
-<li>功能：主要负责加载应用程序的主函数类</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>类加载机制</p>
-<ul>
-<li><p>图示</p>
-<p>  ![preview](D:\Typora\Typora\文件\Java 反射机制.assets\v2-b9d39568c0e3f87a5df6a0cbfe753cda_r.jpg)</p>
-</li>
-</ul>
-</li>
-<li><p>双亲委派机制</p>
-<ul>
-<li><p>图示</p>
-<p>  ![image-20210307175110119](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307175110119.png)</p>
-</li>
-<li><p>解释</p>
-<p>  从 <strong>自定义类加载器</strong> 开始判断当前的类是否加载过；</p>
-<p>  如果当前的类已经在任何一个 类加载器中加载过了，那么当前类就不需要加载了</p>
-<p>  如果直到 <strong>核心类库加载器</strong> 中还没有加载过，那么开始从 <strong>核心类库加载器</strong> 开始判断当前类是否可以被加载</p>
-<p>  如果当前的类加载器无法加载那么依次向下提交，直到 <strong>自定义类加载器</strong></p>
-<p>  如果连 <strong>自定义类加载器</strong> 都无法加载，那么证明当前的类是无法被加载的</p>
-</li>
-<li><p>目的</p>
-<ul>
-<li>避免类的重复加载</li>
-<li>避免基础核心类库被篡改（自行编写的 String 类是无法被加载的）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/codeyanbao/article/details/82875064" >双亲委派机制1</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/54693308" >双亲委派机制2</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-</blockquote>
-
-        <h4 id="实例构建过程"   >
-          <a href="#实例构建过程" class="heading-link"><i class="fas fa-link"></i></a><a href="#实例构建过程" class="headerlink" title="实例构建过程"></a>实例构建过程</h4>
-      <p>![image-20210307180421814](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307180421814.png)</p>
-
-        <h4 id="Class-对象"   >
-          <a href="#Class-对象" class="heading-link"><i class="fas fa-link"></i></a><a href="#Class-对象" class="headerlink" title="Class 对象"></a>Class 对象</h4>
-      <ul>
-<li>概念：.class 文件被类加载器载入堆的方法区中生成 Class 对象</li>
-<li>内容<ul>
-<li>Class 对象具有<strong>被加载类</strong>的所有信息（注解，方法，字段，构造函数等）</li>
-<li>Class 对象提供 <strong>Method Field Constructor <strong>等</strong>静态类</strong>存储<strong>方法</strong>，<strong>字段</strong>，<strong>构造器</strong>的所有信息</li>
-</ul>
-</li>
-<li>源代码</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ReflectionData</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">       <span class="keyword">volatile</span> Field[] declaredFields; <span class="comment">// 字段和方法的信息太多，所以Class对象提供专门的静态类用于存储信息</span></span><br><span class="line">       <span class="keyword">volatile</span> Field[] publicFields;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] declaredMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] publicMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Constructor&lt;T&gt;[] declaredConstructors;</span><br><span class="line">       <span class="keyword">volatile</span> Constructor&lt;T&gt;[] publicConstructors;</span><br><span class="line">       <span class="comment">// Intermediate results for getFields and getMethods</span></span><br><span class="line">       <span class="keyword">volatile</span> Field[] declaredPublicFields;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] declaredPublicMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Class&lt;?&gt;[] interfaces;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// Value of classRedefinedCount when we created this ReflectionData instance</span></span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> redefinedCount;</span><br><span class="line"></span><br><span class="line">       ReflectionData(<span class="keyword">int</span> redefinedCount) &#123;</span><br><span class="line">           <span class="keyword">this</span>.redefinedCount = redefinedCount;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></div></figure>
-
-
-        <h4 id="API"   >
-          <a href="#API" class="heading-link"><i class="fas fa-link"></i></a><a href="#API" class="headerlink" title="API"></a>API</h4>
-      <ul>
-<li>获取类的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一种方式 -- 任意情况都能够使用</span></span><br><span class="line">Class clz = Class.forName(<span class="string">&quot;java.lang.String&quot;</span>);</span><br><span class="line"><span class="comment">// 第二种方式 -- 明确知道类的使用方法</span></span><br><span class="line">Class clz = String.class;</span><br><span class="line"><span class="comment">// 第三种方式</span></span><br><span class="line">String str = <span class="keyword">new</span> String(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">Class clz = str.getClass();</span><br></pre></td></tr></table></div></figure>
-
-<ul>
-<li>获得构造器的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Constructor <span class="title">getConstructor</span><span class="params">(Class[] params)</span> -- 获得使用特殊的参数类型的公共构造函数， </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor[] <span class="title">getConstructors</span><span class="params">()</span> -- 获得类的所有公共构造函数 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor <span class="title">getDeclaredConstructor</span><span class="params">(Class[] params)</span> -- 获得使用特定参数类型的构造函数<span class="params">(与接入级别无关)</span> </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor[] <span class="title">getDeclaredConstructors</span><span class="params">()</span> -- 获得类的所有构造函数<span class="params">(与接入级别无关)</span></span></span><br></pre></td></tr></table></div></figure>
-
-<ul>
-<li>获得字段的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Field <span class="title">getField</span><span class="params">(String name)</span> -- 获得命名的公共字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field[] <span class="title">getFields</span><span class="params">()</span> -- 获得类的所有公共字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field <span class="title">getDeclaredField</span><span class="params">(String name)</span> -- 获得类声明的命名的字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field[] <span class="title">getDeclaredFields</span><span class="params">()</span> -- 获得类声明的所有字段</span></span><br></pre></td></tr></table></div></figure>
-
-<ul>
-<li>获得方法的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Method <span class="title">getMethod</span><span class="params">(String name, Class[] params)</span> -- 使用特定的参数类型，获得命名的公共方法 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method[] <span class="title">getMethods</span><span class="params">()</span> -- 获得类的所有公共方法 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method <span class="title">getDeclaredMethod</span><span class="params">(String name, Class[] params)</span> -- 使用特写的参数类型，获得类声明的命名的方法</span></span><br><span class="line"><span class="function"><span class="comment">/* </span></span></span><br><span class="line"><span class="comment"><span class="function">这里必须要传入 参数的类型 而且只能够是 Class 对象</span></span></span><br><span class="line"><span class="comment"><span class="function">不能够只传入方法的名称，这样是无法找到方法的（JVM实际上是在Class对象中循环遍历找到的）</span></span></span><br><span class="line"><span class="comment"><span class="function">重载的实现过程实际上是 JVM 在执行方法的时候将参数都传入进去了，所以反射获取方法的时候同样需要传递参数</span></span></span><br><span class="line"><span class="comment"><span class="function">*/</span></span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method[] <span class="title">getDeclaredMethods</span><span class="params">()</span> -- 获得类声明的所有方法</span></span><br></pre></td></tr></table></div></figure>
-
-<blockquote>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.zhihu.com/question/24304289?sort=created" >Java 反射机制</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p><a href="jianshu.com/p/9be58ee20dee">Java反射 API</a></p>
-</blockquote>
-</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/21/jvm/runtime/methodarea/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0/">字符串常量池</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-21</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span></div></header><div class="post-body"><div class="post-excerpt">
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/21/jvm/runtime/methodarea/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0/">字符串常量池</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-21</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span></div></header><div class="post-body"><div class="post-excerpt">
         <h1 id="字符串常量池"   >
           <a href="#字符串常量池" class="heading-link"><i class="fas fa-link"></i></a><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h1>
       </div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/21/jvm/runtime/methodarea/%E6%96%B9%E6%B3%95%E5%8C%BA/">方法区</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-21</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span></div></header><div class="post-body"><div class="post-excerpt">
@@ -2370,4 +1932,208 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 
         <h3 id="便携式系统"   >
           <a href="#便携式系统" class="heading-link"><i class="fas fa-link"></i></a><a href="#便携式系统" class="headerlink" title="便携式系统"></a>便携式系统</h3>
-      </div></div></article></section><nav class="paginator"><div class="paginator-inner"><a class="extend prev" rel="prev" href="/page/6/"><i class="fas fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/"><i class="fas fa-angle-right"></i></a></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+      </div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/18/os/overview/%E7%BB%93%E6%9E%84/">操作系统-操作系统结构</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h2 id="操作系统结构"   >
+          <a href="#操作系统结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h2>
+      
+        <h3 id="简单结构"   >
+          <a href="#简单结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#简单结构" class="headerlink" title="简单结构"></a>简单结构</h3>
+      <ul>
+<li>定义：没有 ==模块化== 的设计，利用最小的空间尽可能提供操作系统所有功能</li>
+<li>优点 &amp; 缺点：<ul>
+<li>优点：操作系统所有功能之间可以 ==任意== 通信 -&gt; 效率相对较高</li>
+<li>缺点：(1) 操作系统理解维护非常困难 (2) 单个功能的崩溃会影响整个操作系统</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>早期的 MS-DOS 操作系统就是采用 ==简单结构== -&gt; 没有明确的区分功能的接口和层次</li>
+<li>早期的 MS-DOS 操作系统允许应用程序 ==直接访问== 底层硬件的驱动 -&gt; 对于操作系统来说是非常危险的<ul>
+<li>原因(1)：设计之初确实没有想过采用分层的思想</li>
+<li>原因(2)：Intel 提供的处理器不支持双模式的切换和硬件保护</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/ef1890dc51c4b642bb635f990f2bb33f.png" alt="ef1890dc51c4b642bb635f990f2bb33f.png" style="zoom:80%;" />
+
+
+        <h3 id="分层结构"   >
+          <a href="#分层结构" class="heading-link"><i class="fas fa-link"></i></a><a href="#分层结构" class="headerlink" title="分层结构"></a>分层结构</h3>
+      <ul>
+<li><p>定义：将操作系统的所有功能分为若干层；最高层为用户接口；最低层为硬件设备</p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：(1) 构造调试每层的功能是非常容易的 (2) 向上可以屏蔽底层具体实现</p>
+</li>
+<li><p>缺点：(1) 精确定义每层功能非常困难 (2) 分层越细致会导致操作系统性能越低</p>
+<p>  <a style="color:red;">Windows NT 最初就采用分层结构导致操作系统的性能非常低；Windows XP 采用的就是简单的单片结构</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>现代操作系统通常采用的是 ==简单的单片结构==（分层结构 + 简单结构）</p>
+<p>  <a style="color:red;">简单分层结构：用户层 + 系统程序 + 内核 + 底层硬件 / 系统程序 + 内核</a></p>
+<p>  <em>现代操作系统大多数仍然采用这种简单的分层结构</em></p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/803771918db7acc1e75351a686904ac6.png" alt="803771918db7acc1e75351a686904ac6.png" style="zoom:80%;" />
+
+
+        <h3 id="微内核"   >
+          <a href="#微内核" class="heading-link"><i class="fas fa-link"></i></a><a href="#微内核" class="headerlink" title="微内核"></a>微内核</h3>
+      <ul>
+<li><p>定义：删除内核中所有不必要的功能，将其当做 ==系统级== 或者说 ==用户级== 的功能实现</p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：</p>
+<ol>
+<li><p>操作系统易于扩展</p>
+</li>
+<li><p>操作系统可以非常轻易的实现跨平台</p>
+<p> 解释：删除了内核中非常多的不必要的功能之后导致内核是非常小的</p>
+</li>
+<li><p>操作系统具有很好的 ==可靠性== 和 ==安全性==</p>
+<p> 解释：原来的运行在内核中的功能现在被迁移到内核之外运行，即使发生故障也不会影响操作系统</p>
+</li>
+</ol>
+</li>
+<li><p>缺点：<a style="color:red;">操作系统效率相对较低</a></p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p>保留的必要功能：==进程管理== + ==内存管理== + ==通信功能==</p>
+</li>
+<li><p><a style="color:red;">客户端程序是不会直接访问用户级的操作系统功能，仍然需要借助内核；用户级的功能也是不可以直接访问底层硬件的</a></p>
+</li>
+<li><p>客户端程序和用户级的功能之间的通信采用的是 ==消息传递== 的方式</p>
+<p>  <em>MacOS 部分采用微内核设计实现</em></p>
+</li>
+</ul>
+</li>
+<li><p>运行过程：</p>
+<ol>
+<li>应用程序需要使用 I/O 设备 -&gt; 应用程序发送系统调用</li>
+<li>系统找到相应的驱动程序然后通知驱动程序完成指令</li>
+<li>驱动程序找到相应的控制器 -&gt; 控制器操控相应的设备完成指令</li>
+<li>微内核最后将结果返回给应用程序</li>
+</ol>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/bc0b601e584f9af9f666ae094fa56f89.png" alt="bc0b601e584f9af9f666ae094fa56f89.png" style="zoom:80%;" />
+
+
+        <h3 id="虚拟机"   >
+          <a href="#虚拟机" class="heading-link"><i class="fas fa-link"></i></a><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h3>
+      <ul>
+<li><p>定义：运行在 ==操作系统之上== 的具有真实计算机拥有的 ==全部硬件功能== 的计算机</p>
+</li>
+<li><p>优点 &amp; 缺点</p>
+<ul>
+<li><p>优点：</p>
+<ol>
+<li><p>虚拟机系统故障不会影响到 ==宿主操作系统== 和 ==真实的底层硬件==</p>
+</li>
+<li><p>虚拟机为开发人员提供了非常大的便利</p>
+</li>
+</ol>
+<pre><code>&lt;a style=&quot;color:red;&quot;&gt;虚拟机具备真实计算机拥有的全部硬件功能，虚拟机可以安装任何操作系统&lt;/a&gt; -&gt; 程序员可以利用虚拟机安装各式各样的操作系统进行使用
+</code></pre>
+</li>
+<li><p>缺点：虚拟化技术相对比较难以实现</p>
+<p>  常用虚拟机：Virtual Box &amp; VMware</p>
+</li>
+</ul>
+</li>
+<li><p>细节：</p>
+<ul>
+<li><p><a style="color:red;">可以认为虚拟机将 操作系统 + 底层硬件 都做为硬件看待</a></p>
+</li>
+<li><p><a style="color:red;">宿主操作系统上可以运行多个不同的虚拟机</a> -&gt; 类似于多道程序系统</p>
+<p>  宿主操作系统：真实计算机所运行的操作系统</p>
+</li>
+<li><p><a style="color:red;">多个虚拟共享真实计算机提供的所有资源</a></p>
+</li>
+<li><p>虚拟机系统调用的执行：</p>
+<ul>
+<li>虚拟机中的应用程序发出系统调用 -&gt; 系统调用陷入虚拟机中</li>
+<li>虚拟机再发出普通的硬件指令到宿主操作系统中</li>
+<li>宿主操作系统再调用真实的硬件</li>
+</ul>
+</li>
+<li><p>虚拟化：</p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2021/05/17/ac3a1f73524eabcaae4797f20a718493.png" alt="ac3a1f73524eabcaae4797f20a718493.png" style="zoom:80%;" /></div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">系统调用</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-21</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="系统调用"   >
+          <a href="#系统调用" class="heading-link"><i class="fas fa-link"></i></a><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h1>
+      <ul>
+<li><p>定义：<a style="color:red;">系统调用是进程调用操作系统提供的服务的接口</a></p>
+<p>  <a style="color:red;">注：系统调用的实现通常使用 汇编语言 或者 C/C++ 编写</a></p>
+</li>
+<li><p>类型：(1) 进程管理 (2) 文件管理 (3) I/O 管理 (4) 信息维护 (5) 进程通信 (6) 保护</p>
+</li>
+<li><p>执行过程：</p>
+<ul>
+<li>进程 <strong>传递</strong> 系统调用需要的 <strong>参数</strong></li>
+<li>进程执行陷入指令从用户态切换到内核态</li>
+<li>操作系统根据 <strong>系统调用接口</strong> 查找相应的系统调用</li>
+<li>操作系统执行系统调用的实现（操作系统提供的服务）</li>
+<li>系统调用执行完毕后提供给进程返回值 (<a style="color:red;">中断处理程序将处理器从操作系统交付给进程</a>)</li>
+</ul>
+</li>
+<li><p>传递参数：</p>
+<ul>
+<li><p>“值传递”：参数 <strong>较少</strong> 时可以直接存放在 ==寄存器==中</p>
+</li>
+<li><p>“引用传递”：参数 <strong>非常多</strong> 时 ==内存== 中开辟空间(栈空间)存放参数，寄存器中仅存放这块 <strong>空间的地址</strong></p>
+<p>  注：Linux &amp; UNIX 采用的就是引用传递</p>
+</li>
+<li><p>栈传递：<strong>不限制</strong> 参数的数量每次需要参数时都执行 ==出栈== 操作，填充参数时执行 ==压栈== 操作</p>
+<p>  注：Java 虚拟机采用的就是栈结构</p>
+</li>
+</ul>
+</li>
+<li><p>系统调用接口</p>
+<ul>
+<li><p>定义：系统调用接口使用表结构索引具体的系统调用</p>
+<p>  <a style="color:red;">表结构以 数字编号 + 系统调用 进行构建</a></p>
+</li>
+<li><p>执行过程：</p>
+<ol>
+<li>用户程序需要使用系统调用</li>
+<li>==系统调用接口== 根据表结构 ==索引== 当前需要使用的 ==系统调用的编号==</li>
+<li>系统调用使用操作系统提供的服务完成任务</li>
+<li>==系统调用接口== 最后 ==返回== 给用户程序系统调用的 ==返回值和状态==</li>
+</ol>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/14/0b3f495bf0efb637ad324e08b8f757fa.png" alt="0b3f495bf0efb637ad324e08b8f757fa.png" style="zoom:80%;" /></li>
+<li><p>库函数(API)</p>
+<ul>
+<li><p>引入目的：</p>
+<ol>
+<li>系统调用通常涉及的参数实在太多，并不方便应用程序员的使用</li>
+<li>通常一个简单的程序也需要使用非常多的系统的调用，对于应用程序员来说也是非常难以使用的</li>
+</ol>
+</li>
+<li><p>定义：操作系统提供的函数，供用户程序直接使用，简化程序的编写，直接使用操作系统已经实现的功能</p>
+<p>  <a style="color:red;">(1) 库函数运行在用户态中，系统调用运行在内核态中 (2) 库函数可能使用系统调用也可能不使用</a></p>
+</li>
+<li><p>API 类型：(1) Win32 API (2) POSIX API (3) Java API</p>
+</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2021/05/14/425e0c07d210a2d991496432557eb2ed.png" alt="425e0c07d210a2d991496432557eb2ed.png" style="zoom:80%;" />
+
+</li>
+</ul>
+</div></div></article></section><nav class="paginator"><div class="paginator-inner"><a class="extend prev" rel="prev" href="/page/6/"><i class="fas fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/"><i class="fas fa-angle-right"></i></a></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">106</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
