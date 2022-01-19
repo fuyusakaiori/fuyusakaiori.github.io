@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg">
 <meta property="article:published_time" content="2022-01-13T03:17:23.006Z">
-<meta property="article:modified_time" content="2022-01-17T08:00:51.162Z">
+<meta property="article:modified_time" content="2022-01-19T07:05:31.388Z">
 <meta property="article:author" content="Fuyusakaiori">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg"><title>MySQL 基础架构 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2022/01/13/database/mysql/structure/MySQL%20%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
@@ -34,7 +34,7 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><div class="sticky-top" data-popover="置顶文章" data-popover-pos="up"><span class="sticky-top__icon"><i class="fas fa-thumbtack"></i></span></div><h1 class="post-title">MySQL 基础架构</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-01-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-01-17</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><div class="gallery"><img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg"></div>
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><div class="sticky-top" data-popover="置顶文章" data-popover-pos="up"><span class="sticky-top__icon"><i class="fas fa-thumbtack"></i></span></div><h1 class="post-title">MySQL 基础架构</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-01-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-01-19</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><div class="gallery"><img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1629107036256.706kbze18u8.jpg"></div>
         <h1 id="MySQL-基础架构"   >
           <a href="#MySQL-基础架构" class="heading-link"><i class="fas fa-link"></i></a><a href="#MySQL-基础架构" class="headerlink" title="MySQL 基础架构"></a>MySQL 基础架构</h1>
       
@@ -242,19 +242,97 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 
         <h3 id="常用引擎"   >
           <a href="#常用引擎" class="heading-link"><i class="fas fa-link"></i></a><a href="#常用引擎" class="headerlink" title="常用引擎"></a>常用引擎</h3>
-      
+      <p>MySQL 中使用最为广泛的引擎就是 InnoDB 引擎，但是还存在其他许多应用在不同场景下的引擎。这些引擎以 MyISAM 为代表，有许多和 InnoDB 不同的特点，所以需要了解除 InnoDB 以外的引擎的特点，并将其和 InnoDB 进行对比，了解其区别</p>
+
         <h4 id="InnoDB"   >
           <a href="#InnoDB" class="heading-link"><i class="fas fa-link"></i></a><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h4>
-      
-        <h4 id="MYISAM"   >
-          <a href="#MYISAM" class="heading-link"><i class="fas fa-link"></i></a><a href="#MYISAM" class="headerlink" title="MYISAM"></a>MYISAM</h4>
-      
+      <p><a style="color:#d98787;">注：InnoDB 引擎由第三方开发，后被 Oracle 收购成为官方引擎，现在是应用最为广泛的 MySQL 开源引擎</a></p>
+<p>① InnoDB 引擎特性：</p>
+<ul>
+<li><strong>InnoDB 引擎支持事务：常见的引擎中只有 InnoDB 是支持事务特性的</strong></li>
+<li><strong>InnoDB 引擎支持全局锁、表级锁、行锁</strong></li>
+<li><strong>InnoDB 引擎支持 MVCC（并发版本控制）</strong></li>
+<li><strong>InnoDB 引擎支持 redo log、binlog、undo log 三种日志</strong></li>
+<li><strong>InnoDB 引擎支持大部分形式的索引，并且采用索引组织表（聚集索引）的形式</strong><ul>
+<li>支持的 <strong>索引模型</strong> 有 B+树索引、哈希索引（自适应哈希）</li>
+<li>支持的 <strong>索引类型</strong> 有聚集索引（主键）、唯一索引、普通索引（二级索引）、全文索引、外键<ul>
+<li>全文索引是在 5.6 之后的版本中才支持的，以前的旧版本是不支持全文索引的</li>
+<li><strong>支持许多索引优化技术：联合索引、覆盖索引、前缀索引</strong></li>
+</ul>
+</li>
+<li>索引组织表意味着每张表都需要拥有唯一的主键，并且索引和数据是绑定在一起的<ul>
+<li>如果没有设置主键，那么会检查表中是否存在唯一索引，如果存在那么就将唯一索引设置为主键</li>
+<li>如果唯一索引也没有，那么就会为每行生成一个 6B 的主键（ROWID）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>InnoDB 引擎支持自适应哈希、写缓冲、二次写等特性</strong><ul>
+<li>自适应哈希是对通过 B+ 树索引查询数据这种方式的进一步优化</li>
+<li>写缓冲又称为插入缓冲（change buffer / insert buffer）目的在于优化更新数据的性能</li>
+<li>二次写主要是防止数据落盘的时候 MySQL 宕机，从而出现数据丢失</li>
+</ul>
+</li>
+<li><strong>InnoDB 引擎默认将所有数据都存储在共享表空间中，也可以设置每张表独立存储</strong><ul>
+<li>共享表空间就是 ibdata1 这个文件</li>
+<li>每张表结构的定义文件是以 .frm 结尾的文件</li>
+<li>设置为独立存储的时候，每张表的数据存储在以 .idb 结尾的文件中</li>
+</ul>
+</li>
+</ul>
+<p>② InnoDB 引擎细节：</p>
+<ul>
+<li>MySQL 在 Windows 系统下是将 InnoDB 作为默认存储引擎的，其余所有系统都是将 MYISAM 作为默认引擎</li>
+</ul>
+
+        <h4 id="MyISAM"   >
+          <a href="#MyISAM" class="heading-link"><i class="fas fa-link"></i></a><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h4>
+      <p>① MyISAM 引擎特点</p>
+<ul>
+<li><strong>MyISAM 引擎不支持事务，但是 OLAP（在线分析处理）操作比较快</strong></li>
+<li><strong>MyISAM 引擎只支持全局锁和表级锁</strong></li>
+<li><strong>MyISAM 引擎不支持 MVCC（并发版本控制）</strong></li>
+<li><strong>MyISAM 引擎仅支持 binlog，不支持 undo log、redo log</strong></li>
+<li><strong>MyISAM 引擎支持的索引类型和 InnoDB 几乎一致，但是不采用索引组织表的形式</strong><ul>
+<li>支持的索引模型仅有 B+ 树索引，不支持哈希索引</li>
+<li>支持的的索引类型和 InnoDB 基本没有区别，但是不支持外键</li>
+<li>不采用索引组织表意味着数据和索引是单独存放在不同的文件中，而不是绑定在一起的</li>
+</ul>
+</li>
+<li><strong>MyISAM 引擎可以采用 myisampack 压缩表中的数据，从而缩小数据库容量</strong><ul>
+<li>被压缩之后的表是只读的，不可以进行任何修改</li>
+</ul>
+</li>
+</ul>
+<p>② MyISAM 引擎细节</p>
+<ul>
+<li>MyISAM 引擎的缓存结构仅采用 LRU 算法存储索引的缓存，数据的缓存由操作系统来完成</li>
+</ul>
+
         <h4 id="Memory"   >
           <a href="#Memory" class="heading-link"><i class="fas fa-link"></i></a><a href="#Memory" class="headerlink" title="Memory"></a>Memory</h4>
-      
-        <h4 id="NDB"   >
-          <a href="#NDB" class="heading-link"><i class="fas fa-link"></i></a><a href="#NDB" class="headerlink" title="NDB"></a>NDB</h4>
-      <blockquote>
+      <p><u>此后，会专门详细介绍 Memory 引擎和 InnoDB 引擎的区别，这里仅简单概述</u></p>
+<p>① Memory 引擎特点</p>
+<ul>
+<li><strong>Memory 引擎依然不支持事务</strong></li>
+<li><strong>Memory 引擎也支持全局锁和表锁</strong></li>
+<li><strong>Memory 引擎将所有的数据全部存储在内存中，而不是存储在磁盘中</strong><ul>
+<li>数据全部存储在内存中的优点就是读取速度快，缺点就是宕机之后，数据难以恢复</li>
+<li>所以其主要的应用场景就是临时表的使用</li>
+</ul>
+</li>
+<li><strong>Memory 引擎支持大部分的索引</strong><ul>
+<li>支持的索引模型有 B+树索引、哈希索引：<strong>不同于其他引擎，Memory 默认使用哈希索引</strong></li>
+</ul>
+</li>
+<li><strong>Memory 不支持 BLOB 和 TEXT 类型的字段，并且将 VARCHAR 类型当做 CHAR 类型处理</strong></li>
+</ul>
+<p>② Memory 引擎的细节</p>
+<ul>
+<li>如果查询的中间结果集超过了 Memory 引擎预设的内存大小，那么 MySQL 就会启动 MyISAM 引擎</li>
+<li>将中间结果集的内容全部存储在磁盘中，这样就会对中间结果集的查询速度产生影响 </li>
+</ul>
+<blockquote>
 <p>参考资料：</p>
 <ol>
 <li>《高性能 MySQL》：MySQL 架构和历史</li>
@@ -262,7 +340,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><a style="color:#f1bbbb;">《MySQL 实战：45 讲》</a></li>
 </ol>
 </blockquote>
-</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2022/01/13/database/mysql/structure/MySQL%20%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/">http://example.com/2022/01/13/database/mysql/structure/MySQL%20%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/11/08/juc/juc-utils/juc-threadpool/%E7%BA%BF%E7%A8%8B%E6%B1%A0-%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__text">线程池-概述</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL-%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2022/01/13/database/mysql/structure/MySQL%20%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/">http://example.com/2022/01/13/database/mysql/structure/MySQL%20%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2022/01/19/database/mysql/structure/InnoDB%20%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">InnoDB 体系架构</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/11/08/juc/juc-utils/juc-threadpool/%E7%BA%BF%E7%A8%8B%E6%B1%A0-%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__text">线程池-概述</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL-%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">
           MySQL 基础架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">
           前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server-%E5%B1%82"><span class="toc-number">1.2.</span> <span class="toc-text">
           Server 层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="toc-number">1.2.1.</span> <span class="toc-text">
@@ -276,7 +354,6 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
           Engine 层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">
           基本功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%BC%95%E6%93%8E"><span class="toc-number">1.3.2.</span> <span class="toc-text">
           常用引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#InnoDB"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">
-          InnoDB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MYISAM"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">
-          MYISAM</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Memory"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">
-          Memory</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NDB"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">
-          NDB</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">106</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+          InnoDB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MyISAM"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">
+          MyISAM</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Memory"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">
+          Memory</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>

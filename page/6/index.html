@@ -30,7 +30,444 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/execution-engine/%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/">执行引擎-后端编译器</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-25</span></span></div></header><div class="post-body"><div class="post-excerpt">
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/">概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
+      <blockquote>
+<p><strong>什么是 Java 虚拟机运行时数据区？</strong></p>
+</blockquote>
+<ul>
+<li><p>第一个问题：什么是 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/OperatingSystem/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" >虚拟机</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>？</p>
+<ul>
+<li><p>定义：[运行在操作系统上的具有物理机拥有的全部硬件功能的软件]{.red}</p>
+</li>
+<li><p>核心：[虚拟机采用软件对真实计算机进行模拟]{.red}</p>
+<p>  :::info</p>
+<p>  注：既然是对真实计算机的模拟，那么虚拟机中的很多组件显然会对应真实计算机中的硬件</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>第二个问题：什么是 Java 虚拟机？</p>
+<ul>
+<li><p>定义：简单来说就是运行 Java 进程的虚拟机</p>
+<p>  :::info</p>
+<p>  [① 这种说法并不严谨，只要能够通过编译生成字节码的程序都是可以在虚拟机中运行的]{.green}</p>
+<p>  [② 诸如 Kotlin、Clojure 等语言也都是运行在 Java 虚拟机上的]{.green}</p>
+<p>  :::</p>
+</li>
+<li><p>核心：Java 为了实现跨平台的特性而特意开发的虚拟机，使其能够不受硬件的制约</p>
+</li>
+<li><p>细节：[每个 Java 进程都运行在相应的 JVM 实例上]{.red}</p>
+<p>  :::info</p>
+<p>  注：翻译一下就是说每个 Java 进程都对应一个 JVM 实例，多个 Java 进程就会存在多个 JVM 实例</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>第三个问题：什么是运行时数据区？</p>
+<ul>
+<li>定义：简单来说就是虚拟机中 [存放 Java 进程各种各样数据的空间]{.red}</li>
+<li>细节：真实计算机中进程必须加载到内存中才能够执行，同样在 JVM 中进程也需要加载到运行时数据区中才能够执行</li>
+</ul>
+</li>
+<li><p>第四个问题：运行时数据区由哪些部分组成呢？</p>
+<ul>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8">程序计数寄存器</a>：<ul>
+<li>别称：PC 寄存器、程序计数器、程序钩子</li>
+<li>[真实计算机中的程序计数寄存器是由 <strong>物理硬件寄存器</strong> 实现的，JVM 的程序计数寄存器只是块 <strong>内存区域</strong>]{.blue}</li>
+</ul>
+</li>
+<li>栈空间（<a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88">虚拟机栈</a> + <a href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88">本地方法栈</a>） + <a href="#%E5%A0%86%E7%A9%BA%E9%97%B4">堆空间</a><ul>
+<li>在 C/C++ 这样的操作系统级别的语言来说，内存空间基本是由这两部分组成的</li>
+<li>无论是 Java 或者 C/C++，栈空间和堆空间都是非常重要的两个部分</li>
+</ul>
+</li>
+<li><a href="#%E6%96%B9%E6%B3%95%E5%8C%BA">方法区</a>：<ul>
+<li>[方法区中还包含 <strong>运行时常量池</strong>]{.red}</li>
+<li>[JDK 8 之后采用 <strong>元空间</strong> 替代]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>运行时数据区总结图示</strong></p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/运行时数据区.4yae49h3vr00.jpg" alt="运行时数据区" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>内存模型简化图示</strong></p>
+</blockquote>
+<p>:::warning</p>
+<p>运行时数据区并不包含执行引擎部分，这里只是为了能够展示整个虚拟机全貌而画出来的</p>
+<p>:::</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/内存模型.1oezjqm5y51c.png" alt="内存模型" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>内存模型完全图示</strong></p>
+</blockquote>
+
+        <h1 id="线程"   >
+          <a href="#线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程" class="headerlink" title="线程"></a>线程</h1>
+      <p>:::warning</p>
+<p>① 本部分不会介绍 Java 线程的基础知识，更加不会介绍 Java 线程并发的知识，放在另外的博客介绍</p>
+<p>② 本部分也不会像操作系统那样详细介绍线程的来龙去脉，这部分已经在操作系统的博客中介绍过了</p>
+<p>③ 本部分主要从操作系统线程的角度来看待 Java 线程</p>
+<p>参考书籍：《深入理解 Java 虚拟机》</p>
+<p>建议阅读：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/OperatingSystem/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/" >线程概述</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
+<ul>
+<li>前提：具备操作系统层面的相关知识之后再阅读如下部分</li>
+</ul>
+
+        <h2 id="Java-线程实现"   >
+          <a href="#Java-线程实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程实现" class="headerlink" title="Java 线程实现"></a>Java 线程实现</h2>
+      
+        <h3 id="Java-线程历史"   >
+          <a href="#Java-线程历史" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程历史" class="headerlink" title="Java 线程历史"></a>Java 线程历史</h3>
+      <ul>
+<li>Java 在 JDK 1.2 时期的 Classic 虚拟机上采用线程实现方案是 [用户级线程实现]{.blue}：称为绿色线程（Green Threads）</li>
+<li>Java 在 JDK 1.3 时期时，所有主流的商用虚拟机全部采用 [内核级线程实现]{.blue}</li>
+<li>Java ME 的 CLDC-HI 虚拟机采用的是两种实现方案： [用户级线程实现 + 混合级线程实现]{.blue}</li>
+<li>Solaris 的 HotSpot 虚拟机采用的也是两种实现方案：[内核级线程实现 + 混合级线程实现]{.blue}</li>
+</ul>
+<p>:::info</p>
+<p>① Java 早期采用用户级线程的目的应该是比较明确的：为了实现更好的跨平台；改用内核级线程估计还是处于性能上的考虑</p>
+<p>② Java 之后采用内核级线程就导致了各个操作系统上的虚拟机的具体实现根本不一样，Solaris、Windows、Linux等等，都有自己的实现方案</p>
+<p>:::</p>
+
+        <h3 id="Java-线程调度"   >
+          <a href="#Java-线程调度" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程调度" class="headerlink" title="Java 线程调度"></a>Java 线程调度</h3>
+      <p>:::warning</p>
+<p>建议阅读：<a href="">调度算法</a></p>
+<p>:::</p>
+<ul>
+<li><p>前提：最好具备一定的操作系统的调度算法知识再继续阅读</p>
+</li>
+<li><p>引入：多线程并发执行时，如何安排这些线程执行呢？这就是调度算法要完成的工作</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li>协同式调度（Cooperative Threads-Scheduling）<ul>
+<li>名称：协同式调度也可以称为非抢占式调度</li>
+<li>定义：线程只有执行完成自己的所有任务后主动放弃处理器的使用权</li>
+<li>优点：调度算法实现简单</li>
+<li>缺点：当前线程执行时间过长会导致后续所有线程长时间等待，即使后续线程执行时间很短</li>
+</ul>
+</li>
+<li>抢占式调度（Preemptive Threads-Scheduling）<ul>
+<li>定义：其他线程可以抢占当前线程处理的使用权，无论当前线程是否执行结束</li>
+<li>优点：避免线程长时间等待，线程执行效率高</li>
+<li>缺点：调度算法实现复杂</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[Java 采用抢占式类型的调度算法]{.red}</p>
+<ul>
+<li>此前提到 Java 采用的线程实现方案是内核级线程实现，所有线程的控制权都在操作系统手上，JVM 没有管理的权利</li>
+<li>这里又提到 Java 采用的调度算法是抢占式的，不同的线程在交替执行</li>
+<li>这就出现了多线程编程中的常见现象<ul>
+<li>每次启动多个线程，执行的先后结果都是不一样的：每次抢占的情况都不一样</li>
+<li>设定线程优先级后，依然没有按照预想的情况执行：JVM 仅能给操作系统建议，而无法控制</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Java 优先级：</p>
+<ul>
+<li><p>Java 提供了 10 种优先级（1~10）：主线程默认优先级为 5</p>
+</li>
+<li><p>Windows 操作系统也提供了 7 种优先级</p>
+</li>
+<li><p>Solaris 操作系统提供了 2^31 种优先级</p>
+<p>  +++danger 问题来了，Java 和操作系统的优先级数量不一样，那么是怎么对应上的呢？</p>
+<p>  实际很简单，如果操作系统的优先级数量少，那么 Java 中多个优先级就对应一个就行了，如 Windows</p>
+<p>  所以得到结果就是，Java 中1和2、3和4、6和7、8和9的效果是完全相同</p>
+<p>  +++</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="Java-线程状态转换"   >
+          <a href="#Java-线程状态转换" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程状态转换" class="headerlink" title="Java 线程状态转换"></a>Java 线程状态转换</h3>
+      <ul>
+<li><p>Java 线程状态：</p>
+<ul>
+<li><p>初始态（New）：线程对象被创建但是没有启动时的状态</p>
+</li>
+<li><p>可运行态（Runnable）：包含 [线程准备运行和线程正在运行]{.red} 两种状态，即对应操作系统中两种状态</p>
+</li>
+<li><p>等待态：线程正在等待</p>
+<ul>
+<li><p>无限等待（Waiting）：线程必须被 [其他线程唤醒]{.red}，否则该线程永远不会执行</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下方法会导致线程进入无限等待</span></span><br><span class="line">wait()</span><br><span class="line"><span class="comment">// 唤醒方法</span></span><br><span class="line">notify()/notifyAll()</span><br></pre></td></tr></table></div></figure></li>
+<li><p>有限等待（Timed Waiting）：线程睡眠一段时间后 [自动唤醒]{.red}，不需要其他线程帮助</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下方法会导致线程进入有限等待</span></span><br><span class="line">sleep()</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>阻塞态（Blocked）:线程等待其他线程释放同步锁</p>
+</li>
+<li><p>终止态（Terminated）：线程执行结束或者意外终止</p>
+</li>
+</ul>
+<p>  :::info</p>
+<p>  ① Java 定义线程运行状态和操作系统层面定义的有些细微差距，要注意区分</p>
+<p>  ② Java 线程的状态是可以测试得到的，之后在其他博客中说明</p>
+<p>  :::</p>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/Java 线程状态.547rhq1vqz40.png" alt="Java 线程状态" style="zoom:80%;" />
+
+
+        <h2 id="Java-与协程"   >
+          <a href="#Java-与协程" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-与协程" class="headerlink" title="Java 与协程"></a>Java 与协程</h2>
+      <ul>
+<li>前提：[目前 Java 并没有提供协程技术]{.blue}</li>
+</ul>
+
+        <h2 id="Java-守护线程"   >
+          <a href="#Java-守护线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-守护线程" class="headerlink" title="Java 守护线程"></a>Java 守护线程</h2>
+      <ul>
+<li>虚拟线程</li>
+<li>周期任务线程</li>
+<li>垃圾回收线程（GC线程）</li>
+<li>编译线程</li>
+<li>信号调度线程</li>
+</ul>
+
+        <h1 id="字节码解析"   >
+          <a href="#字节码解析" class="heading-link"><i class="fas fa-link"></i></a><a href="#字节码解析" class="headerlink" title="字节码解析"></a>字节码解析</h1>
+      <ul>
+<li><p>前提：后续的学习中会涉及到字节码的分析，而字节码的解析途径有多种，在此提前解释下</p>
+</li>
+<li><p>反编译：定义：将字节码文件解析成 Java 源代码</p>
+</li>
+<li><p>IDAE：本身就可以直接反编译字节码文件</p>
+<ul>
+<li><p>点击进入 out/production/ 目录下（存放所有字节码文件的目录）</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/IDEA 查看字节码文件.6k9fo19k10g0.png" alt="IDEA 查看字节码文件" style="zoom:80%;" /></li>
+<li><p>[实际上源代码并不是我们想要查看的信息，我们需要把字节码解析成另外的形式才能得到更多的信息]{.green}</p>
+<p>  :::warning</p>
+<p>  注：毕竟我们自己编写的源代码，再去查看一遍确实没有什么意义</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>反编译命令</p>
+<ul>
+<li><p>选择命令行终端</p>
+<p>  :::info</p>
+<p>  IDEA 或者 Windows 中使用都是可以的，笔者这里使用 IDEA 里的终端</p>
+<p>  :::</p>
+</li>
+<li><p>点击 IDEA 中的终端后切换当前所在目录</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 后面接上你自己的字节码所在的目录</span></span><br><span class="line"><span class="built_in">cd</span> out/production/yourdirectoryname</span><br></pre></td></tr></table></div></figure></li>
+<li><p>使用反编译命令解析字节码文件：</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java 自身提供的反编译指令：接上你想要反编译的类的名称</span></span><br><span class="line">javap -v ClassName.class</span><br></pre></td></tr></table></div></figure></li>
+<li><p>反编译解析结果：可以先简单了解下</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/解析字节码文件.25f1fgg3dgn4.png" alt="解析字节码文件" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>反编译插件：</p>
+<ul>
+<li>IDEA 中安装 Jclasslib 插件</li>
+<li>选中想要解析的字节码文件后点击 View 选中 Show ByteCode With Jclasslib </li>
+<li>就可以非常方便的查看字节码文件解析后的结果</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/IDEA 插件查看字节码文件.17xxsmn7pfkw.png" alt="IDEA 插件查看字节码文件" style="zoom:80%;" /></li>
+</ul>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/">执行引擎-概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-25</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
+      <blockquote>
+<p><strong>什么是执行引擎?</strong></p>
+</blockquote>
+<ul>
+<li><p>定义：[采用 <strong>软件模拟</strong> 的物理机处理器就是执行引擎]{.red}</p>
+<ul>
+<li>物理机中的计算核心是处理器（CPU）</li>
+<li>虚拟机作为对物理机的模拟，执行引擎显然就是对计算核心的模拟，也就是处理器</li>
+</ul>
+</li>
+<li><p>作用：[将（前端）编译器生成的字节码 <strong>翻译/编译</strong> 成本地机器指令]{.red}</p>
+<ul>
+<li>执行引擎每次都取出一条字节码指令并执行</li>
+<li>但是无论执行任何指令，最终都要依靠物理机，所以需要向物理机解释</li>
+<li>执行引擎需要将字节码指令翻译/编译成处理器能够识别的机器指令</li>
+</ul>
+<p>:::info</p>
+<p>① 前端编译器是什么之后将会提到，可以暂时先认为前端编译器就是 Javac</p>
+<p>② 前端编译器并不是执行引擎的其中一部分，特别注意</p>
+<p>:::</p>
+</li>
+<li><p>特点：</p>
+<ul>
+<li><p>[执行引擎作为对于处理的模拟：具有相应的指令集和缓存结构]{.red}</p>
+<ul>
+<li>执行引擎的指令集：[字节码指令]{.blue}</li>
+<li>执行引擎的缓存结构：[即时编译器产生的本地代码就缓存再方法区中]{.blue}</li>
+</ul>
+</li>
+<li><p>执行引擎处理指令集的方式：</p>
+<ul>
+<li>解释执行：初代 Java 虚拟机——Classic 虚拟机就只拥有解释器，仅能够解释执行</li>
+<li>即时编译：BEA 开发的 JRockit 虚拟机就仅具有即时编译器，只能够编译执行</li>
+<li>[解释执行 + 即时编译：HotSpot 虚拟机既具有即时编译器和解释器，两者可以协调合作]{.red}</li>
+</ul>
+<p>  :::info</p>
+<p>  注：什么是解释执行，什么是即时编译之后会详细提到</p>
+<p>  :::</p>
+</li>
+<li><p>[Java 虚拟机执行引擎是基于栈执行的，现代计算机基本都是基于寄存器执行的]{.red}</p>
+<p>  :::primary</p>
+<p>  想要了解什么是基于栈执行的执行引擎，参考 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/JVM/Runtime/StackSpace/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88/" >运行时数据区-栈空间-操作数栈</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 部分</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>执行引擎是由哪些部分组成的?</strong></p>
+</blockquote>
+<p>:::warning</p>
+<p>① 仅针对 HotSpot 虚拟机的执行引擎，而不针对其他虚拟机的执行引擎</p>
+<p>② 下面的图示是将执行引擎的大多数细节都填充进去了，目前你只需要知道个大致组成就行，之后会详细介绍</p>
+<p>:::</p>
+<ul>
+<li><p>图示</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/执行引擎.2jibqu41fte0.png" alt="执行引擎" style="zoom:80%;" /></li>
+<li><p>组成：[解释器 + 即时编译器 + 垃圾回收器]{.red}</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>解释器(解释执行)与编译器(编译执行)到底是什么?</strong></p>
+</blockquote>
+<p>:::warning</p>
+<p>① 如果想要详细了解编译器，建议阅读《编译原理》（俗称龙书）</p>
+<p>② 如果想要了解机器指令和汇编语言，建议阅读《深入理解计算机系统》和《数字设计和计算机体系结构》</p>
+<p>:::</p>
+<ul>
+<li><p>编译器（编译执行）：</p>
+<ul>
+<li><p>定义：[编译器将高级语言编译成处理器能够识别的机器指令]{.red}</p>
+</li>
+<li><p>主要语言：C、C++ 都是编译执行的语言</p>
+</li>
+<li><p>流程（任何类型的编译器基本都遵照以下流程）：</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/编译器流程.1fexxdsd40gw.png" alt="编译器流程" style="zoom:80%;" /></li>
+<li><p>分类（仅限于 Java）：</p>
+<ul>
+<li><p>前端编译器：</p>
+<ul>
+<li>定义：[负责将源代码编译成 <strong>字节码指令</strong>]{.red}</li>
+<li>常见编译器：JDK 自带的 Javac 编译器，Eclipse JDT 提供的 ECJ（增量式编译器）<ul>
+<li>[Javac 编译器完全采用 Java 实现]{.blue}</li>
+<li>Eclipse 编辑器中使用的就是 ECJ 编译器</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>即时编译器（后端编译器）</p>
+<ul>
+<li><p>定义：[负责在进程运行时将经常调用的方法编译成 <strong>机器指令</strong>]{.red}</p>
+<ul>
+<li>[编译生成的本地代码将会被缓存再方法区中（JIT 代码缓存）]{.red}</li>
+</ul>
+</li>
+<li><p>常见编译器：HotSpot 提供的C1（客户端编译器）、C2（服务器端编译器），Graal 虚拟机提供的 Graal 编译器</p>
+<p>  Graal 目前还只是实验性质的虚拟机，并没有发布正式的版本</p>
+</li>
+</ul>
+</li>
+<li><p>提前编译器（后端编译器）</p>
+<ul>
+<li>定义：[<strong>直接</strong> 将源代码编译成机器指令]{.red}<ul>
+<li>类似于 C/C++ 使用的 GCC 编译器</li>
+</ul>
+</li>
+<li>常见编译器：JDK 自带的 Jaotc 编译器，GNU 计划中的 GCJ 编译器，Excelsior JET 编译器</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>解释器（解释执行）：</p>
+<ul>
+<li><p>定义：[解释器每次都会向处理器解释源代码的含义]{.red}</p>
+</li>
+<li><p>主要语言：Python、JavaScript、PHP 都是解释执行的语言</p>
+</li>
+<li><p>流程</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/解释器.k8qxml3ekz4.png" alt="解释器" style="zoom:80%;" />
+  </li>
+<li><p>分类（仅限于 Java）：</p>
+<ul>
+<li>[字节码解释器：采用纯软件模拟的方式执行字节码 -&gt; 效率非常低下]{.red}</li>
+<li>[模板解释器：每条字节码都和一个模板函数关联，模板函数能够直接生成字节码对应的本地代码 -&gt; 效率相对较高]{.red}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>区别：</p>
+<ul>
+<li>[编译器对源代码进行编译之后会生成可执行文件，解释器不会生成任何可执行文件]{.red}</li>
+<li>[编译器在编译过程中会对源代码采用各种优化技术进行优化（诸如逃逸分析），解释器不会对源代码进行任何优化]{.red}</li>
+<li>源代码再次执行时：<ul>
+<li>编译器生成的可执行文件就可以直接使用不需要再编译，[所以编译执行效率非常高]{.blue}</li>
+<li>解释器则需要再次向处理器解释源代码的含义，[所以解释执行的效率就低]{.blue}</li>
+</ul>
+</li>
+<li>[编译器需要对源代码进行编译：程序的启动速度慢；解释器不需要任何编译过程直接向处理器解释：启动速度快]{.red}</li>
+</ul>
+</li>
+</ul>
+<p>+++danger Java 到底是解释执行还是编译执行的语言呢？</p>
+<p>① 远古时代的 Java 确实是纯解释执行的语言，就和 Python 一样</p>
+<p>② 如今的 Java 既不是纯解释执行也不是纯编译执行的语言，而是半解释半编译的语言</p>
+<p>③ 如今的 Java 程序在运行过程会交替使用解释器和编译器，使得运行效率大幅提升（至于如何交替使用，会在后端编译器部分中详细介绍） </p>
+<p>+++</p>
+<blockquote>
+<p><strong>执行引擎如何使用解释器和即时编译器呢?</strong></p>
+</blockquote>
+<ul>
+<li><p>[前端编译器将源代码编译成字节码]{.red}</p>
+<ul>
+<li>提前编译器通常会给即时编译器作为缓存加速，改善程序的启动时间</li>
+</ul>
+</li>
+<li><p>执行引擎获取程序计数器提供的指令地址</p>
+</li>
+<li><p>执行引擎从方法区中获取相应的字节码指令</p>
+</li>
+<li><p>[执行引擎开始协调解释器和即时编译器执行：]{.red}</p>
+<ul>
+<li><p>[使用 <strong>热点探测技术</strong> 判断字节码指令是否要编译成本地代码]{.blue}</p>
+<ul>
+<li><p>如果执行引擎决定将其编译为本地代码，那么即时编译器将开始执行编译过程</p>
+<p>  编译期间，[解释器会和即时编译器 <strong>异步执行</strong>]{.blue}，避免浪费用户线程的执行时间</p>
+</li>
+<li><p>如果执行引擎不认为要将其编译为本地代码，那么就采用解释执行</p>
+</li>
+</ul>
+</li>
+<li><p>查看调用的方法是否存在编译好的本地代码</p>
+<ul>
+<li>如果被调用的方法没有被编译成本地代码，那么将会解释执行</li>
+<li>如果被调用的方法已经有相应的本地代码，那么将会直接执行本地代码</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/执行引擎执行大致流程.2cwfqncr4dwk.png" alt="执行引擎执行大致流程" style="zoom:80%;" />
+
+<p>+++danger 最后抛出一个问题，为什么要使用字节码文件呢？明明虚拟机已经实现跨平台了啊？</p>
+<p>+++</p>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/execution-engine/%E5%90%8E%E7%AB%AF%E7%BC%96%E8%AF%91%E5%99%A8/">执行引擎-后端编译器</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-25</span></span></div></header><div class="post-body"><div class="post-excerpt">
         <h1 id="后端编译器"   >
           <a href="#后端编译器" class="heading-link"><i class="fas fa-link"></i></a><a href="#后端编译器" class="headerlink" title="后端编译器"></a>后端编译器</h1>
       
@@ -1745,442 +2182,4 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/23/jvm/runtime/heapspace/%E6%A6%82%E8%BF%B0/">堆空间-概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-23</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-23</span></span></div></header><div class="post-body"><div class="post-excerpt">
-        <h1 id="堆空间"   >
-          <a href="#堆空间" class="heading-link"><i class="fas fa-link"></i></a><a href="#堆空间" class="headerlink" title="堆空间"></a>堆空间</h1>
-      
-        <h2 id="概述"   >
-          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
-      <blockquote>
-<p><strong>什么是堆空间?</strong></p>
-</blockquote>
-<ul>
-<li><p>定义：虚拟机中 [最大的存储空间]{.red}</p>
-</li>
-<li><p>作用：[存放所有被创建的对象和数组的空间]{.red}</p>
-<p>  +++danger 对象一定被分配在堆空间中吗？</p>
-<p>  <a href="#%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90">逃逸分析</a></p>
-<p>  +++</p>
-</li>
-<li><p>特点：</p>
-<ul>
-<li><p>[堆空间可以处于物理上并不连续的内存空间中]{.red}</p>
-<ul>
-<li><p>物理上不连续：操作系统采用了虚拟内存技术，所以分配给虚拟机的内存显然是不连续的</p>
-</li>
-<li><p>逻辑上连续：虚拟机的使用者并不关心实际内存是怎么存储的，从表面上看来就是连续的</p>
-</li>
-<li><p>[如果创建的是大对象通常会要求使用连续的堆空间]{.red}</p>
-<p>  :::info</p>
-<p>  大对象：需要占用的堆内存非常大的对象，诸如数组对象 new byte[1024 * 1024 * 1024]</p>
-<p>  :::</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间实际占用内存.69fin0iqv300.png" alt="堆空间实际占用内存" style="zoom:80%;" /></li>
-</ul>
-</li>
-<li><p>[堆空间中的对象的销毁不取决于方法是否结束，而是取决于垃圾回收机制]{.red}</p>
-</li>
-<li><p>[堆空间既存在垃圾回收机制，也存在 OutOfMemoryError 异常]{.red}</p>
-</li>
-<li><p>[堆空间是所有线程共享的区域：线程可以互相访问彼此创建的对象和数组]{.red}</p>
-</li>
-<li><p>[堆空间主要管理数据的存储，所以存储的是对象和数组的实际数据]{.red}</p>
-</li>
-</ul>
-</li>
-</ul>
-
-        <h2 id="空间划分"   >
-          <a href="#空间划分" class="heading-link"><i class="fas fa-link"></i></a><a href="#空间划分" class="headerlink" title="空间划分"></a>空间划分</h2>
-      <ul>
-<li><p>核心：[分代思想]{.red}</p>
-</li>
-<li><p>虚拟机规范划分：新生代 + 老年代</p>
-<ul>
-<li><p>新生代：</p>
-<ul>
-<li>伊甸园区：TLAB（Thread Local Allocation Buffer） + 共享区域</li>
-<li>幸存者区：幸存者0区 + 幸存者1区</li>
-</ul>
-</li>
-<li><p>老年代</p>
-</li>
-<li><p>方法区：[逻辑上归属堆区，物理上并不属于堆区，甚至可以称为非堆区]{.red}</p>
-<p>  :::info</p>
-<p>  ① 类似于中国大陆和中国台湾的关系，逻辑上台湾归属于中国，但是目前中国大陆的政策无法管理台湾</p>
-<p>  ② 方法区和堆区实际存储的内容完全不同，所以进行区分也是正常的</p>
-<p>  :::</p>
-</li>
-</ul>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间划分.3mxvqtnctuw0.png" alt="堆空间划分" style="zoom:80%;" /></li>
-<li><p>JDK 7：[方法区采用永久代实现：使用内存是虚拟机提供的内存]{.red}</p>
-</li>
-<li><p>JDK 8：[方法区采用元空间实现：使用的内存是操作系统提供的物理内存]{.red}</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/方法区落地实现.1dqvno6ggn8g.png" alt="方法区落地实现" style="zoom:80%;" />
-
-<p>  +++danger 为什么堆空间要采用分代思想进行管理？</p>
-<p>  ① 显然堆空间即使不分代也是可以进行垃圾回收的</p>
-<p>  ② 但是如果所有的对象都被杂乱无章地放在一起，每次执行垃圾回收的时候就需要挨个查找</p>
-<p>  ③ 哪些是短生命周期的，可以回收，哪些是长生命周期的，不能回收，就相当于每次都要问一问老年代需不需要回收</p>
-<p>  ④ 这样垃圾回收的性能显然就会下降，执行了太多没有意义的操作</p>
-<p>  ⑤ 核心：优化垃圾回收机制的性能</p>
-<p>  +++</p>
-</li>
-</ul>
-
-        <h2 id="空间大小"   >
-          <a href="#空间大小" class="heading-link"><i class="fas fa-link"></i></a><a href="#空间大小" class="headerlink" title="空间大小"></a>空间大小</h2>
-      <ul>
-<li><p>堆空间大小设置</p>
-<ul>
-<li><p>特点：[堆空间大小可以是固定容量也可以是动态扩展的]{.red}</p>
-</li>
-<li><p>固定容量：虚拟机默认采用的是动态扩展，固定容量需要自行设置</p>
-<p>  +++info 如何将堆空间设置为固定容量？</p>
-<p>  ① 只需要将堆空间的的初始容量和最大容量设置为相同的即可</p>
-<p>  ② 再继续想想，为什么要将两者设置为相同？或者说为什么要使用固定容量？</p>
-<p>  +++</p>
-</li>
-<li><p>动态扩展</p>
-<ul>
-<li><p>[默认初始化容量：物理内存 / 64]{.blue}</p>
-</li>
-<li><p>[默认最大容量：物理内存 / 4]{.blue}</p>
-</li>
-<li><p>现状：大多数虚拟机都支持堆空间的动态扩展，[但是实际开发中都是采用固定容量]{.blue}</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Runtime: 运行时数据区</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 初始内存：245MB</span></span><br><span class="line">    <span class="keyword">long</span> initialMemory = Runtime.getRuntime().totalMemory(); </span><br><span class="line">    <span class="comment">// 最大内存：3625MB</span></span><br><span class="line">    <span class="keyword">long</span> maxMemory = Runtime.getRuntime().maxMemory();</span><br><span class="line">    <span class="comment">// 输出内存提示信息</span></span><br><span class="line">    System.out.println(<span class="string">&quot;堆空间初始化内存: &quot;</span> + initialMemory / <span class="number">1024</span> /<span class="number">1024</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;堆空间最大内存: &quot;</span> + maxMemory / <span class="number">1024</span> / <span class="number">1024</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算物理机的实际内存：15680MB 14500MB</span></span><br><span class="line">    System.out.println(<span class="string">&quot;物理机实际内存: &quot;</span> + initialMemory / <span class="number">1024</span> /<span class="number">1024</span> * <span class="number">64</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;物理机实际最大内存: &quot;</span> + maxMemory / <span class="number">1024</span> /<span class="number">1024</span> * <span class="number">4</span> + <span class="string">&quot;MB&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
-<li><p>问题：</p>
-<p>  +++danger 为什么要将堆空间的初始化大小和最大容量设置为相同的呢？</p>
-<p>  ① 核心：避免频繁扩展堆空间的大小，同时也避免在垃圾回收之后重新计算堆空间大小，从而提高虚拟机的执行性能</p>
-<p>  ② 此前提到大多数的虚拟机都支持堆的动态扩展，并且需要使用垃圾回收机制</p>
-<p>  ③ 如果允许堆采用动态扩展，那么每次垃圾回收之后都会重新计算堆空间大小</p>
-<p>  ④ 因为对象被回收了，堆需要的空间就没那么大了，所以需要重新计算，这显然是浪费性能的</p>
-<p>  +++</p>
-<p>  +++ 为什么计算得到的物理机内存和实际内存不一样呢？</p>
-<p>  ① Runtime.getRuntime().totalMemory();  获取的堆内存是只有正在使用的内存</p>
-<p>  ② 幸存者区只会将其中一个区用作存放对象，另外一个区空着不放对象，所以获得的内存每次就少了一部分幸存者区的内存</p>
-<p>  +++</p>
-</li>
-</ul>
-</li>
-<li><p>设置堆空间大小命令</p>
-<ul>
-<li><p>[-Xms Size 设置堆空间的初始化大小]{.blue} </p>
-  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间初始化大小</span></span><br><span class="line"><span class="comment"># 等价于 -XX:InitialHeapSize</span></span><br><span class="line"><span class="comment">#（实际上这个参数我并没有使用过，网上也没有提到如何使用，很奇怪，就连官方文档都没有提到）</span></span><br><span class="line">-Xms1m</span><br></pre></td></tr></table></div></figure></li>
-<li><p>[-Xmx Size 设置堆空间的最大容量]{.blue}：</p>
-  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间最大大小</span></span><br><span class="line"><span class="comment"># 等价于 -XX:MaxHeapSize</span></span><br><span class="line">-Xmx1m</span><br></pre></td></tr></table></div></figure></li>
-<li><p>[-Xmn Size 设置堆空间中年轻代的大小]{.blue}：堆剩下的空间就是老年代占有的</p>
-  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置堆空间中年轻代的大小</span></span><br><span class="line">-Xmn1m</span><br></pre></td></tr></table></div></figure></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>新生代和老年代大小设置</p>
-<ul>
-<li><p>默认大小比例</p>
-<ul>
-<li><p>[新生代 : 老年代 = 1 : 2]{.blue}</p>
-</li>
-<li><p>[伊甸园区 : 幸存者0区 : 幸存者1区 = 8 : 1 : 1]{.blue}</p>
-</li>
-<li><p>细节：</p>
-<ul>
-<li><p>实际开发中通常使用默认的比例设置</p>
-</li>
-<li><p>实际上虚拟机会采用 [自适应策略]{.red}，新生代和老年代的比例是 1:2，但是新生代内部的比例却不是 8:1:1</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/堆空间比例.4vqbtj0dody0.png" alt="堆空间比例" style="zoom: 67%;" /></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>设置大小比例命令</p>
-<ul>
-<li><p>[-XX:+UseAdaptiveSizePolicy：关闭虚拟机自适应策略]{.blue}</p>
-<p>  :::info</p>
-<p>  实际上这个命令并不会生效，自适应策略是无法关闭的，想要让比例为默认的8:1:1，直接设置就好</p>
-<p>  :::</p>
-</li>
-<li><p>[-XX:NewRatio=ration：设置新生代和老年代的比例大小]{.blue}</p>
-</li>
-<li><p>[-XX:SurvivorRation=ratio：设置伊甸园区和幸存者区的比例大小]{.blue}</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>  +++ 为什么两个幸存者区的比例始终为 1:1 呢？</p>
-<p>  涉及到垃圾回收算法：复制标记算法</p>
-<p>  +++</p>
-</li>
-</ul>
-
-        <h2 id="堆空间溢出"   >
-          <a href="#堆空间溢出" class="heading-link"><i class="fas fa-link"></i></a><a href="#堆空间溢出" class="headerlink" title="堆空间溢出"></a>堆空间溢出</h2>
-      <p>:::primary</p>
-<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/366840983" >来来来，聊聊7种内存泄露场景和13种解决方案</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p>警告：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/sunweiye/p/10863985.html" >jvm 内存泄露与内存溢出</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>、<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43689480/article/details/96474346" >jvm内存泄漏</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>这些博客的例子全部都是错的，但凡写的人自己试一试他写的代码就会发现错了</p>
-<p>:::</p>
-<ul>
-<li><p>异常：OutOfMemoryError</p>
-</li>
-<li><p>原因：[内存泄露或者内存溢出]{.red}</p>
-<ul>
-<li><p>内存泄露（Memory Leak）</p>
-<ul>
-<li><p>定义：[应该被垃圾回收机制清除的对象无法被顺利清除，造成空间浪费，最终可能造成 OOM 异常]{.red}</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露.2mbg5mrp49q0.png" alt="内存泄露" style="zoom:80%;" /></li>
-<li><p>情况：（这部分笔记暂时存在问题，先了解什么是内存泄露就行）</p>
-<p>  +++danger ① 静态集合类变量长期引用短生命周期的对象</p>
-<p>  测试代码</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 线程休眠: 便于观察上升曲线</span></span><br><span class="line">    Thread.sleep(<span class="number">10000</span>);</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        Object object = <span class="keyword">new</span> Object();</span><br><span class="line">        <span class="comment">// 链表不被销毁就会长期持有这个对象的引用</span></span><br><span class="line">        list.add(object);</span><br><span class="line">        <span class="comment">// 短生命周期引用不再指向对象, 链表依然持有该对象的引用</span></span><br><span class="line">        <span class="comment">// 注意: 这里将引用置为空的目的是代表这个对象我们不想再使用了</span></span><br><span class="line">        object = <span class="keyword">null</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;创建对象数量: &quot;</span> + ++count);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 线程休眠: 便于观察上升曲线</span></span><br><span class="line">    Thread.sleep(<span class="number">10000000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
-
-<p>  测试图示</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/内存泄露1.i0i0025otcw.png" alt="内存泄露1" style="zoom:80%;" />
-
-<p>  测试堆内存结果</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/堆内存分析1.2caocz52qy4g.png" alt="堆内存分析1" style="zoom:80%;" />
-
-<p>  测试结论：</p>
-<ul>
-<li>每个添加进入链表的对象我们都不想继续使用，但是由于链表是静态变量，生命周期和类加载器一致，所以垃圾回收无法回收</li>
-<li>堆内存结果会再创建对象完成之后长时间保持水平线，意味着垃圾回收一直没有生效</li>
-</ul>
-<p>  :::info</p>
-<p>  疑惑：为什么将 static 关键字去掉之后依然没有触发垃圾回收机制？</p>
-<p>  :::</p>
-<p>  +++</p>
-<p>  ② [未关闭不再使用的连接资源]{.red}：创建的数据库连接、流对象等连接资源再使用之后没有合理关闭，就会造成内存泄露</p>
-<p>  ③ [未重写相应的 equals 和 hashCode 方法]{.red}</p>
-<p>  ④ 外部类引用内部类对象：</p>
-<p>  ⑤ 重写 finalize 方法不得当：</p>
-</li>
-</ul>
-</li>
-<li><p>内存溢出（Memory OverFlow）</p>
-<ul>
-<li><p>定义：[堆空间需要使用的内存超过虚拟机分配的内存，造成 OOM 异常]{.red}</p>
-</li>
-<li><p>测试：</p>
-<p>  测试代码</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 虚拟机参数设置: -Xms1m -Xmx1m</span></span><br><span class="line">    ArrayList&lt;Object&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">// 注意：尽可能将对象数量设置多点，否则不会溢出</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 循环创建对象</span></span><br><span class="line">        list.add(<span class="keyword">new</span> Object());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
-
-<p>  测试结果</p>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/内存溢出.689o51k3uf40.png" alt="内存溢出" style="zoom:80%;" /></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/22/java/reflection/%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/">反射机制</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-22</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-22</span></span></div></header><div class="post-body"><div class="post-excerpt">
-        <h1 id="反射机制"   >
-          <a href="#反射机制" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h1>
-      <p>:::warning</p>
-<ul>
-<li>反射机制是非常难解释清楚的，主要原因有如下几个<ul>
-<li>反射机制概念本身就很抽象，难以理解其概念</li>
-<li>反射机制在初学时使用的机会很少，因为初学者甚至都没有类加载的概念</li>
-<li>反射机制涉及到虚拟机中类加载的概念，在各个框架中也有很广泛的应用，没有这些的基本了解真的很难理解</li>
-</ul>
-</li>
-<li>我会尽可能将反射最基础的内容和虚拟机联系起来</li>
-</ul>
-<p>:::</p>
-<p>:::primary</p>
-<p>参考博客：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/a745233700/article/details/82893076?ops_request_misc=&request_id=&biz_id=102&utm_term=Java%20%E5%8F%8D%E5%B0%84&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-82893076.nonecase&spm=1018.2226.3001.4187" >Java基础篇：反射机制详解</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p>:::</p>
-<blockquote>
-<p><strong>什么是类加载机制?</strong></p>
-</blockquote>
-<p>:::info</p>
-<p>详细了解：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/JVM/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" >Java 虚拟机-类加载机制</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p>:::</p>
-<blockquote>
-<p><strong>什么是反射?</strong></p>
-</blockquote>
-<ul>
-<li><p>定义：</p>
-<ul>
-<li>[虚拟机处于 <strong>运行状态</strong> 中]{.red}</li>
-<li>[对于任意一个类都能够知道这个类所有的属性和方法]{.blue}</li>
-<li>[对于任意一个对象，都能够调用它的任意一个方法]{.blue}</li>
-</ul>
-</li>
-<li><p>核心：[在进程运行期间将类 <strong>动态</strong> 地加载到虚拟机内存中使用]{.red}</p>
-</li>
-</ul>
-<blockquote>
-<p><strong>为什么要使用反射?</strong></p>
-</blockquote>
-<blockquote>
-<p><strong>如何使用反射?</strong></p>
-</blockquote>
-<blockquote>
-<p><strong>反射的原理是什么?</strong></p>
-</blockquote>
-
-        <h2 id="反射"   >
-          <a href="#反射" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射" class="headerlink" title="反射"></a>反射</h2>
-      <ul>
-<li><p>概念解释    </p>
-<ul>
-<li>Java 程序处于运行过程中</li>
-<li><strong>根据</strong> Java 程序的<strong>需要</strong></li>
-<li><strong>动态</strong>加载 .class 文件</li>
-<li>图示解释</li>
-</ul>
-</li>
-<li><p>目的解释</p>
-<ul>
-<li>更加灵活地根据需求加载 .class 文件</li>
-</ul>
-<p>  例：每个数据库系统都有不同的数据库驱动（MySQL Oracle）；</p>
-<p>  如果在编写代码的时候无法确定程序在执行的过程中究竟使用哪一套数据库驱动系统；</p>
-<p>  采用反射机制使用 Class.forName（<em>需要加载的类的全限定名</em>）加载需要使用的数据库驱动</p>
-</li>
-<li><p>Java 成为<strong>准动态</strong>语言</p>
-</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallerSensitive</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; forName(String name, <span class="keyword">boolean</span> initialize,</span><br><span class="line">                                   ClassLoader loader)</span><br><span class="line">        <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">    &#123;</span><br><span class="line">        Class&lt;?&gt; caller = <span class="keyword">null</span>;</span><br><span class="line">        SecurityManager sm = System.getSecurityManager();</span><br><span class="line">        <span class="keyword">if</span> (sm != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Reflective call to get caller class is only needed if a security manager</span></span><br><span class="line">            <span class="comment">// is present.  Avoid the overhead of making this call otherwise.</span></span><br><span class="line">            caller = Reflection.getCallerClass();</span><br><span class="line">            <span class="keyword">if</span> (sun.misc.VM.isSystemDomainLoader(loader)) &#123;</span><br><span class="line">                ClassLoader ccl = ClassLoader.getClassLoader(caller);</span><br><span class="line">                <span class="keyword">if</span> (!sun.misc.VM.isSystemDomainLoader(ccl)) &#123;</span><br><span class="line">                    sm.checkPermission(</span><br><span class="line">                        SecurityConstants.GET_CLASSLOADER_PERMISSION);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// forName 方法会自动选择类加载器(ClassLoader)加载.class文件</span></span><br><span class="line">        <span class="keyword">return</span> forName0(name, initialize, loader, caller);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></div></figure>
-
-
-
-
-        <h3 id="反射的用途"   >
-          <a href="#反射的用途" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射的用途" class="headerlink" title="反射的用途"></a>反射的用途</h3>
-      <ul>
-<li>创建实例</li>
-<li>框架实现的原理</li>
-</ul>
-
-        <h3 id="反射主要内容"   >
-          <a href="#反射主要内容" class="heading-link"><i class="fas fa-link"></i></a><a href="#反射主要内容" class="headerlink" title="反射主要内容"></a>反射主要内容</h3>
-      
-        <h4 id="Javac"   >
-          <a href="#Javac" class="heading-link"><i class="fas fa-link"></i></a><a href="#Javac" class="headerlink" title="Javac"></a>Javac</h4>
-      <ul>
-<li><p>基本概念：Javac 全称 Java Compiler </p>
-</li>
-<li><p>目的</p>
-<ul>
-<li><p>Java 源代码实是由 Javac.exe 执行的</p>
-<p>  也就是说我们执行 Java 程序实际上是在执行 Javac.exe</p>
-</li>
-<li><p>Javac 将由 <strong>Java 语言编写的源代码</strong> 转换成 机器能够识别的 <strong>字节码文件(.class)</strong></p>
-<p>  ![image-20210307172652963](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307172652963.png)</p>
-</li>
-</ul>
-</li>
-<li><p>使用</p>
-</li>
-</ul>
-
-        <h4 id="类加载器"   >
-          <a href="#类加载器" class="heading-link"><i class="fas fa-link"></i></a><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4>
-      <ul>
-<li><p>概念：将 C++ 和 Java 编写完成的 <strong>“类”</strong> 加载到<strong>堆中的方法区</strong>中生成 <strong>Class 对象</strong></p>
-<ul>
-<li>类：所有的类（.java）文件都被 Javac 编译成 .class 文件；所以实际类加载器加载的是 .class 文件</li>
-</ul>
-</li>
-<li><p>分类</p>
-<ul>
-<li>BootstrapClassLoader<ul>
-<li>功能：负责加载 Java 语言中的最核心的类库（java.lang.*） 和 构造 ExtClassLoader 和 APPClassLoader</li>
-<li>特点<ul>
-<li>C++编写</li>
-<li>涉及到虚拟机的本地实现细节，不能够被直接调用</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>ExtClassLoader<ul>
-<li>功能：负责加载 Java 语言中的扩展类库（javax.*）</li>
-<li>特点<ul>
-<li>Java 编写</li>
-<li>开发者可以实际调用</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>APPClassLoader<ul>
-<li>功能：主要负责加载应用程序的主函数类</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>类加载机制</p>
-<ul>
-<li><p>图示</p>
-<p>  ![preview](D:\Typora\Typora\文件\Java 反射机制.assets\v2-b9d39568c0e3f87a5df6a0cbfe753cda_r.jpg)</p>
-</li>
-</ul>
-</li>
-<li><p>双亲委派机制</p>
-<ul>
-<li><p>图示</p>
-<p>  ![image-20210307175110119](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307175110119.png)</p>
-</li>
-<li><p>解释</p>
-<p>  从 <strong>自定义类加载器</strong> 开始判断当前的类是否加载过；</p>
-<p>  如果当前的类已经在任何一个 类加载器中加载过了，那么当前类就不需要加载了</p>
-<p>  如果直到 <strong>核心类库加载器</strong> 中还没有加载过，那么开始从 <strong>核心类库加载器</strong> 开始判断当前类是否可以被加载</p>
-<p>  如果当前的类加载器无法加载那么依次向下提交，直到 <strong>自定义类加载器</strong></p>
-<p>  如果连 <strong>自定义类加载器</strong> 都无法加载，那么证明当前的类是无法被加载的</p>
-</li>
-<li><p>目的</p>
-<ul>
-<li>避免类的重复加载</li>
-<li>避免基础核心类库被篡改（自行编写的 String 类是无法被加载的）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/codeyanbao/article/details/82875064" >双亲委派机制1</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/54693308" >双亲委派机制2</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-</blockquote>
-
-        <h4 id="实例构建过程"   >
-          <a href="#实例构建过程" class="heading-link"><i class="fas fa-link"></i></a><a href="#实例构建过程" class="headerlink" title="实例构建过程"></a>实例构建过程</h4>
-      <p>![image-20210307180421814](D:\Typora\Typora\文件\Java 反射机制.assets\image-20210307180421814.png)</p>
-
-        <h4 id="Class-对象"   >
-          <a href="#Class-对象" class="heading-link"><i class="fas fa-link"></i></a><a href="#Class-对象" class="headerlink" title="Class 对象"></a>Class 对象</h4>
-      <ul>
-<li>概念：.class 文件被类加载器载入堆的方法区中生成 Class 对象</li>
-<li>内容<ul>
-<li>Class 对象具有<strong>被加载类</strong>的所有信息（注解，方法，字段，构造函数等）</li>
-<li>Class 对象提供 <strong>Method Field Constructor <strong>等</strong>静态类</strong>存储<strong>方法</strong>，<strong>字段</strong>，<strong>构造器</strong>的所有信息</li>
-</ul>
-</li>
-<li>源代码</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ReflectionData</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">       <span class="keyword">volatile</span> Field[] declaredFields; <span class="comment">// 字段和方法的信息太多，所以Class对象提供专门的静态类用于存储信息</span></span><br><span class="line">       <span class="keyword">volatile</span> Field[] publicFields;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] declaredMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] publicMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Constructor&lt;T&gt;[] declaredConstructors;</span><br><span class="line">       <span class="keyword">volatile</span> Constructor&lt;T&gt;[] publicConstructors;</span><br><span class="line">       <span class="comment">// Intermediate results for getFields and getMethods</span></span><br><span class="line">       <span class="keyword">volatile</span> Field[] declaredPublicFields;</span><br><span class="line">       <span class="keyword">volatile</span> Method[] declaredPublicMethods;</span><br><span class="line">       <span class="keyword">volatile</span> Class&lt;?&gt;[] interfaces;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// Value of classRedefinedCount when we created this ReflectionData instance</span></span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> redefinedCount;</span><br><span class="line"></span><br><span class="line">       ReflectionData(<span class="keyword">int</span> redefinedCount) &#123;</span><br><span class="line">           <span class="keyword">this</span>.redefinedCount = redefinedCount;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></div></figure>
-
-
-        <h4 id="API"   >
-          <a href="#API" class="heading-link"><i class="fas fa-link"></i></a><a href="#API" class="headerlink" title="API"></a>API</h4>
-      <ul>
-<li>获取类的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一种方式 -- 任意情况都能够使用</span></span><br><span class="line">Class clz = Class.forName(<span class="string">&quot;java.lang.String&quot;</span>);</span><br><span class="line"><span class="comment">// 第二种方式 -- 明确知道类的使用方法</span></span><br><span class="line">Class clz = String.class;</span><br><span class="line"><span class="comment">// 第三种方式</span></span><br><span class="line">String str = <span class="keyword">new</span> String(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">Class clz = str.getClass();</span><br></pre></td></tr></table></div></figure>
-
-<ul>
-<li>获得构造器的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Constructor <span class="title">getConstructor</span><span class="params">(Class[] params)</span> -- 获得使用特殊的参数类型的公共构造函数， </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor[] <span class="title">getConstructors</span><span class="params">()</span> -- 获得类的所有公共构造函数 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor <span class="title">getDeclaredConstructor</span><span class="params">(Class[] params)</span> -- 获得使用特定参数类型的构造函数<span class="params">(与接入级别无关)</span> </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Constructor[] <span class="title">getDeclaredConstructors</span><span class="params">()</span> -- 获得类的所有构造函数<span class="params">(与接入级别无关)</span></span></span><br></pre></td></tr></table></div></figure>
-
-<ul>
-<li>获得字段的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Field <span class="title">getField</span><span class="params">(String name)</span> -- 获得命名的公共字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field[] <span class="title">getFields</span><span class="params">()</span> -- 获得类的所有公共字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field <span class="title">getDeclaredField</span><span class="params">(String name)</span> -- 获得类声明的命名的字段 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Field[] <span class="title">getDeclaredFields</span><span class="params">()</span> -- 获得类声明的所有字段</span></span><br></pre></td></tr></table></div></figure>
-
-<ul>
-<li>获得方法的方式</li>
-</ul>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Method <span class="title">getMethod</span><span class="params">(String name, Class[] params)</span> -- 使用特定的参数类型，获得命名的公共方法 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method[] <span class="title">getMethods</span><span class="params">()</span> -- 获得类的所有公共方法 </span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method <span class="title">getDeclaredMethod</span><span class="params">(String name, Class[] params)</span> -- 使用特写的参数类型，获得类声明的命名的方法</span></span><br><span class="line"><span class="function"><span class="comment">/* </span></span></span><br><span class="line"><span class="comment"><span class="function">这里必须要传入 参数的类型 而且只能够是 Class 对象</span></span></span><br><span class="line"><span class="comment"><span class="function">不能够只传入方法的名称，这样是无法找到方法的（JVM实际上是在Class对象中循环遍历找到的）</span></span></span><br><span class="line"><span class="comment"><span class="function">重载的实现过程实际上是 JVM 在执行方法的时候将参数都传入进去了，所以反射获取方法的时候同样需要传递参数</span></span></span><br><span class="line"><span class="comment"><span class="function">*/</span></span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function">Method[] <span class="title">getDeclaredMethods</span><span class="params">()</span> -- 获得类声明的所有方法</span></span><br></pre></td></tr></table></div></figure>
-
-<blockquote>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.zhihu.com/question/24304289?sort=created" >Java 反射机制</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p><a href="jianshu.com/p/9be58ee20dee">Java反射 API</a></p>
-</blockquote>
-</div></div></article></section><nav class="paginator"><div class="paginator-inner"><a class="extend prev" rel="prev" href="/page/5/"><i class="fas fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/"><i class="fas fa-angle-right"></i></a></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">106</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+</div></div></article></section><nav class="paginator"><div class="paginator-inner"><a class="extend prev" rel="prev" href="/page/5/"><i class="fas fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/"><i class="fas fa-angle-right"></i></a></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
