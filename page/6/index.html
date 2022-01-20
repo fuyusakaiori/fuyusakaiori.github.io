@@ -30,95 +30,255 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/">程序计数寄存器</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span></div></header><div class="post-body"><div class="post-excerpt">
-        <h1 id="程序计数寄存器"   >
-          <a href="#程序计数寄存器" class="heading-link"><i class="fas fa-link"></i></a><a href="#程序计数寄存器" class="headerlink" title="程序计数寄存器"></a>程序计数寄存器</h1>
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/">概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-24</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="概述"   >
+          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
       <blockquote>
-<p><strong>什么是程序计数寄存器？</strong></p>
+<p><strong>什么是 Java 虚拟机运行时数据区？</strong></p>
 </blockquote>
 <ul>
-<li><p>名称：程序计数寄存器（Programmer Counter Register）</p>
+<li><p>第一个问题：什么是 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/OperatingSystem/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" >虚拟机</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>？</p>
 <ul>
-<li>别名：PC 寄存器、程序计数器、程序钩子</li>
-</ul>
+<li><p>定义：[运行在操作系统上的具有物理机拥有的全部硬件功能的软件]{.red}</p>
 </li>
-<li><p>定义：JVM 中的一块较小的 [内存区域]{.blue}</p>
-<ul>
-<li>区别：真实计算机中的程序计数器是 [物理硬件寄存器]{.blue} 制作完成的</li>
-</ul>
-</li>
-<li><p>作用：[保存当前线程正在执行的字节码指令的地址]{.red}</p>
-<ul>
-<li>字节码指令：源代码被编译器编译后生成的就是字节码文件（包含字节码指令）</li>
-<li>字节码指令地址：每个字节码指令都具有自己的地址，便于执行引擎选择执行</li>
-<li>编译器：C/C++ 的编译器是 GCC，Java 的编译器是的 Javac</li>
-</ul>
-  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/字节码指令.41jaaaxto960.png" alt="字节码指令" style="zoom:80%;" /></li>
-<li><p>指令地址：</p>
-<ul>
-<li><p>执行方法是 Java 方法：程序计数会保存该方法对应的指令地址 </p>
-</li>
-<li><p>执行的方法是 Native 方法：[程序计数器将会被置为空 （Undefined）]{.red}</p>
+<li><p>核心：[虚拟机采用软件对真实计算机进行模拟]{.red}</p>
 <p>  :::info</p>
-<p>  简单来说 Native 方法就是本地方法，是不采用 Java 实现的外部方法，之后在本地方法栈详细介绍</p>
+<p>  注：既然是对真实计算机的模拟，那么虚拟机中的很多组件显然会对应真实计算机中的硬件</p>
 <p>  :::</p>
 </li>
 </ul>
 </li>
-<li><p>实质：</p>
+<li><p>第二个问题：什么是 Java 虚拟机？</p>
 <ul>
-<li><p>程序计数器是 Java 虚拟机中 [运行速度最快，空间较小的内存区域]{.red}</p>
+<li><p>定义：简单来说就是运行 Java 进程的虚拟机</p>
+<p>  :::info</p>
+<p>  [① 这种说法并不严谨，只要能够通过编译生成字节码的程序都是可以在虚拟机中运行的]{.green}</p>
+<p>  [② 诸如 Kotlin、Clojure 等语言也都是运行在 Java 虚拟机上的]{.green}</p>
+<p>  :::</p>
 </li>
-<li><p>Java 虚拟机中的程序计数器是对处理器中的程序计数器的抽象模拟</p>
+<li><p>核心：Java 为了实现跨平台的特性而特意开发的虚拟机，使其能够不受硬件的制约</p>
+</li>
+<li><p>细节：[每个 Java 进程都运行在相应的 JVM 实例上]{.red}</p>
+<p>  :::info</p>
+<p>  注：翻译一下就是说每个 Java 进程都对应一个 JVM 实例，多个 Java 进程就会存在多个 JVM 实例</p>
+<p>  :::</p>
 </li>
 </ul>
 </li>
-<li><p>特点：：</p>
+<li><p>第三个问题：什么是运行时数据区？</p>
 <ul>
-<li><p>[每个线程都拥有独立的程序计数器]{.red}</p>
+<li>定义：简单来说就是虚拟机中 [存放 Java 进程各种各样数据的空间]{.red}</li>
+<li>细节：真实计算机中进程必须加载到内存中才能够执行，同样在 JVM 中进程也需要加载到运行时数据区中才能够执行</li>
+</ul>
 </li>
-<li><p>[每个线程都是不可以访问其余线程的空间的：线程间不可以直接相互通信]{.red}</p>
-<p>  :::danger</p>
-<p>  注：操作系统中进程中的每个线程都是直接相互通信的，进程之间才是相互隔离的</p>
-<p>  :::</p>
+<li><p>第四个问题：运行时数据区由哪些部分组成呢？</p>
+<ul>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8">程序计数寄存器</a>：<ul>
+<li>别称：PC 寄存器、程序计数器、程序钩子</li>
+<li>[真实计算机中的程序计数寄存器是由 <strong>物理硬件寄存器</strong> 实现的，JVM 的程序计数寄存器只是块 <strong>内存区域</strong>]{.blue}</li>
+</ul>
 </li>
-<li><p>[程序计数器区域没有垃圾回收机制也没有 OutOfMemory 异常]{.red}</p>
+<li>栈空间（<a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88">虚拟机栈</a> + <a href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88">本地方法栈</a>） + <a href="#%E5%A0%86%E7%A9%BA%E9%97%B4">堆空间</a><ul>
+<li>在 C/C++ 这样的操作系统级别的语言来说，内存空间基本是由这两部分组成的</li>
+<li>无论是 Java 或者 C/C++，栈空间和堆空间都是非常重要的两个部分</li>
+</ul>
+</li>
+<li><a href="#%E6%96%B9%E6%B3%95%E5%8C%BA">方法区</a>：<ul>
+<li>[方法区中还包含 <strong>运行时常量池</strong>]{.red}</li>
+<li>[JDK 8 之后采用 <strong>元空间</strong> 替代]{.red}</li>
+</ul>
 </li>
 </ul>
 </li>
 </ul>
 <blockquote>
-<p><strong>为什么要使用程序计数寄存器？</strong></p>
+<p><strong>运行时数据区总结图示</strong></p>
 </blockquote>
-<ul>
-<li>前提：Java 多线程采用线程轮流切换，分配处理器执行时间的方式实现的（时间片轮转法？）<ul>
-<li>第一个原因：多线程切换<ul>
-<li>其余线程抢占当前线程的处理器使用权执行任务</li>
-<li>其余线程执行任务结束之后，之前被抢占的线程想要继续执行</li>
-<li>[如果没有程序计数器加以保存]{.blue}，那么之前被抢占的线程就不可能知道从哪里开始继续执行了</li>
-</ul>
-</li>
-<li>第二个原因：方法调用（不准确）<ul>
-<li>被调用的方法执行结束了，执行引擎需要借助 [返回地址]{.red} 才能够回到此前的位置</li>
-<li>返回地址就是获取的当前程序计数器的值，确保方法调用结束后执行引擎能够返回</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/运行时数据区.4yae49h3vr00.jpg" alt="运行时数据区" style="zoom:80%;" />
+
 <blockquote>
-<p><strong>程序计数器为什么是线程私有的呢？</strong></p>
+<p><strong>内存模型简化图示</strong></p>
 </blockquote>
+<p>:::warning</p>
+<p>运行时数据区并不包含执行引擎部分，这里只是为了能够展示整个虚拟机全貌而画出来的</p>
+<p>:::</p>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/内存模型.1oezjqm5y51c.png" alt="内存模型" style="zoom:80%;" />
+
+<blockquote>
+<p><strong>内存模型完全图示</strong></p>
+</blockquote>
+
+        <h1 id="线程"   >
+          <a href="#线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#线程" class="headerlink" title="线程"></a>线程</h1>
+      <p>:::warning</p>
+<p>① 本部分不会介绍 Java 线程的基础知识，更加不会介绍 Java 线程并发的知识，放在另外的博客介绍</p>
+<p>② 本部分也不会像操作系统那样详细介绍线程的来龙去脉，这部分已经在操作系统的博客中介绍过了</p>
+<p>③ 本部分主要从操作系统线程的角度来看待 Java 线程</p>
+<p>参考书籍：《深入理解 Java 虚拟机》</p>
+<p>建议阅读：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fuyusakaiori.github.io/OperatingSystem/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/" >线程概述</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>:::</p>
 <ul>
-<li>其余线程抢占当前线程的处理器使用权执行任务</li>
-<li>其余线程执行任务结束之后，之前被抢占的线程想要继续执行</li>
-<li>[如果所有线程共享同一个程序计数器，那么上一个线程存入程序计数器的字节码指令地址就会被下一个线程 <strong>覆盖</strong>]{.blue}</li>
-<li>那么之前被抢占的线程就不可能知道从哪里开始继续执行了</li>
+<li>前提：具备操作系统层面的相关知识之后再阅读如下部分</li>
+</ul>
+
+        <h2 id="Java-线程实现"   >
+          <a href="#Java-线程实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程实现" class="headerlink" title="Java 线程实现"></a>Java 线程实现</h2>
+      
+        <h3 id="Java-线程历史"   >
+          <a href="#Java-线程历史" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程历史" class="headerlink" title="Java 线程历史"></a>Java 线程历史</h3>
+      <ul>
+<li>Java 在 JDK 1.2 时期的 Classic 虚拟机上采用线程实现方案是 [用户级线程实现]{.blue}：称为绿色线程（Green Threads）</li>
+<li>Java 在 JDK 1.3 时期时，所有主流的商用虚拟机全部采用 [内核级线程实现]{.blue}</li>
+<li>Java ME 的 CLDC-HI 虚拟机采用的是两种实现方案： [用户级线程实现 + 混合级线程实现]{.blue}</li>
+<li>Solaris 的 HotSpot 虚拟机采用的也是两种实现方案：[内核级线程实现 + 混合级线程实现]{.blue}</li>
 </ul>
 <p>:::info</p>
-<p>参考博客：</p>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/leaf_0303/article/details/78953669" >JVM 程序计数器</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>① Java 早期采用用户级线程的目的应该是比较明确的：为了实现更好的跨平台；改用内核级线程估计还是处于性能上的考虑</p>
+<p>② Java 之后采用内核级线程就导致了各个操作系统上的虚拟机的具体实现根本不一样，Solaris、Windows、Linux等等，都有自己的实现方案</p>
 <p>:::</p>
+
+        <h3 id="Java-线程调度"   >
+          <a href="#Java-线程调度" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程调度" class="headerlink" title="Java 线程调度"></a>Java 线程调度</h3>
+      <p>:::warning</p>
+<p>建议阅读：<a href="">调度算法</a></p>
+<p>:::</p>
+<ul>
+<li><p>前提：最好具备一定的操作系统的调度算法知识再继续阅读</p>
+</li>
+<li><p>引入：多线程并发执行时，如何安排这些线程执行呢？这就是调度算法要完成的工作</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li>协同式调度（Cooperative Threads-Scheduling）<ul>
+<li>名称：协同式调度也可以称为非抢占式调度</li>
+<li>定义：线程只有执行完成自己的所有任务后主动放弃处理器的使用权</li>
+<li>优点：调度算法实现简单</li>
+<li>缺点：当前线程执行时间过长会导致后续所有线程长时间等待，即使后续线程执行时间很短</li>
+</ul>
+</li>
+<li>抢占式调度（Preemptive Threads-Scheduling）<ul>
+<li>定义：其他线程可以抢占当前线程处理的使用权，无论当前线程是否执行结束</li>
+<li>优点：避免线程长时间等待，线程执行效率高</li>
+<li>缺点：调度算法实现复杂</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[Java 采用抢占式类型的调度算法]{.red}</p>
+<ul>
+<li>此前提到 Java 采用的线程实现方案是内核级线程实现，所有线程的控制权都在操作系统手上，JVM 没有管理的权利</li>
+<li>这里又提到 Java 采用的调度算法是抢占式的，不同的线程在交替执行</li>
+<li>这就出现了多线程编程中的常见现象<ul>
+<li>每次启动多个线程，执行的先后结果都是不一样的：每次抢占的情况都不一样</li>
+<li>设定线程优先级后，依然没有按照预想的情况执行：JVM 仅能给操作系统建议，而无法控制</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Java 优先级：</p>
+<ul>
+<li><p>Java 提供了 10 种优先级（1~10）：主线程默认优先级为 5</p>
+</li>
+<li><p>Windows 操作系统也提供了 7 种优先级</p>
+</li>
+<li><p>Solaris 操作系统提供了 2^31 种优先级</p>
+<p>  +++danger 问题来了，Java 和操作系统的优先级数量不一样，那么是怎么对应上的呢？</p>
+<p>  实际很简单，如果操作系统的优先级数量少，那么 Java 中多个优先级就对应一个就行了，如 Windows</p>
+<p>  所以得到结果就是，Java 中1和2、3和4、6和7、8和9的效果是完全相同</p>
+<p>  +++</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        <h3 id="Java-线程状态转换"   >
+          <a href="#Java-线程状态转换" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-线程状态转换" class="headerlink" title="Java 线程状态转换"></a>Java 线程状态转换</h3>
+      <ul>
+<li><p>Java 线程状态：</p>
+<ul>
+<li><p>初始态（New）：线程对象被创建但是没有启动时的状态</p>
+</li>
+<li><p>可运行态（Runnable）：包含 [线程准备运行和线程正在运行]{.red} 两种状态，即对应操作系统中两种状态</p>
+</li>
+<li><p>等待态：线程正在等待</p>
+<ul>
+<li><p>无限等待（Waiting）：线程必须被 [其他线程唤醒]{.red}，否则该线程永远不会执行</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下方法会导致线程进入无限等待</span></span><br><span class="line">wait()</span><br><span class="line"><span class="comment">// 唤醒方法</span></span><br><span class="line">notify()/notifyAll()</span><br></pre></td></tr></table></div></figure></li>
+<li><p>有限等待（Timed Waiting）：线程睡眠一段时间后 [自动唤醒]{.red}，不需要其他线程帮助</p>
+  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下方法会导致线程进入有限等待</span></span><br><span class="line">sleep()</span><br></pre></td></tr></table></div></figure></li>
+</ul>
+</li>
+<li><p>阻塞态（Blocked）:线程等待其他线程释放同步锁</p>
+</li>
+<li><p>终止态（Terminated）：线程执行结束或者意外终止</p>
+</li>
+</ul>
+<p>  :::info</p>
+<p>  ① Java 定义线程运行状态和操作系统层面定义的有些细微差距，要注意区分</p>
+<p>  ② Java 线程的状态是可以测试得到的，之后在其他博客中说明</p>
+<p>  :::</p>
+</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/Java 线程状态.547rhq1vqz40.png" alt="Java 线程状态" style="zoom:80%;" />
+
+
+        <h2 id="Java-与协程"   >
+          <a href="#Java-与协程" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-与协程" class="headerlink" title="Java 与协程"></a>Java 与协程</h2>
+      <ul>
+<li>前提：[目前 Java 并没有提供协程技术]{.blue}</li>
+</ul>
+
+        <h2 id="Java-守护线程"   >
+          <a href="#Java-守护线程" class="heading-link"><i class="fas fa-link"></i></a><a href="#Java-守护线程" class="headerlink" title="Java 守护线程"></a>Java 守护线程</h2>
+      <ul>
+<li>虚拟线程</li>
+<li>周期任务线程</li>
+<li>垃圾回收线程（GC线程）</li>
+<li>编译线程</li>
+<li>信号调度线程</li>
+</ul>
+
+        <h1 id="字节码解析"   >
+          <a href="#字节码解析" class="heading-link"><i class="fas fa-link"></i></a><a href="#字节码解析" class="headerlink" title="字节码解析"></a>字节码解析</h1>
+      <ul>
+<li><p>前提：后续的学习中会涉及到字节码的分析，而字节码的解析途径有多种，在此提前解释下</p>
+</li>
+<li><p>反编译：定义：将字节码文件解析成 Java 源代码</p>
+</li>
+<li><p>IDAE：本身就可以直接反编译字节码文件</p>
+<ul>
+<li><p>点击进入 out/production/ 目录下（存放所有字节码文件的目录）</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/IDEA 查看字节码文件.6k9fo19k10g0.png" alt="IDEA 查看字节码文件" style="zoom:80%;" /></li>
+<li><p>[实际上源代码并不是我们想要查看的信息，我们需要把字节码解析成另外的形式才能得到更多的信息]{.green}</p>
+<p>  :::warning</p>
+<p>  注：毕竟我们自己编写的源代码，再去查看一遍确实没有什么意义</p>
+<p>  :::</p>
+</li>
+</ul>
+</li>
+<li><p>反编译命令</p>
+<ul>
+<li><p>选择命令行终端</p>
+<p>  :::info</p>
+<p>  IDEA 或者 Windows 中使用都是可以的，笔者这里使用 IDEA 里的终端</p>
+<p>  :::</p>
+</li>
+<li><p>点击 IDEA 中的终端后切换当前所在目录</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 后面接上你自己的字节码所在的目录</span></span><br><span class="line"><span class="built_in">cd</span> out/production/yourdirectoryname</span><br></pre></td></tr></table></div></figure></li>
+<li><p>使用反编译命令解析字节码文件：</p>
+  <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Java 自身提供的反编译指令：接上你想要反编译的类的名称</span></span><br><span class="line">javap -v ClassName.class</span><br></pre></td></tr></table></div></figure></li>
+<li><p>反编译解析结果：可以先简单了解下</p>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/解析字节码文件.25f1fgg3dgn4.png" alt="解析字节码文件" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>反编译插件：</p>
+<ul>
+<li>IDEA 中安装 Jclasslib 插件</li>
+<li>选中想要解析的字节码文件后点击 View 选中 Show ByteCode With Jclasslib </li>
+<li>就可以非常方便的查看字节码文件解析后的结果</li>
+</ul>
+  <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/个人博客搭建/IDEA 插件查看字节码文件.17xxsmn7pfkw.png" alt="IDEA 插件查看字节码文件" style="zoom:80%;" /></li>
+</ul>
 </div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/">执行引擎-概述</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-24</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-25</span></span></div></header><div class="post-body"><div class="post-excerpt">
         <h1 id="概述"   >
           <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h1>
