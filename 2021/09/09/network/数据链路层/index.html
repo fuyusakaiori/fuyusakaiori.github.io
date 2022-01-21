@@ -1,63 +1,14 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="数据链路层                           概述        概念：[数据链路层解决的是两个节点之间如何传输数据的问题]{.red}  术语  节点：主机，路由器，交换机 通信链路：网络中两个节点之间的通信的通道 协议数据单位：[帧]{.red} (通过封装网络层传递的数据包得到)   功能  成帧：(1) 封装成帧的方式 (2) 帧格">
-<meta property="og:type" content="article">
-<meta property="og:title" content="数据链路层">
-<meta property="og:url" content="http://example.com/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/index.html">
-<meta property="og:site_name" content="天鹅绒房间">
-<meta property="og:description" content="数据链路层                           概述        概念：[数据链路层解决的是两个节点之间如何传输数据的问题]{.red}  术语  节点：主机，路由器，交换机 通信链路：网络中两个节点之间的通信的通道 协议数据单位：[帧]{.red} (通过封装网络层传递的数据包得到)   功能  成帧：(1) 封装成帧的方式 (2) 帧格">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210308192406247.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210308193222252.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210308193628777.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210308193906261.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210308201008841.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210311163747321.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210311165115013.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210311165529935.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210311171636295.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210311172237359.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210311175715866.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210312154721673.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210314151304864.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210314152232517.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210312170154293.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210314143614745.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210314143833560.png">
-<meta property="og:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210315145441669.png">
-<meta property="article:published_time" content="2021-09-09T12:47:13.737Z">
-<meta property="article:modified_time" content="2021-09-11T10:24:51.679Z">
-<meta property="article:author" content="Fuyusakaiori">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="d:/Typora/Typora/文件/计算机网络.assets/image-20210308192406247.png"><title>数据链路层 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
-var CONFIG = {
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="数据链路层"><meta name="keywords" content=""><meta name="author" content="Fuyusakaiori"><meta name="copyright" content="Fuyusakaiori"><title>数据链路层 | 天鹅绒房间</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
   root: '/',
-  algolia: undefined,
-  assistSearch: undefined,
-  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
-  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
-  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
-  postWidget: {"endText":true},
-  nightMode: {"enable":true},
-  back2top: {"enable":true},
-  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
-  reward: false,
-  fancybox: true,
-  zoomImage: {"gapAside":"20px"},
-  galleryWaterfall: undefined,
-  lazyload: false,
-  pjax: undefined,
-  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
-  shortcuts: undefined,
-  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
-  sourcePath: {"js":"js","css":"css","images":"images"},
-};
-
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">数据链路层</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-09</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-11</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
-        <h1 id="数据链路层"   >
-          <a href="#数据链路层" class="heading-link"><i class="fas fa-link"></i></a><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h1>
-      
-        <h2 id="概述"   >
-          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
-      <ul>
+  algolia: {"appId":"37DAS9P43B","apiKey":"c2a5f8cdb503b255bb4384b147d4ab84","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}.","hits_stats":"${hits} results found in ${time} ms"}},
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-number">1.</span> <span class="toc-text">数据链路层</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.3.</span> <span class="toc-text">功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%B8%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text">成帧</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E6%88%90%E5%B8%A7"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">封装成帧</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%8F%E6%98%8E%E4%BC%A0%E8%BE%93"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">透明传输</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%AE%E9%94%99%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.2.</span> <span class="toc-text">差错控制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E9%94%99%E7%BC%96%E7%A0%81"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">检错编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%A0%E9%94%99%E7%BC%96%E7%A0%81"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">纠错编码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E8%B7%AF%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.3.</span> <span class="toc-text">链路管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E9%93%BE%E8%B7%AF"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">多路访问链路</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E9%93%BE%E8%B7%AF"><span class="toc-number">1.3.3.1.1.</span> <span class="toc-text">传输链路</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%86%B2%E7%AA%81"><span class="toc-number">1.3.3.1.2.</span> <span class="toc-text">信号冲突</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.</span> <span class="toc-text">介质访问控制</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BF%A1%E9%81%93%E5%88%92%E5%88%86%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.1.</span> <span class="toc-text">信道划分介质访问控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.2.</span> <span class="toc-text">随机访问介质访问控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BD%AE%E8%AF%A2%E8%AE%BF%E9%97%AE%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.3.</span> <span class="toc-text">轮询访问介质访问控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.3.1.3.4.</span> <span class="toc-text">三种介质访问控制方式对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E9%93%BE%E8%B7%AF"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">点对点链路</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">1.4.</span> <span class="toc-text">局域网</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.4.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.4.2.</span> <span class="toc-text">以太网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E7%BA%BF%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">1.4.3.</span> <span class="toc-text">无线局域网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">1.4.4.</span> <span class="toc-text">虚拟局域网</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87"><span class="toc-number">1.5.</span> <span class="toc-text">设备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.5.1.</span> <span class="toc-text">扩展以太网</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%B1%82%E6%89%A9%E5%B1%95%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">物理层扩展以太网</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E8%B7%AF%E5%B1%82%E6%89%A9%E5%B1%95%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">链路层扩展以太网</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">108</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">32</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/Home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">数据链路层</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">9.6k</span><span class="post-meta__separator">|</span><span>Reading time: 29 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
 <li><p>概念：[数据链路层解决的是两个节点之间如何传输数据的问题]{.red}</p>
 </li>
 <li><p>术语</p>
@@ -89,10 +40,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p><a href="#%E8%AE%BE%E5%A4%87">设备</a>：交换机</p>
 </li>
 </ul>
-
-        <h2 id="实现"   >
-          <a href="#实现" class="heading-link"><i class="fas fa-link"></i></a><a href="#实现" class="headerlink" title="实现"></a>实现</h2>
-      <ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><ul>
 <li><p>硬件：<a style="color:red;">网络适配器</a> (NetWork Adapter)</p>
 <p>  注：网络适配器又称为 <strong>网络接口卡</strong>(俗称网卡 NIC)</p>
 </li>
@@ -141,16 +89,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>[ARP](#ARP 协议)：<a style="color:red;">ARP 协议在 《TCP/IP 详解》中归为网络层；在 《自顶向下》中认为网络层或者数据链路层都是可以的</a></p>
 </li>
 </ul>
-
-        <h2 id="功能"   >
-          <a href="#功能" class="heading-link"><i class="fas fa-link"></i></a><a href="#功能" class="headerlink" title="功能"></a>功能</h2>
-      
-        <h3 id="成帧"   >
-          <a href="#成帧" class="heading-link"><i class="fas fa-link"></i></a><a href="#成帧" class="headerlink" title="成帧"></a>成帧</h3>
-      
-        <h4 id="封装成帧"   >
-          <a href="#封装成帧" class="heading-link"><i class="fas fa-link"></i></a><a href="#封装成帧" class="headerlink" title="封装成帧"></a>封装成帧</h4>
-      <ul>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><h3 id="成帧"><a href="#成帧" class="headerlink" title="成帧"></a>成帧</h3><h4 id="封装成帧"><a href="#封装成帧" class="headerlink" title="封装成帧"></a>封装成帧</h4><ul>
 <li><p>封装成帧：网络适配器将 <strong>数据报</strong> 添加 <strong>首部信息</strong> 和 <strong>尾部信息</strong> 后进行封装</p>
 </li>
 <li><p>首部信息( 帧开始符 SOH )：<a style="color:red;">实现帧同步</a>：通知接收方数据帧即将到来请做好接收准备</p>
@@ -167,10 +106,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </li>
 </ul>
 <p><img src="D:\Typora\Typora\文件\计算机网络.assets\image-20210308192406247.png" alt="image-20210308192406247"></p>
-
-        <h4 id="透明传输"   >
-          <a href="#透明传输" class="heading-link"><i class="fas fa-link"></i></a><a href="#透明传输" class="headerlink" title="透明传输"></a>透明传输</h4>
-      <ul>
+<h4 id="透明传输"><a href="#透明传输" class="headerlink" title="透明传输"></a>透明传输</h4><ul>
 <li><p>透明传输：保证无论任何组合的比特序列都能够在信道中==不受到任何阻碍==地传输</p>
 <p>  解释：阻碍是指帧首部和帧尾部是多位比特组成的控制信息，数据部分的比特序列可能和控制信息一致，阻碍帧的数据部分传输</p>
 </li>
@@ -203,13 +139,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="差错控制"   >
-          <a href="#差错控制" class="heading-link"><i class="fas fa-link"></i></a><a href="#差错控制" class="headerlink" title="差错控制"></a>差错控制</h3>
-      
-        <h4 id="原因"   >
-          <a href="#原因" class="heading-link"><i class="fas fa-link"></i></a><a href="#原因" class="headerlink" title="原因"></a>原因</h4>
-      <ul>
+<h3 id="差错控制"><a href="#差错控制" class="headerlink" title="差错控制"></a>差错控制</h3><h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><ul>
 <li><p>根本原因：信号在信道中传输时受到噪声的影响</p>
 </li>
 <li><p>类型</p>
@@ -245,10 +175,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h4 id="检错编码"   >
-          <a href="#检错编码" class="heading-link"><i class="fas fa-link"></i></a><a href="#检错编码" class="headerlink" title="检错编码"></a>检错编码</h4>
-      <ul>
+<h4 id="检错编码"><a href="#检错编码" class="headerlink" title="检错编码"></a>检错编码</h4><ul>
 <li><p>奇偶校验码</p>
 <ul>
 <li><p>概念：</p>
@@ -290,10 +217,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h4 id="纠错编码"   >
-          <a href="#纠错编码" class="heading-link"><i class="fas fa-link"></i></a><a href="#纠错编码" class="headerlink" title="纠错编码"></a>纠错编码</h4>
-      <ul>
+<h4 id="纠错编码"><a href="#纠错编码" class="headerlink" title="纠错编码"></a>纠错编码</h4><ul>
 <li><p>海明码</p>
 <ul>
 <li><p>实现</p>
@@ -322,16 +246,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="链路管理"   >
-          <a href="#链路管理" class="heading-link"><i class="fas fa-link"></i></a><a href="#链路管理" class="headerlink" title="链路管理"></a>链路管理</h3>
-      
-        <h4 id="多路访问链路"   >
-          <a href="#多路访问链路" class="heading-link"><i class="fas fa-link"></i></a><a href="#多路访问链路" class="headerlink" title="多路访问链路"></a>多路访问链路</h4>
-      
-        <h5 id="传输链路"   >
-          <a href="#传输链路" class="heading-link"><i class="fas fa-link"></i></a><a href="#传输链路" class="headerlink" title="传输链路"></a>传输链路</h5>
-      <ul>
+<h3 id="链路管理"><a href="#链路管理" class="headerlink" title="链路管理"></a>链路管理</h3><h4 id="多路访问链路"><a href="#多路访问链路" class="headerlink" title="多路访问链路"></a>多路访问链路</h4><h5 id="传输链路"><a href="#传输链路" class="headerlink" title="传输链路"></a>传输链路</h5><ul>
 <li>点对点链路<ul>
 <li>概念：两个相邻节点相连，没有第三者</li>
 <li>应用：==PPP 协议== ==HDLC 协议==</li>
@@ -348,10 +263,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h5 id="信号冲突"   >
-          <a href="#信号冲突" class="heading-link"><i class="fas fa-link"></i></a><a href="#信号冲突" class="headerlink" title="信号冲突"></a>信号冲突</h5>
-      <ul>
+<h5 id="信号冲突"><a href="#信号冲突" class="headerlink" title="信号冲突"></a>信号冲突</h5><ul>
 <li><p>基本概念：两个节点 <strong>同时</strong> 传输帧，两个节点的帧在传输的过程中发生 <strong>碰撞</strong></p>
 </li>
 <li><p>产生情况：<a style="color:red;">电路交换不会产生信号冲突，分组交换会产生信号冲突</a></p>
@@ -362,16 +274,10 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>解决方式：介质访问控制</p>
 </li>
 </ul>
-
-        <h5 id="介质访问控制"   >
-          <a href="#介质访问控制" class="heading-link"><i class="fas fa-link"></i></a><a href="#介质访问控制" class="headerlink" title="介质访问控制"></a>介质访问控制</h5>
-      <ul>
+<h5 id="介质访问控制"><a href="#介质访问控制" class="headerlink" title="介质访问控制"></a>介质访问控制</h5><ul>
 <li>目的：==协调==节点传输数据的过程 </li>
 </ul>
-
-        <h6 id="信道划分介质访问控制"   >
-          <a href="#信道划分介质访问控制" class="heading-link"><i class="fas fa-link"></i></a><a href="#信道划分介质访问控制" class="headerlink" title="信道划分介质访问控制"></a>信道划分介质访问控制</h6>
-      <ul>
+<h6 id="信道划分介质访问控制"><a href="#信道划分介质访问控制" class="headerlink" title="信道划分介质访问控制"></a>信道划分介质访问控制</h6><ul>
 <li><p>基本概念：将使用介质的每个设备利用技术进行 <strong>隔离</strong> </p>
 </li>
 <li><p>频分多路复用（FDM）</p>
@@ -479,7 +385,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </li>
 <li><p>对比</p>
 <p>  注：只要采用这种静态划分信道的方式，可以说就是将分组交换变成了电路交换 （以太网中都不采用这种方式来划分信道）</p>
-<div class="table-container"><table>
+<table>
 <thead>
 <tr>
 <th></th>
@@ -518,13 +424,10 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <td>1.每个频带带宽较低 2.不能同时发送</td>
 <td>无</td>
 </tr>
-</tbody></table></div>
+</tbody></table>
 </li>
 </ul>
-
-        <h6 id="随机访问介质访问控制"   >
-          <a href="#随机访问介质访问控制" class="heading-link"><i class="fas fa-link"></i></a><a href="#随机访问介质访问控制" class="headerlink" title="随机访问介质访问控制"></a>随机访问介质访问控制</h6>
-      <ul>
+<h6 id="随机访问介质访问控制"><a href="#随机访问介质访问控制" class="headerlink" title="随机访问介质访问控制"></a>随机访问介质访问控制</h6><ul>
 <li><p>纯 ALOHA 协议</p>
 <ul>
 <li><p>内容：多个站点==可以同时发送数据==，产生信号冲突后，每个站点有 ==概率 p== 立即重传该帧；==1-p的概率选择其他时间== 重传该帧</p>
@@ -702,7 +605,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>对比：数据链路层所有帧的重复都是交由高层决定，因为数据链路层本身并不实现可靠传输没有确认重传机制</p>
 </li>
 </ul>
-<div class="table-container"><table>
+<table>
 <thead>
 <tr>
 <th></th>
@@ -745,11 +648,8 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <td>不能</td>
 <td>尽量避免</td>
 </tr>
-</tbody></table></div>
-
-        <h6 id="轮询访问介质访问控制"   >
-          <a href="#轮询访问介质访问控制" class="heading-link"><i class="fas fa-link"></i></a><a href="#轮询访问介质访问控制" class="headerlink" title="轮询访问介质访问控制"></a>轮询访问介质访问控制</h6>
-      <ul>
+</tbody></table>
+<h6 id="轮询访问介质访问控制"><a href="#轮询访问介质访问控制" class="headerlink" title="轮询访问介质访问控制"></a>轮询访问介质访问控制</h6><ul>
 <li><p>轮询协议</p>
 <ul>
 <li><p>内容：</p>
@@ -787,10 +687,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <p>  <img src="D:\Typora\Typora\文件\计算机网络.assets\image-20210312154721673.png" alt="image-20210312154721673"></p>
 </li>
 </ul>
-
-        <h6 id="三种介质访问控制方式对比"   >
-          <a href="#三种介质访问控制方式对比" class="heading-link"><i class="fas fa-link"></i></a><a href="#三种介质访问控制方式对比" class="headerlink" title="三种介质访问控制方式对比"></a>三种介质访问控制方式对比</h6>
-      <ul>
+<h6 id="三种介质访问控制方式对比"><a href="#三种介质访问控制方式对比" class="headerlink" title="三种介质访问控制方式对比"></a>三种介质访问控制方式对比</h6><ul>
 <li>信道划分介质访问控制<ul>
 <li>优点：适用于网络负载重的情况<ul>
 <li>共享信道效率较高，非常公平</li>
@@ -825,10 +722,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h4 id="点对点链路"   >
-          <a href="#点对点链路" class="heading-link"><i class="fas fa-link"></i></a><a href="#点对点链路" class="headerlink" title="点对点链路"></a>点对点链路</h4>
-      <ul>
+<h4 id="点对点链路"><a href="#点对点链路" class="headerlink" title="点对点链路"></a>点对点链路</h4><ul>
 <li><p>广域网</p>
 <ul>
 <li>概念：国际性网络（Internet）</li>
@@ -938,13 +832,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>对比</p>
 </li>
 </ul>
-
-        <h2 id="局域网"   >
-          <a href="#局域网" class="heading-link"><i class="fas fa-link"></i></a><a href="#局域网" class="headerlink" title="局域网"></a>局域网</h2>
-      
-        <h3 id="基本概念"   >
-          <a href="#基本概念" class="heading-link"><i class="fas fa-link"></i></a><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3>
-      <ul>
+<h2 id="局域网"><a href="#局域网" class="headerlink" title="局域网"></a>局域网</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
 <li><p>概念：<strong>某一较小区域内</strong>，多台计算机设备共同组成的计算机组，使用<strong>广播信道</strong></p>
 </li>
 <li><p>组成</p>
@@ -1050,10 +938,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="以太网"   >
-          <a href="#以太网" class="heading-link"><i class="fas fa-link"></i></a><a href="#以太网" class="headerlink" title="以太网"></a>以太网</h3>
-      <ul>
+<h3 id="以太网"><a href="#以太网" class="headerlink" title="以太网"></a>以太网</h3><ul>
 <li><p>定义：</p>
 <ul>
 <li>以太网是局域网的一种：所以可以认为以太网是互联自治的计算机集合</li>
@@ -1109,7 +994,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>常见传输介质对比</p>
 </li>
 </ul>
-<div class="table-container"><table>
+<table>
 <thead>
 <tr>
 <th>参数</th>
@@ -1154,11 +1039,8 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <td>2</td>
 <td>2</td>
 </tr>
-</tbody></table></div>
-
-        <h3 id="无线局域网"   >
-          <a href="#无线局域网" class="heading-link"><i class="fas fa-link"></i></a><a href="#无线局域网" class="headerlink" title="无线局域网"></a>无线局域网</h3>
-      <ul>
+</tbody></table>
+<h3 id="无线局域网"><a href="#无线局域网" class="headerlink" title="无线局域网"></a>无线局域网</h3><ul>
 <li><p>标准：<strong>IEEE 802.11</strong></p>
 </li>
 <li><p>IEEE 802.11 标准</p>
@@ -1199,16 +1081,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="虚拟局域网"   >
-          <a href="#虚拟局域网" class="heading-link"><i class="fas fa-link"></i></a><a href="#虚拟局域网" class="headerlink" title="虚拟局域网"></a>虚拟局域网</h3>
-      
-        <h2 id="设备"   >
-          <a href="#设备" class="heading-link"><i class="fas fa-link"></i></a><a href="#设备" class="headerlink" title="设备"></a>设备</h2>
-      
-        <h3 id="扩展以太网"   >
-          <a href="#扩展以太网" class="heading-link"><i class="fas fa-link"></i></a><a href="#扩展以太网" class="headerlink" title="扩展以太网"></a>扩展以太网</h3>
-      <p>扩展以太网的原因：</p>
+<h3 id="虚拟局域网"><a href="#虚拟局域网" class="headerlink" title="虚拟局域网"></a>虚拟局域网</h3><h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><h3 id="扩展以太网"><a href="#扩展以太网" class="headerlink" title="扩展以太网"></a>扩展以太网</h3><p>扩展以太网的原因：</p>
 <ul>
 <li><p>主机需要和其他距离更远的主机进行通信</p>
 </li>
@@ -1216,10 +1089,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <p>  超出这个距离之后信道中的信号受损之后是无法恢复的</p>
 </li>
 </ul>
-
-        <h4 id="物理层扩展以太网"   >
-          <a href="#物理层扩展以太网" class="heading-link"><i class="fas fa-link"></i></a><a href="#物理层扩展以太网" class="headerlink" title="物理层扩展以太网"></a>物理层扩展以太网</h4>
-      <ul>
+<h4 id="物理层扩展以太网"><a href="#物理层扩展以太网" class="headerlink" title="物理层扩展以太网"></a>物理层扩展以太网</h4><ul>
 <li><p>光纤</p>
 <ul>
 <li>采用光纤作为传输介质连接主机和集线器</li>
@@ -1232,10 +1102,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <p>  <img src="D:\Typora\Typora\文件\计算机网络.assets\image-20210315145441669.png" alt="image-20210315145441669"></p>
 </li>
 </ul>
-
-        <h4 id="链路层扩展以太网"   >
-          <a href="#链路层扩展以太网" class="heading-link"><i class="fas fa-link"></i></a><a href="#链路层扩展以太网" class="headerlink" title="链路层扩展以太网"></a>链路层扩展以太网</h4>
-      <ul>
+<h4 id="链路层扩展以太网"><a href="#链路层扩展以太网" class="headerlink" title="链路层扩展以太网"></a>链路层扩展以太网</h4><ul>
 <li><p>网桥</p>
 <ul>
 <li><p>基本概念</p>
@@ -1323,34 +1190,8 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>广播域：网络中能够<strong>接收</strong>任一设备发送的<strong>广播帧</strong>的所有设备集合</p>
 </li>
 </ul>
-</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">http://example.com/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/11/linux/Linux%20%E5%8E%86%E5%8F%B2/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">Linux 历史</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/"><span class="paginator-prev__text">网络层</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-number">1.</span> <span class="toc-text">
-          数据链路层</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
-          概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.</span> <span class="toc-text">
-          实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.3.</span> <span class="toc-text">
-          功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%B8%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text">
-          成帧</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E6%88%90%E5%B8%A7"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">
-          封装成帧</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%8F%E6%98%8E%E4%BC%A0%E8%BE%93"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">
-          透明传输</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%AE%E9%94%99%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.2.</span> <span class="toc-text">
-          差错控制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">
-          原因</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E9%94%99%E7%BC%96%E7%A0%81"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">
-          检错编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%A0%E9%94%99%E7%BC%96%E7%A0%81"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">
-          纠错编码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E8%B7%AF%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.3.</span> <span class="toc-text">
-          链路管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E9%93%BE%E8%B7%AF"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">
-          多路访问链路</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E9%93%BE%E8%B7%AF"><span class="toc-number">1.3.3.1.1.</span> <span class="toc-text">
-          传输链路</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%86%B2%E7%AA%81"><span class="toc-number">1.3.3.1.2.</span> <span class="toc-text">
-          信号冲突</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.</span> <span class="toc-text">
-          介质访问控制</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BF%A1%E9%81%93%E5%88%92%E5%88%86%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.1.</span> <span class="toc-text">
-          信道划分介质访问控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.2.</span> <span class="toc-text">
-          随机访问介质访问控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BD%AE%E8%AF%A2%E8%AE%BF%E9%97%AE%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">1.3.3.1.3.3.</span> <span class="toc-text">
-          轮询访问介质访问控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.3.1.3.4.</span> <span class="toc-text">
-          三种介质访问控制方式对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E9%93%BE%E8%B7%AF"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">
-          点对点链路</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">1.4.</span> <span class="toc-text">
-          局域网</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.4.1.</span> <span class="toc-text">
-          基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.4.2.</span> <span class="toc-text">
-          以太网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E7%BA%BF%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">1.4.3.</span> <span class="toc-text">
-          无线局域网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%B1%80%E5%9F%9F%E7%BD%91"><span class="toc-number">1.4.4.</span> <span class="toc-text">
-          虚拟局域网</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87"><span class="toc-number">1.5.</span> <span class="toc-text">
-          设备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.5.1.</span> <span class="toc-text">
-          扩展以太网</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%B1%82%E6%89%A9%E5%B1%95%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">
-          物理层扩展以太网</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%93%BE%E8%B7%AF%E5%B1%82%E6%89%A9%E5%B1%95%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">
-          链路层扩展以太网</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Fuyusakaiori</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/09/network/数据链路层/">http://example.com/2021/09/09/network/数据链路层/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2021/09/11/linux/Linux%20%E5%8E%86%E5%8F%B2/"><i class="fa fa-chevron-left">  </i><span>Linux 历史</span></a></div><div class="next-post pull-right"><a href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/"><span>网络层</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

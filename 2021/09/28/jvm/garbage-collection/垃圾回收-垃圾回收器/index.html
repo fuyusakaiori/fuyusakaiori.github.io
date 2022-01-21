@@ -1,59 +1,21 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="垃圾回收器                           概述       :::warning ① 垃圾回收器是虚拟机中具体执行垃圾回收的部分，也是垃圾回收算法的具体实现 ② 不过后续许多的垃圾回收器并不是严格使用此前提到的算法，有非常多不同的改进 ③ Java 社区中的许多公司都开发了自己的虚拟机，诸如 IBM、Oracle、RedHat 等等 ④">
-<meta property="og:type" content="article">
-<meta property="og:title" content="垃圾回收-垃圾回收器">
-<meta property="og:url" content="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/index.html">
-<meta property="og:site_name" content="天鹅绒房间">
-<meta property="og:description" content="垃圾回收器                           概述       :::warning ① 垃圾回收器是虚拟机中具体执行垃圾回收的部分，也是垃圾回收算法的具体实现 ② 不过后续许多的垃圾回收器并不是严格使用此前提到的算法，有非常多不同的改进 ③ Java 社区中的许多公司都开发了自己的虚拟机，诸如 IBM、Oracle、RedHat 等等 ④">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器分类.fg1iu3bz6ww.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器组合图示.2b22lycmp7b4.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/吞吐量与延迟.tunha27nl68.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/查看-Serial-垃圾回收器.59tbi2y2k3k0.png">
-<meta property="article:published_time" content="2021-09-28T09:17:53.928Z">
-<meta property="article:modified_time" content="2021-10-03T13:07:53.730Z">
-<meta property="article:author" content="Fuyusakaiori">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器分类.fg1iu3bz6ww.png"><title>垃圾回收-垃圾回收器 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
-var CONFIG = {
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="垃圾回收-垃圾回收器"><meta name="keywords" content=""><meta name="author" content="Fuyusakaiori"><meta name="copyright" content="Fuyusakaiori"><title>垃圾回收-垃圾回收器 | 天鹅绒房间</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
   root: '/',
-  algolia: undefined,
-  assistSearch: undefined,
-  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
-  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
-  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
-  postWidget: {"endText":true},
-  nightMode: {"enable":true},
-  back2top: {"enable":true},
-  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
-  reward: false,
-  fancybox: true,
-  zoomImage: {"gapAside":"20px"},
-  galleryWaterfall: undefined,
-  lazyload: false,
-  pjax: undefined,
-  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
-  shortcuts: undefined,
-  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
-  sourcePath: {"js":"js","css":"css","images":"images"},
-};
-
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">垃圾回收-垃圾回收器</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-28</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-10-03</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
-        <h1 id="垃圾回收器"   >
-          <a href="#垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h1>
-      
-        <h2 id="概述"   >
-          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
-      <p>:::warning</p>
+  algolia: {"appId":"37DAS9P43B","apiKey":"c2a5f8cdb503b255bb4384b147d4ab84","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}.","hits_stats":"${hits} results found in ${time} ms"}},
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.1.1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88"><span class="toc-number">1.1.3.</span> <span class="toc-text">组合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.4.</span> <span class="toc-text">性能指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8-1"><span class="toc-number">1.2.</span> <span class="toc-text">垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%A4%A7%E7%BB%8F%E5%85%B8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">7 大经典垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%B2%E8%A1%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">串行垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Serial-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.1.</span> <span class="toc-text">Serial 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Serial-Old-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.2.</span> <span class="toc-text">Serial Old 垃圾回收器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">并行垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ParNew-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.1.</span> <span class="toc-text">ParNew 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Parallel-Scavenge-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.2.</span> <span class="toc-text">Parallel Scavenge 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Parallel-Old-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.3.</span> <span class="toc-text">Parallel Old 垃圾回收器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">并发垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CMS-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.1.</span> <span class="toc-text">CMS 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#G1-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.2.</span> <span class="toc-text">G1 垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-1"><span class="toc-number">1.2.1.3.2.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Region-%E5%B8%83%E5%B1%80"><span class="toc-number">1.2.1.3.2.2.</span> <span class="toc-text">Region 布局</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9E%E6%94%B6%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.1.3.2.3.</span> <span class="toc-text">回收模式</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9E%E6%94%B6%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.1.3.2.4.</span> <span class="toc-text">回收过程</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%E4%B8%8E%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.1.3.2.5.</span> <span class="toc-text">优点与缺点</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%A7%E5%89%8D%E6%B2%BF%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">3 大前沿垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Shenandoah-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">Shenandoah 垃圾回收器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ZGC-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">ZGC 垃圾回收器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Epsilon-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">Epsilon 垃圾回收器</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">108</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">32</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/Home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">垃圾回收-垃圾回收器</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-28</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">垃圾回收</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">5.9k</span><span class="post-meta__separator">|</span><span>Reading time: 18 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>:::warning</p>
 <p>① 垃圾回收器是虚拟机中具体执行垃圾回收的部分，也是垃圾回收算法的具体实现</p>
 <p>② 不过后续许多的垃圾回收器并不是严格使用此前提到的算法，有非常多不同的改进</p>
 <p>③ Java 社区中的许多公司都开发了自己的虚拟机，诸如 IBM、Oracle、RedHat 等等</p>
 <p>④ 不同的公司研发的不同的虚拟机，以及虚拟机的逐步改进，可能会让初看的同学感到混乱</p>
 <p>⑤ 所以我打算先把垃圾回收器的发展历史写出来，先了解大致有什么垃圾回收器，再进一步了解</p>
 <p>:::</p>
-
-        <h3 id="历史"   >
-          <a href="#历史" class="heading-link"><i class="fas fa-link"></i></a><a href="#历史" class="headerlink" title="历史"></a>历史</h3>
-      <ul>
+<h3 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h3><ul>
 <li>伴随 Java 虚拟机诞生的 [两款串行执行垃圾回收器应该是 Serial 和 Serial Old]{.red}<ul>
 <li>[Serial 主要用于收集年轻代、Serial Old 主要用于收集老年代]{.red}</li>
 </ul>
@@ -99,10 +61,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <p>② 可是 JDK 1.0 到 JDK 1.3 中间有三年的过度，那不可能这三年间虚拟机没有垃圾回收器吧，太扯了</p>
 <p>③ 《深入理解虚拟机》中提到 JDK 1.3 之前都是采用的 Serial 垃圾回收器，我觉得还比较合理</p>
 <p>:::</p>
-
-        <h3 id="分类"   >
-          <a href="#分类" class="heading-link"><i class="fas fa-link"></i></a><a href="#分类" class="headerlink" title="分类"></a>分类</h3>
-      <p>:::info</p>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p>:::info</p>
 <p>不同的垃圾回收器针对的堆空间区域不同，而且有并行与并发的区别</p>
 <p>:::</p>
 <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器分类.fg1iu3bz6ww.png" alt="垃圾回收器分类" style="zoom:80%;" />
@@ -124,10 +83,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="组合"   >
-          <a href="#组合" class="heading-link"><i class="fas fa-link"></i></a><a href="#组合" class="headerlink" title="组合"></a>组合</h3>
-      <img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器组合图示.2b22lycmp7b4.png" alt="垃圾回收器组合图示" style="zoom:80%;" />
+<h3 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h3><img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/垃圾回收器组合图示.2b22lycmp7b4.png" alt="垃圾回收器组合图示" style="zoom:80%;" />
 
 <ul>
 <li>[最早的垃圾回收器组合：Serial + Serial Old]{.blue}</li>
@@ -135,10 +91,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li>[JDK 8 时代的垃圾回收器组合：Parallel Scavenge + Parallel Old]{.blue}</li>
 <li>[JDK 9 时代的垃圾回收器：G1]{.blue}</li>
 </ul>
-
-        <h3 id="性能指标"   >
-          <a href="#性能指标" class="heading-link"><i class="fas fa-link"></i></a><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3>
-      <p>:::info</p>
+<h3 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3><p>:::info</p>
 <p>就好比采用时间复杂度衡量算法的好坏一样，需要有相应的标准衡量垃圾回收器性能的好坏</p>
 <p>:::</p>
 <ul>
@@ -172,23 +125,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>核心：[未来所有垃圾回收器都是朝着在 <strong>确保延迟可控的情况尽最大可能提升吞吐量</strong> 的方向努力]{.red}</p>
 </li>
 </ul>
-
-        <h2 id="垃圾回收器-1"   >
-          <a href="#垃圾回收器-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#垃圾回收器-1" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h2>
-      
-        <h3 id="7-大经典垃圾回收器"   >
-          <a href="#7-大经典垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#7-大经典垃圾回收器" class="headerlink" title="7 大经典垃圾回收器"></a>7 大经典垃圾回收器</h3>
-      <p>:::info</p>
+<h2 id="垃圾回收器-1"><a href="#垃圾回收器-1" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h2><h3 id="7-大经典垃圾回收器"><a href="#7-大经典垃圾回收器" class="headerlink" title="7 大经典垃圾回收器"></a>7 大经典垃圾回收器</h3><p>:::info</p>
 <p>① 前面的串行和并行垃圾收集器都是比较简单，算法都是基于此前提到过的基础算法</p>
 <p>② 后面的并发和全能回收器的理解具有一定的难度，一些细节是缺失的，算法是有改进的</p>
 <p>:::</p>
-
-        <h4 id="串行垃圾回收器"   >
-          <a href="#串行垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#串行垃圾回收器" class="headerlink" title="串行垃圾回收器"></a>串行垃圾回收器</h4>
-      
-        <h5 id="Serial-垃圾回收器"   >
-          <a href="#Serial-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Serial-垃圾回收器" class="headerlink" title="Serial 垃圾回收器"></a>Serial 垃圾回收器</h5>
-      <ul>
+<h4 id="串行垃圾回收器"><a href="#串行垃圾回收器" class="headerlink" title="串行垃圾回收器"></a>串行垃圾回收器</h4><h5 id="Serial-垃圾回收器"><a href="#Serial-垃圾回收器" class="headerlink" title="Serial 垃圾回收器"></a>Serial 垃圾回收器</h5><ul>
 <li><p>历史：JDK 1.3 之前新生代垃圾收集器的唯一选择，是历史最长最基础的垃圾收集器</p>
 </li>
 <li><p>特点：</p>
@@ -226,10 +167,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h5 id="Serial-Old-垃圾回收器"   >
-          <a href="#Serial-Old-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Serial-Old-垃圾回收器" class="headerlink" title="Serial Old 垃圾回收器"></a>Serial Old 垃圾回收器</h5>
-      <ul>
+<h5 id="Serial-Old-垃圾回收器"><a href="#Serial-Old-垃圾回收器" class="headerlink" title="Serial Old 垃圾回收器"></a>Serial Old 垃圾回收器</h5><ul>
 <li>历史：伴随 Serial 垃圾收集器诞生的老年代垃圾收集器</li>
 <li>特点：<ul>
 <li>[针对堆空间中的老年代回收垃圾]{.red}</li>
@@ -243,17 +181,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </li>
 <li>优点缺点和 Serial 垃圾收集器基本一致</li>
 </ul>
-
-        <h4 id="并行垃圾回收器"   >
-          <a href="#并行垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#并行垃圾回收器" class="headerlink" title="并行垃圾回收器"></a>并行垃圾回收器</h4>
-      <ul>
+<h4 id="并行垃圾回收器"><a href="#并行垃圾回收器" class="headerlink" title="并行垃圾回收器"></a>并行垃圾回收器</h4><ul>
 <li>所有的并行垃圾回收器都可以设置并行的 GC 线程数量</li>
 <li>[开启的 GC 线程数量最好不要超过处理器计算核的数量，避免引起线程并发带来的性能下降问题]{.red}</li>
 </ul>
-
-        <h5 id="ParNew-垃圾回收器"   >
-          <a href="#ParNew-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#ParNew-垃圾回收器" class="headerlink" title="ParNew 垃圾回收器"></a>ParNew 垃圾回收器</h5>
-      <ul>
+<h5 id="ParNew-垃圾回收器"><a href="#ParNew-垃圾回收器" class="headerlink" title="ParNew 垃圾回收器"></a>ParNew 垃圾回收器</h5><ul>
 <li>历史：JDK 1.3 推出第一款并行的垃圾回收器</li>
 <li>特点：<ul>
 <li>[针对堆空间中的新生代回收垃圾]{.red}</li>
@@ -271,10 +203,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h5 id="Parallel-Scavenge-垃圾回收器"   >
-          <a href="#Parallel-Scavenge-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Parallel-Scavenge-垃圾回收器" class="headerlink" title="Parallel Scavenge 垃圾回收器"></a>Parallel Scavenge 垃圾回收器</h5>
-      <ul>
+<h5 id="Parallel-Scavenge-垃圾回收器"><a href="#Parallel-Scavenge-垃圾回收器" class="headerlink" title="Parallel Scavenge 垃圾回收器"></a>Parallel Scavenge 垃圾回收器</h5><ul>
 <li><p>历史：JDK 1.4 推出，采用不同于 HotSpot 虚拟机规定的垃圾回收器框架，导致该垃圾回收器非常“特别”</p>
 </li>
 <li><p>特点：</p>
@@ -338,10 +267,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </li>
 </ul>
 <p>​            </p>
-
-        <h5 id="Parallel-Old-垃圾回收器"   >
-          <a href="#Parallel-Old-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Parallel-Old-垃圾回收器" class="headerlink" title="Parallel Old 垃圾回收器"></a>Parallel Old 垃圾回收器</h5>
-      <ul>
+<h5 id="Parallel-Old-垃圾回收器"><a href="#Parallel-Old-垃圾回收器" class="headerlink" title="Parallel Old 垃圾回收器"></a>Parallel Old 垃圾回收器</h5><ul>
 <li>历史：JDK 6 推出的老年代的并行垃圾收集器（《深入理解虚拟机》中提到这是个并发收集器，我觉得是写错了）</li>
 <li>特点：<ul>
 <li>[针对老年代进行垃圾回收]{.red}</li>
@@ -349,18 +275,12 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h4 id="并发垃圾回收器"   >
-          <a href="#并发垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#并发垃圾回收器" class="headerlink" title="并发垃圾回收器"></a>并发垃圾回收器</h4>
-      <p>:::primary</p>
+<h4 id="并发垃圾回收器"><a href="#并发垃圾回收器" class="headerlink" title="并发垃圾回收器"></a>并发垃圾回收器</h4><p>:::primary</p>
 <p>参考博客：</p>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/zqz_zqz/article/details/70568819" >CMS垃圾回收器详解</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36697880/article/details/105201936" >Java虚拟机 —-CMS 垃圾回收器</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zqz_zqz/article/details/70568819">CMS垃圾回收器详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36697880/article/details/105201936">Java虚拟机 —-CMS 垃圾回收器</a></p>
 <p>:::</p>
-
-        <h5 id="CMS-垃圾回收器"   >
-          <a href="#CMS-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#CMS-垃圾回收器" class="headerlink" title="CMS 垃圾回收器"></a>CMS 垃圾回收器</h5>
-      <ul>
+<h5 id="CMS-垃圾回收器"><a href="#CMS-垃圾回收器" class="headerlink" title="CMS 垃圾回收器"></a>CMS 垃圾回收器</h5><ul>
 <li><p>历史：</p>
 <ul>
 <li>JDK 5 时期推出的第一款并发式垃圾回收器，真正意义上实现了 GC 线程和用户线程同时执行</li>
@@ -476,17 +396,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h5 id="G1-垃圾回收器"   >
-          <a href="#G1-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#G1-垃圾回收器" class="headerlink" title="G1 垃圾回收器"></a>G1 垃圾回收器</h5>
-      <p>:::primary</p>
+<h5 id="G1-垃圾回收器"><a href="#G1-垃圾回收器" class="headerlink" title="G1 垃圾回收器"></a>G1 垃圾回收器</h5><p>:::primary</p>
 <p>参考博客：</p>
-<p><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://blog.csdn.net/coderlius/article/details/79272773" >详解 JVM Garbage First(G1) 垃圾收集器</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/coderlius/article/details/79272773">详解 JVM Garbage First(G1) 垃圾收集器</a></p>
 <p>:::</p>
-
-        <h6 id="概述-1"   >
-          <a href="#概述-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述-1" class="headerlink" title="概述"></a>概述</h6>
-      <ul>
+<h6 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h6><ul>
 <li>历史<ul>
 <li>G1 是垃圾回收器技术发展史上的里程碑，开创了面向局部收集的设计思路和基于 Region 的布局方式</li>
 <li>JDK 6 中作为实验性质的垃圾回收器被推出</li>
@@ -516,10 +430,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h6 id="Region-布局"   >
-          <a href="#Region-布局" class="heading-link"><i class="fas fa-link"></i></a><a href="#Region-布局" class="headerlink" title="Region 布局"></a>Region 布局</h6>
-      <ul>
+<h6 id="Region-布局"><a href="#Region-布局" class="headerlink" title="Region 布局"></a>Region 布局</h6><ul>
 <li>前提：[不再采用 <strong>连续内存分配</strong> 的方式为对象分配空间，而是采用 <strong>非连续内存</strong> 的方式]{.red}<ul>
 <li>连续内存分配：以前大多数对象通常占据的空间都是连续的</li>
 <li>非连续内存分配：现在对象占据的空间都是可以不连续的</li>
@@ -588,10 +499,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h6 id="回收模式"   >
-          <a href="#回收模式" class="heading-link"><i class="fas fa-link"></i></a><a href="#回收模式" class="headerlink" title="回收模式"></a>回收模式</h6>
-      <ul>
+<h6 id="回收模式"><a href="#回收模式" class="headerlink" title="回收模式"></a>回收模式</h6><ul>
 <li>新生代回收（Minor GC / Young GC）：<ul>
 <li>内容：采用标记-复制算法将伊甸园区+幸存者区的 Region 中存活的对象复制到空的 Region 中去</li>
 <li>回收条件：[新生代的大小占据整个堆空间的 60% 的时候开始执行新生代回收]{.blue}</li>
@@ -608,10 +516,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h6 id="回收过程"   >
-          <a href="#回收过程" class="heading-link"><i class="fas fa-link"></i></a><a href="#回收过程" class="headerlink" title="回收过程"></a>回收过程</h6>
-      <ul>
+<h6 id="回收过程"><a href="#回收过程" class="headerlink" title="回收过程"></a>回收过程</h6><ul>
 <li><p>前提：无论采用哪种回收模式，其回收过程都是完全一致的</p>
 </li>
 <li><p>标记阶段</p>
@@ -634,10 +539,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h6 id="优点与缺点"   >
-          <a href="#优点与缺点" class="heading-link"><i class="fas fa-link"></i></a><a href="#优点与缺点" class="headerlink" title="优点与缺点"></a>优点与缺点</h6>
-      <ul>
+<h6 id="优点与缺点"><a href="#优点与缺点" class="headerlink" title="优点与缺点"></a>优点与缺点</h6><ul>
 <li>优点</li>
 <li>缺点</li>
 <li>命令<ul>
@@ -655,43 +557,8 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="3-大前沿垃圾回收器"   >
-          <a href="#3-大前沿垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-大前沿垃圾回收器" class="headerlink" title="3 大前沿垃圾回收器"></a>3 大前沿垃圾回收器</h3>
-      
-        <h4 id="Shenandoah-垃圾回收器"   >
-          <a href="#Shenandoah-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Shenandoah-垃圾回收器" class="headerlink" title="Shenandoah 垃圾回收器"></a>Shenandoah 垃圾回收器</h4>
-      
-        <h4 id="ZGC-垃圾回收器"   >
-          <a href="#ZGC-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#ZGC-垃圾回收器" class="headerlink" title="ZGC 垃圾回收器"></a>ZGC 垃圾回收器</h4>
-      
-        <h4 id="Epsilon-垃圾回收器"   >
-          <a href="#Epsilon-垃圾回收器" class="heading-link"><i class="fas fa-link"></i></a><a href="#Epsilon-垃圾回收器" class="headerlink" title="Epsilon 垃圾回收器"></a>Epsilon 垃圾回收器</h4>
-      </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">http://example.com/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">类加载机制-概述</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/"><span class="paginator-prev__text">垃圾回收-垃圾回收算法</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">
-          垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
-          概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.1.1.</span> <span class="toc-text">
-          历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">
-          分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88"><span class="toc-number">1.1.3.</span> <span class="toc-text">
-          组合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">1.1.4.</span> <span class="toc-text">
-          性能指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8-1"><span class="toc-number">1.2.</span> <span class="toc-text">
-          垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%A4%A7%E7%BB%8F%E5%85%B8%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">
-          7 大经典垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%B2%E8%A1%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">
-          串行垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Serial-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.1.</span> <span class="toc-text">
-          Serial 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Serial-Old-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.1.2.</span> <span class="toc-text">
-          Serial Old 垃圾回收器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">
-          并行垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ParNew-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.1.</span> <span class="toc-text">
-          ParNew 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Parallel-Scavenge-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.2.</span> <span class="toc-text">
-          Parallel Scavenge 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Parallel-Old-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.2.3.</span> <span class="toc-text">
-          Parallel Old 垃圾回收器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">
-          并发垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CMS-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.1.</span> <span class="toc-text">
-          CMS 垃圾回收器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#G1-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.1.3.2.</span> <span class="toc-text">
-          G1 垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0-1"><span class="toc-number">1.2.1.3.2.1.</span> <span class="toc-text">
-          概述</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Region-%E5%B8%83%E5%B1%80"><span class="toc-number">1.2.1.3.2.2.</span> <span class="toc-text">
-          Region 布局</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9E%E6%94%B6%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.1.3.2.3.</span> <span class="toc-text">
-          回收模式</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9E%E6%94%B6%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.1.3.2.4.</span> <span class="toc-text">
-          回收过程</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%E4%B8%8E%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.1.3.2.5.</span> <span class="toc-text">
-          优点与缺点</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%A7%E5%89%8D%E6%B2%BF%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">
-          3 大前沿垃圾回收器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Shenandoah-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">
-          Shenandoah 垃圾回收器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ZGC-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">
-          ZGC 垃圾回收器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Epsilon-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">
-          Epsilon 垃圾回收器</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+<h3 id="3-大前沿垃圾回收器"><a href="#3-大前沿垃圾回收器" class="headerlink" title="3 大前沿垃圾回收器"></a>3 大前沿垃圾回收器</h3><h4 id="Shenandoah-垃圾回收器"><a href="#Shenandoah-垃圾回收器" class="headerlink" title="Shenandoah 垃圾回收器"></a>Shenandoah 垃圾回收器</h4><h4 id="ZGC-垃圾回收器"><a href="#ZGC-垃圾回收器" class="headerlink" title="ZGC 垃圾回收器"></a>ZGC 垃圾回收器</h4><h4 id="Epsilon-垃圾回收器"><a href="#Epsilon-垃圾回收器" class="headerlink" title="Epsilon 垃圾回收器"></a>Epsilon 垃圾回收器</h4></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Fuyusakaiori</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/28/jvm/garbage-collection/垃圾回收-垃圾回收器/">http://example.com/2021/09/28/jvm/garbage-collection/垃圾回收-垃圾回收器/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2021/09/28/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E6%A6%82%E8%BF%B0/"><i class="fa fa-chevron-left">  </i><span>类加载机制-概述</span></a></div><div class="next-post pull-right"><a href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/"><span>垃圾回收-垃圾回收算法</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

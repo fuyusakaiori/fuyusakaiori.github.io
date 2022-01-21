@@ -1,50 +1,14 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="面向对象                           概述        历史：  面向对象编程（object-oriented *programming: oop）取代 面向过程编程（结构化）   注：面向对象是一种思想而不是技术：Java 是面向对象的语言但是不代表不能按照面向过程的思想写代码，C 是面向过程的语言同样不代表不能按照面向对象的思想">
-<meta property="og:type" content="article">
-<meta property="og:title" content="面向对象">
-<meta property="og:url" content="http://example.com/2021/09/12/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/index.html">
-<meta property="og:site_name" content="天鹅绒房间">
-<meta property="og:description" content="面向对象                           概述        历史：  面向对象编程（object-oriented *programming: oop）取代 面向过程编程（结构化）   注：面向对象是一种思想而不是技术：Java 是面向对象的语言但是不代表不能按照面向过程的思想写代码，C 是面向过程的语言同样不代表不能按照面向对象的思想">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/01/fd91eda2fa5279281a7ccb866d9b95c6.png">
-<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/01/d22a707d17c9b052e4232c89bce66b4e.png">
-<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/01/140db6ac15eb6921869dfdad40512a52.png">
-<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/01/f5bd7b3bc5170cbdc0bed4d57978ec4d.png">
-<meta property="og:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/01/bc309d4393a01b790e5774fde51189e2.png">
-<meta property="article:published_time" content="2021-09-12T04:14:55.788Z">
-<meta property="article:modified_time" content="2021-09-12T04:17:16.251Z">
-<meta property="article:author" content="Fuyusakaiori">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i1.xpic.jp/file/xpicjp/2021/08/01/fd91eda2fa5279281a7ccb866d9b95c6.png"><title>面向对象 | 天鹅绒房间</title><link ref="canonical" href="http://example.com/2021/09/12/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
-var CONFIG = {
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="面向对象"><meta name="keywords" content=""><meta name="author" content="Fuyusakaiori"><meta name="copyright" content="Fuyusakaiori"><title>面向对象 | 天鹅绒房间</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
   root: '/',
-  algolia: undefined,
-  assistSearch: undefined,
-  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
-  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
-  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
-  postWidget: {"endText":true},
-  nightMode: {"enable":true},
-  back2top: {"enable":true},
-  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
-  reward: false,
-  fancybox: true,
-  zoomImage: {"gapAside":"20px"},
-  galleryWaterfall: undefined,
-  lazyload: false,
-  pjax: undefined,
-  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
-  shortcuts: undefined,
-  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
-  sourcePath: {"js":"js","css":"css","images":"images"},
-};
-
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">天鹅绒房间</div><div class="header-banner-info__subtitle">Velvet Room</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">面向对象</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-09-12</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-09-12</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
-        <h1 id="面向对象"   >
-          <a href="#面向对象" class="heading-link"><i class="fas fa-link"></i></a><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h1>
-      
-        <h2 id="概述"   >
-          <a href="#概述" class="heading-link"><i class="fas fa-link"></i></a><a href="#概述" class="headerlink" title="概述"></a>概述</h2>
-      <ul>
+  algolia: {"appId":"37DAS9P43B","apiKey":"c2a5f8cdb503b255bb4384b147d4ab84","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}.","hits_stats":"${hits} results found in ${time} ms"}},
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">1.2.2.</span> <span class="toc-text">特性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%81%E8%A3%85"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">继承</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%91%E4%B8%8A%E8%BD%AC%E5%9E%8B-amp-%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">向上转型 &amp; 向下转型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%86%99-amp-%E9%87%8D%E8%BD%BD"><span class="toc-number">1.2.2.2.2.</span> <span class="toc-text">重写 &amp; 重载</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%80%81"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">多态</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB"><span class="toc-number">1.2.3.</span> <span class="toc-text">关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="toc-number">1.3.</span> <span class="toc-text">访问权限</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text">包可见性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#public"><span class="toc-number">1.3.2.</span> <span class="toc-text">public</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#private"><span class="toc-number">1.3.3.</span> <span class="toc-text">private</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#protected"><span class="toc-number">1.3.4.</span> <span class="toc-text">protected</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.4.</span> <span class="toc-text">关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#static"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">static</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">静态变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">静态方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">1.4.0.4.</span> <span class="toc-text">静态代码块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.4.0.5.</span> <span class="toc-text">静态内部类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%AF%BC%E5%8C%85"><span class="toc-number">1.4.0.6.</span> <span class="toc-text">静态导包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.4.0.7.</span> <span class="toc-text">初始化顺序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#final"><span class="toc-number">1.4.1.</span> <span class="toc-text">final</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%8F%98%E9%87%8F"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">不可变变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">不可变方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E7%B1%BB"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">不可变类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">重排序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Object"><span class="toc-number">1.5.</span> <span class="toc-text">Object</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.6.</span> <span class="toc-text">枚举</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">108</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">32</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/Home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">面向对象</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-12</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Java/">Java</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">7.4k</span><span class="post-meta__separator">|</span><span>Reading time: 23 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
 <li><p>历史：</p>
 <ul>
 <li><p><strong>面向对象编程</strong>（<code>object-oriented *programming: oop</code>）取代 <strong>面向过程编程</strong>（结构化）</p>
@@ -77,13 +41,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h2 id="类"   >
-          <a href="#类" class="heading-link"><i class="fas fa-link"></i></a><a href="#类" class="headerlink" title="类"></a>类</h2>
-      
-        <h3 id="组成"   >
-          <a href="#组成" class="heading-link"><i class="fas fa-link"></i></a><a href="#组成" class="headerlink" title="组成"></a>组成</h3>
-      <ul>
+<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><h3 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h3><ul>
 <li><p>成员变量：</p>
 <ul>
 <li><p>定义：属于每个对象实例的变量</p>
@@ -92,10 +50,10 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </li>
 <li><p>细节：<a style="color:red;">每个对象中都隐含一个 “成员变量” </a>：<code>this</code> 表示当前对象的 <strong>引用</strong></p>
 <p>  (1) 方法的形式参数和成员变量名字相同时可以调用 <code>this</code> 加以区分</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MyObject</span> <span class="params">(<span class="keyword">int</span> count)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.count = count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MyObject</span> <span class="params">(<span class="keyword">int</span> count)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.count = count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>  (2) <a style="color:red;">每个对象在初始化完成时第一个变量一定是 <strong>对象的引用</strong> </a>(<code>this</code>)</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> MyObject <span class="keyword">this</span> = referrence; <span class="comment">// 模仿变量的声明，实际情况不是这样的</span></span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> MyObject <span class="keyword">this</span> = referrence; <span class="comment">// 模仿变量的声明，实际情况不是这样的</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>类变量：</p>
@@ -138,19 +96,10 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>方法</p>
 </li>
 </ul>
-
-        <h3 id="特性"   >
-          <a href="#特性" class="heading-link"><i class="fas fa-link"></i></a><a href="#特性" class="headerlink" title="特性"></a>特性</h3>
-      
-        <h4 id="封装"   >
-          <a href="#封装" class="heading-link"><i class="fas fa-link"></i></a><a href="#封装" class="headerlink" title="封装"></a>封装</h4>
-      <ul>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><h4 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h4><ul>
 <li>定义：合并数据和行为并创建新的数据类型，将接口和实现分离，实现细节隐藏</li>
 </ul>
-
-        <h4 id="继承"   >
-          <a href="#继承" class="heading-link"><i class="fas fa-link"></i></a><a href="#继承" class="headerlink" title="继承"></a>继承</h4>
-      <ul>
+<h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><ul>
 <li><p>定义：采用关键字 <code>extends</code> 实现的类与类之间的关系</p>
 </li>
 <li><p>特点：</p>
@@ -196,14 +145,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h5 id="向上转型-amp-向下转型"   >
-          <a href="#向上转型-amp-向下转型" class="heading-link"><i class="fas fa-link"></i></a><a href="#向上转型-amp-向下转型" class="headerlink" title="向上转型 &amp; 向下转型"></a>向上转型 &amp; 向下转型</h5>
-      <ul>
+<h5 id="向上转型-amp-向下转型"><a href="#向上转型-amp-向下转型" class="headerlink" title="向上转型 &amp; 向下转型"></a>向上转型 &amp; 向下转型</h5><ul>
 <li><p>向上转型</p>
 <ul>
 <li><p>定义：子类引用向父类引用进行转换被称为向上转型</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Father father = <span class="keyword">new</span> Son();</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Father father = <span class="keyword">new</span> Son();</span><br></pre></td></tr></table></figure></li>
 <li><p>特点：</p>
 <p>  (1) <a style="color:red;">子类向上转型后只可以调用父类拥有的成员变量和方法，无法调用子类自身的成员变量和方法</a>，但是仍然拥有自身的成员变量</p>
 <p>  (2) <a style="color:red;">向上转型可以通过隐式的强制转换就可以执行</a>：意味着向上转型始终都是安全的</p>
@@ -214,7 +160,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>向下转型</p>
 <ul>
 <li><p>定义：父类引用向子类引用进行转换被称为向下转型</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Son son = (Father) <span class="keyword">new</span> Father</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Son son = (Father) <span class="keyword">new</span> Father</span><br></pre></td></tr></table></figure></li>
 <li><p>特点：</p>
 <p>  (1) <a style="color:red;">向下转型只能够通过显式的强制转换才可以执行</a></p>
 <p>  (2) <a style="color:red;">向下转型可以通过编译器检查但是无法调用任何成员变量和方法</a>：会直接抛出 <code>java.lang.ClassCastException</code> 异常</p>
@@ -222,14 +168,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h5 id="重写-amp-重载"   >
-          <a href="#重写-amp-重载" class="heading-link"><i class="fas fa-link"></i></a><a href="#重写-amp-重载" class="headerlink" title="重写 &amp; 重载"></a>重写 &amp; 重载</h5>
-      <ul>
+<h5 id="重写-amp-重载"><a href="#重写-amp-重载" class="headerlink" title="重写 &amp; 重载"></a>重写 &amp; 重载</h5><ul>
 <li><p>重写（<code>Override</code>）</p>
 <ul>
 <li><p>定义：<a style="color:red;">子类对从父类继承而来的方法进行 <strong>重新定义</strong></a>：子类重新实现一个方法，这个方法和父类的 <strong>方法声明完全相同</strong>，实现不同</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* LinkedHashMap 继承 HashMap 并且重写了 newNode 方法 */</span></span><br><span class="line"><span class="comment">// HashMap 中创建节点的方法</span></span><br><span class="line"><span class="function">Node&lt;K,V&gt; <span class="title">newNode</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; next)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Node&lt;&gt;(hash, key, value, next);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// LinkedHashMap 中创建节点的方法</span></span><br><span class="line"><span class="function">Node&lt;K,V&gt; <span class="title">newNode</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; e)</span> </span>&#123;</span><br><span class="line">    LinkedHashMap.Entry&lt;K,V&gt; p =</span><br><span class="line">        <span class="keyword">new</span> LinkedHashMap.Entry&lt;K,V&gt;(hash, key, value, e);</span><br><span class="line">    linkNodeLast(p);</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* LinkedHashMap 继承 HashMap 并且重写了 newNode 方法 */</span></span><br><span class="line"><span class="comment">// HashMap 中创建节点的方法</span></span><br><span class="line"><span class="function">Node&lt;K,V&gt; <span class="title">newNode</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; next)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Node&lt;&gt;(hash, key, value, next);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// LinkedHashMap 中创建节点的方法</span></span><br><span class="line"><span class="function">Node&lt;K,V&gt; <span class="title">newNode</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, Node&lt;K,V&gt; e)</span> </span>&#123;</span><br><span class="line">    LinkedHashMap.Entry&lt;K,V&gt; p =</span><br><span class="line">        <span class="keyword">new</span> LinkedHashMap.Entry&lt;K,V&gt;(hash, key, value, e);</span><br><span class="line">    linkNodeLast(p);</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p>规则：</p>
 <ul>
 <li><a style="color:red;">子类重写的方法的访问权限必须 <strong>大于等于</strong> 父类的访问权限</a></li>
@@ -284,14 +227,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h4 id="多态"   >
-          <a href="#多态" class="heading-link"><i class="fas fa-link"></i></a><a href="#多态" class="headerlink" title="多态"></a>多态</h4>
-      <ul>
+<h4 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h4><ul>
 <li><p>定义：某个对象引用可以指向多种不同的实际类型的现象（==多态又被称为后期绑定、动态绑定、运行时绑定==）</p>
 </li>
 <li><p>体现：重载可以体现方法的多态性 、重写和向上转型可以体现类的多态性；成员变量无法体现多态性</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*向上转型体现多态*/</span></span><br><span class="line">Father father = <span class="keyword">new</span> Son();</span><br><span class="line"><span class="comment">/*方法重写*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;						<span class="comment">// 父类中的方法</span></span><br><span class="line">    System.out.println(<span class="string">&quot;Father Play...&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Son Play...&quot;</span>);		<span class="comment">// 子类中的方法：重写</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(Father father)</span></span>&#123;</span><br><span class="line">    father.play();						<span class="comment">// 最后调用的一定是子类重写的方法而不是父类的方法，重写就在这里体现了多态性：编译器是如何知道最后调用的是子类的实现呢？明明这里是父类的引用</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    test(<span class="keyword">new</span> Son());					<span class="comment">// 方法参数给定的类型是父类，但是传入的参数却是子类：发生向上转型</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*方法重载*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*成员变量无法体现多态性*/</span></span><br><span class="line">Father father = <span class="keyword">new</span> Son(); 			<span class="comment">// 假定父类和子类中都存在变量 field</span></span><br><span class="line">System.out.println(father.field); 	<span class="comment">// 调用的一定是父类自身的那个变量而一定不会是子类</span></span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*向上转型体现多态*/</span></span><br><span class="line">Father father = <span class="keyword">new</span> Son();</span><br><span class="line"><span class="comment">/*方法重写*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;						<span class="comment">// 父类中的方法</span></span><br><span class="line">    System.out.println(<span class="string">&quot;Father Play...&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Son Play...&quot;</span>);		<span class="comment">// 子类中的方法：重写</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(Father father)</span></span>&#123;</span><br><span class="line">    father.play();						<span class="comment">// 最后调用的一定是子类重写的方法而不是父类的方法，重写就在这里体现了多态性：编译器是如何知道最后调用的是子类的实现呢？明明这里是父类的引用</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    test(<span class="keyword">new</span> Son());					<span class="comment">// 方法参数给定的类型是父类，但是传入的参数却是子类：发生向上转型</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*方法重载*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*成员变量无法体现多态性*/</span></span><br><span class="line">Father father = <span class="keyword">new</span> Son(); 			<span class="comment">// 假定父类和子类中都存在变量 field</span></span><br><span class="line">System.out.println(father.field); 	<span class="comment">// 调用的一定是父类自身的那个变量而一定不会是子类</span></span><br></pre></td></tr></table></figure></li>
 <li><p>解释：</p>
 <ul>
 <li><p><a style="color:red;">编译器在编译器的确不知道最后父类引用的实际指向类型究竟是什么，需要等到方法 <strong>真正被调用执行的时候</strong> 才会将父类引用替换成实际类型的引用</a></p>
@@ -309,10 +249,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="关系"   >
-          <a href="#关系" class="heading-link"><i class="fas fa-link"></i></a><a href="#关系" class="headerlink" title="关系"></a>关系</h3>
-      <ul>
+<h3 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h3><ul>
 <li><p>泛化（<code>Generalization</code>）</p>
 <ul>
 <li><p>定义：从特殊到一般抽象出更加通用的类</p>
@@ -338,7 +275,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>细节：</p>
 <p>  (1) 实际实现时不会在构造器中创建部分的引用而是借助方法创建</p>
 <p>  (2) <a style="color:red;">整体对象生命周期结束 <strong>不代表</strong> 部分对象的生命周期也结束</a></p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Computer computer;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 不会在构造器中创建</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setComputer</span><span class="params">(Computer computer)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.computer = computer; <span class="comment">// 等待外界的传入</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Computer computer;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">// 不会在构造器中创建</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setComputer</span><span class="params">(Computer computer)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.computer = computer; <span class="comment">// 等待外界的传入</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
   <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/140db6ac15eb6921869dfdad40512a52.png" alt="140db6ac15eb6921869dfdad40512a52.png" style="zoom:80%;" /></li>
 </ul>
@@ -351,7 +288,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <p>  (1) 实际实现时借助构造器创建部分的引用</p>
 <p>  (2) <a style="color:red;">整体对象生命周期结束 <strong>代表</strong> 部分对象的生命周期也结束</a></p>
 <p>  (3) <a style="color:red;">实际实现是更加推荐使用组合、聚合的方式来建立类与类之间的联系</a></p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Hand hand;</span><br><span class="line">    <span class="keyword">private</span> Foot foot;</span><br><span class="line">    <span class="keyword">private</span> Head head;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(Hand hand, Foot foot, Head head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.hand = hand;</span><br><span class="line">        <span class="keyword">this</span>.foot = foot;</span><br><span class="line">        <span class="keyword">this</span>.head = head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Hand hand;</span><br><span class="line">    <span class="keyword">private</span> Foot foot;</span><br><span class="line">    <span class="keyword">private</span> Head head;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(Hand hand, Foot foot, Head head)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.hand = hand;</span><br><span class="line">        <span class="keyword">this</span>.foot = foot;</span><br><span class="line">        <span class="keyword">this</span>.head = head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
   <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/f5bd7b3bc5170cbdc0bed4d57978ec4d.png" alt="f5bd7b3bc5170cbdc0bed4d57978ec4d.png" style="zoom:80%;" /></li>
 </ul>
@@ -376,19 +313,13 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>定义：类与类之间的联系，联系是偶然性的，非常弱</p>
 </li>
 <li><p>细节：实际实现时在方法的参数中使用到另外一个类的引用</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassA</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(ClassB classb)</span></span>&#123;	<span class="comment">// 仅仅只是在方法中使用到其他类的引用不是长期性的</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassA</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(ClassB classb)</span></span>&#123;	<span class="comment">// 仅仅只是在方法中使用到其他类的引用不是长期性的</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
   <img src="https://i1.xpic.jp/file/xpicjp/2021/08/01/bc309d4393a01b790e5774fde51189e2.png" alt="bc309d4393a01b790e5774fde51189e2.png" style="zoom:80%;" /></li>
 </ul>
 </li>
 </ul>
-
-        <h2 id="访问权限"   >
-          <a href="#访问权限" class="heading-link"><i class="fas fa-link"></i></a><a href="#访问权限" class="headerlink" title="访问权限"></a>访问权限</h2>
-      
-        <h3 id="包可见性"   >
-          <a href="#包可见性" class="heading-link"><i class="fas fa-link"></i></a><a href="#包可见性" class="headerlink" title="包可见性"></a>包可见性</h3>
-      <ul>
+<h2 id="访问权限"><a href="#访问权限" class="headerlink" title="访问权限"></a>访问权限</h2><h3 id="包可见性"><a href="#包可见性" class="headerlink" title="包可见性"></a>包可见性</h3><ul>
 <li>定义：被修饰的属性只有处于 ==同一个包== 下的类才可以直接访问</li>
 <li>特点：<a style="color:red;">属性不添加任何访问权限关键字修饰，默认就是包可见性</a></li>
 <li>细节：<ul>
@@ -398,10 +329,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="public"   >
-          <a href="#public" class="heading-link"><i class="fas fa-link"></i></a><a href="#public" class="headerlink" title="public"></a>public</h3>
-      <ul>
+<h3 id="public"><a href="#public" class="headerlink" title="public"></a>public</h3><ul>
 <li>定义：被修饰的属性可以被 ==任何类== 直接访问</li>
 <li>特点：<ul>
 <li><a style="color:red;">被修饰的属性都是向外提供的接口</a></li>
@@ -410,10 +338,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </li>
 <li>细节：接口中默认所有方法都是公共的</li>
 </ul>
-
-        <h3 id="private"   >
-          <a href="#private" class="heading-link"><i class="fas fa-link"></i></a><a href="#private" class="headerlink" title="private"></a>private</h3>
-      <ul>
+<h3 id="private"><a href="#private" class="headerlink" title="private"></a>private</h3><ul>
 <li><p>定义：被修饰的属性只有在 ==类的内部== 可以直接访问</p>
 </li>
 <li><p>特点：</p>
@@ -433,10 +358,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h3 id="protected"   >
-          <a href="#protected" class="heading-link"><i class="fas fa-link"></i></a><a href="#protected" class="headerlink" title="protected"></a>protected</h3>
-      <ul>
+<h3 id="protected"><a href="#protected" class="headerlink" title="protected"></a>protected</h3><ul>
 <li>定义：被修饰的属性可以被 ==子类== 或者 ==同一个包== 下的类直接访问</li>
 <li>细节：<ul>
 <li><code>protected</code> 不可以修饰普通类；可以修饰内部类</li>
@@ -444,7 +366,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-<div class="table-container"><table>
+<table>
 <thead>
 <tr>
 <th></th>
@@ -482,20 +404,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <td>同一个包中类可以直接创建</td>
 <td>可以随意创建</td>
 </tr>
-</tbody></table></div>
-
-        <h2 id="关键字"   >
-          <a href="#关键字" class="heading-link"><i class="fas fa-link"></i></a><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h2>
-      <ul>
+</tbody></table>
+<h2 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h2><ul>
 <li>前提：仅列出和类相关的常用关键字，并发和其他相关的关键字不在此列出</li>
 </ul>
-
-        <h4 id="static"   >
-          <a href="#static" class="heading-link"><i class="fas fa-link"></i></a><a href="#static" class="headerlink" title="static"></a>static</h4>
-      
-        <h4 id="静态变量"   >
-          <a href="#静态变量" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h4>
-      <ul>
+<h4 id="static"><a href="#static" class="headerlink" title="static"></a>static</h4><h4 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h4><ul>
 <li><p>定义：采用关键字 <code>static</code> 修饰的变量 （静态变量又被称为类变量）</p>
 </li>
 <li><p>特点：</p>
@@ -512,14 +425,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p><code>static</code> 关键字修饰的变量是可以修改的（不要和 <code>final</code> 关键字搞混）</p>
 </li>
 <li><p><code>System.out</code> 是 <strong>静态常量</strong>：<strong>理论上</strong> 是不可以对静态常量进行修改的，实际 <code>Java</code> 中存在 <code>setOut</code> 方法可以更换输出流</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setOut</span><span class="params">(PrintStream out)</span> </span>&#123;</span><br><span class="line">    checkIO();</span><br><span class="line">    setOut0(out);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">setOut0</span><span class="params">(PrintStream out)</span></span>; <span class="comment">// 可以修改静态常量的原因是因为该方法是本地方法，采用 C++ 编写的</span></span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setOut</span><span class="params">(PrintStream out)</span> </span>&#123;</span><br><span class="line">    checkIO();</span><br><span class="line">    setOut0(out);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">setOut0</span><span class="params">(PrintStream out)</span></span>; <span class="comment">// 可以修改静态常量的原因是因为该方法是本地方法，采用 C++ 编写的</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 </ul>
-
-        <h4 id="静态方法"   >
-          <a href="#静态方法" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h4>
-      <ul>
+<h4 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h4><ul>
 <li>定义：采用关键字 <code>static</code> 修饰的方法</li>
 <li>特点：<ul>
 <li><a style="color:red;">被修饰的方法被类的所有实例对象共享 / 被修饰的方法仅有一份且属于类</a>：直接通过类名调用也可以创建对象调用；类的内部不可以使用 <code>this</code> 调用</li>
@@ -530,12 +440,9 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h4 id="静态代码块"   >
-          <a href="#静态代码块" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h4>
-      <ul>
+<h4 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h4><ul>
 <li><p>定义：采用关键字 <code>static</code> 修饰的代码块</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    InputStream in = JDBCUtils.class.getClassLoader().getResourceAsStream(<span class="string">&quot;db.properties&quot;</span>);</span><br><span class="line">    Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    InputStream in = JDBCUtils.class.getClassLoader().getResourceAsStream(<span class="string">&quot;db.properties&quot;</span>);</span><br><span class="line">    Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p>特点：</p>
 <ul>
 <li>代码块是不可以被调用的</li>
@@ -547,31 +454,25 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <ul>
 <li><p>提高程序性能</p>
 <p>  解释：多次调用方法中反复初始化内容不变的对象，可以把对象的初始化过程放入静态代码块中减少反复初始的过程</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isBornBoomer</span><span class="params">()</span> </span>&#123;														<span class="comment">// 每次调用这个方法都会创建对象</span></span><br><span class="line">    Date startDate = Date.valueOf(<span class="string">&quot;1946&quot;</span>);										 <span class="comment">// 创建的对象具有内容还完全一样 </span></span><br><span class="line">    Date endDate = Date.valueOf(<span class="string">&quot;1964&quot;</span>);										 <span class="comment">// 最好抽取出来成为静态代码块 </span></span><br><span class="line">    <span class="keyword">return</span> birthDate.compareTo(startDate)&gt;=<span class="number">0</span> &amp;&amp; birthDate.compareTo(endDate) &lt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isBornBoomer</span><span class="params">()</span> </span>&#123;														<span class="comment">// 每次调用这个方法都会创建对象</span></span><br><span class="line">    Date startDate = Date.valueOf(<span class="string">&quot;1946&quot;</span>);										 <span class="comment">// 创建的对象具有内容还完全一样 </span></span><br><span class="line">    Date endDate = Date.valueOf(<span class="string">&quot;1964&quot;</span>);										 <span class="comment">// 最好抽取出来成为静态代码块 </span></span><br><span class="line">    <span class="keyword">return</span> birthDate.compareTo(startDate)&gt;=<span class="number">0</span> &amp;&amp; birthDate.compareTo(endDate) &lt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p>多个静态代码块的执行顺序是按照 ==从上至下== 的顺序执行的：包括 <code>main</code> 方法在内</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;test static 1&quot;</span>);			<span class="comment">// 第一个执行的静态代码块</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">													<span class="comment">// 第二个执行的静态代码块：虽然什么内容都没有但是依然会执行</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;test static 2&quot;</span>);			<span class="comment">// 第三个执行的静态代码块</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;test static 1&quot;</span>);			<span class="comment">// 第一个执行的静态代码块</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">													<span class="comment">// 第二个执行的静态代码块：虽然什么内容都没有但是依然会执行</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;test static 2&quot;</span>);			<span class="comment">// 第三个执行的静态代码块</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 </ul>
-
-        <h4 id="静态内部类"   >
-          <a href="#静态内部类" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4>
-      <ul>
+<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><ul>
 <li><p>定义：采用关键字 <code>static</code> 修饰的内部类</p>
 </li>
 <li><p>特点：</p>
 <ul>
 <li><p><a style="color:red;">静态内部类可以直接在外部通过 <code>new</code> 创建对象</a>：内部类只能够借助外部类后再利用 <code>new</code> 创建对象</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    MyTest myTest = <span class="keyword">new</span> MyTest();											<span class="comment">// 外部类</span></span><br><span class="line">    InnerClass innerClass = myTest.<span class="function">new <span class="title">InnerClass</span><span class="params">()</span></span>;						<span class="comment">// 内部类只能够借助外部类创建对象</span></span><br><span class="line">    StaticInnerClass staticInnerClass = <span class="keyword">new</span> StaticInnerClass();				<span class="comment">// 静态内部类直接创建对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">    MyTest myTest = <span class="keyword">new</span> MyTest();											<span class="comment">// 外部类</span></span><br><span class="line">    InnerClass innerClass = myTest.<span class="function">new <span class="title">InnerClass</span><span class="params">()</span></span>;						<span class="comment">// 内部类只能够借助外部类创建对象</span></span><br><span class="line">    StaticInnerClass staticInnerClass = <span class="keyword">new</span> StaticInnerClass();				<span class="comment">// 静态内部类直接创建对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 </ul>
-
-        <h4 id="静态导包"   >
-          <a href="#静态导包" class="heading-link"><i class="fas fa-link"></i></a><a href="#静态导包" class="headerlink" title="静态导包"></a>静态导包</h4>
-      <ul>
+<h4 id="静态导包"><a href="#静态导包" class="headerlink" title="静态导包"></a>静态导包</h4><ul>
 <li><p>定义：采用关键字 <code>static</code> 进行导包</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.lang.System.*; <span class="comment">// 静态导包</span></span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.lang.System.*; <span class="comment">// 静态导包</span></span><br></pre></td></tr></table></figure></li>
 <li><p>特点：</p>
 <ul>
 <li><a style="color:red;">采用静态导包之后，该类中的所有静态变量、静态方法都可以直接使用</a>，不需要再使用类名调用了</li>
@@ -580,10 +481,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>细节：通常不会这样做，因为代码可读性非常低</p>
 </li>
 </ul>
-
-        <h4 id="初始化顺序"   >
-          <a href="#初始化顺序" class="heading-link"><i class="fas fa-link"></i></a><a href="#初始化顺序" class="headerlink" title="初始化顺序"></a>初始化顺序</h4>
-      <ul>
+<h4 id="初始化顺序"><a href="#初始化顺序" class="headerlink" title="初始化顺序"></a>初始化顺序</h4><ul>
 <li><p>初始化优先级排序：</p>
 <ul>
 <li>父类静态代码块、静态变量</li>
@@ -601,22 +499,16 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 <li><p>例子：尝试判断一下下面所有的语句执行顺序</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Father</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Brother</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Brother</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;兄弟类被初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Brother brother = <span class="keyword">new</span> Brother();</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类代码块初始化&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Son</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Father</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;父类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Brother</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Brother</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;兄弟类被初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Brother brother = <span class="keyword">new</span> Brother();</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类代码块初始化&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类静态代码块初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Son</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子类初始化...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-
-        <h3 id="final"   >
-          <a href="#final" class="heading-link"><i class="fas fa-link"></i></a><a href="#final" class="headerlink" title="final"></a>final</h3>
-      <ul>
+<h3 id="final"><a href="#final" class="headerlink" title="final"></a>final</h3><ul>
 <li><a style="color:red;">提高程序性能</a>：<code>JVM</code> 会将所有常量值存放在运行时常量池中（缓存）</li>
 <li><a style="color:red;">可以在多线程并发状态向安全地共享，不需要额外的同步机制</a>：?</li>
 <li><a style="color:red;">所有匿名内部类 、Lambda 表达式中的变量必须是常量</a>：？</li>
 </ul>
-
-        <h4 id="不可变变量"   >
-          <a href="#不可变变量" class="heading-link"><i class="fas fa-link"></i></a><a href="#不可变变量" class="headerlink" title="不可变变量"></a>不可变变量</h4>
-      <ul>
+<h4 id="不可变变量"><a href="#不可变变量" class="headerlink" title="不可变变量"></a>不可变变量</h4><ul>
 <li><p>定义：采用关键字 <code>final</code> 修饰的变量</p>
 </li>
 <li><p>特点：<a style="color:red;">不可以对被修饰的变量进行 <strong>任何的修改</strong></a>（常量值）</p>
@@ -624,24 +516,24 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p>如果不可变变量是 ==基本数据类型==：不可以进行任何修改</p>
 </li>
 <li><p>如果不可变变量是 ==引用类型==：引用不可以再指向其他的对象，<a style="color:red;">对象本身是可以修改的</a></p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> constant = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">final</span> MyObject constantRef = <span class="keyword">new</span> MyObject();<span class="comment">/* constantRef 不可以指向其他对象了，但是依然可以调用类中的方法对对象进行修改  */</span></span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> constant = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">final</span> MyObject constantRef = <span class="keyword">new</span> MyObject();<span class="comment">/* constantRef 不可以指向其他对象了，但是依然可以调用类中的方法对对象进行修改  */</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>分类：  根据常量赋值的不同时期进行区分</p>
 <ul>
 <li><p>编译时常量：定义常量时赋予其固定值</p>
 <p>  <a style="color:red;">注：编译时常量在 <strong>编译阶段设置默认值</strong>，在<strong>连接过程的准备阶段赋值</strong></a> （<code>JVM</code> 相关）</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> constant = <span class="number">0</span>; <span class="comment">// 编译时常量</span></span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> constant = <span class="number">0</span>; <span class="comment">// 编译时常量</span></span><br></pre></td></tr></table></figure></li>
 <li><p>运行时常量：定义常量时 <strong>调用方法赋值</strong> 或者 <strong>构造方法</strong> 中赋值</p>
 <p>  (1) <a style="color:red;">等待方法被调用或者对象被初始化时才可以赋值</a></p>
 <p>  (2) 利用构造器初始化常量值，该常量也被称为空白 <code>final</code></p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> number = <span class="keyword">new</span> Random().nextInt(); <span class="comment">// 等待随机方法被调用时才会真正为常量赋值：不会在类加载阶段就赋值，而是等到运行时才会</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> constant;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">		constant = <span class="number">120</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> number = <span class="keyword">new</span> Random().nextInt(); <span class="comment">// 等待随机方法被调用时才会真正为常量赋值：不会在类加载阶段就赋值，而是等到运行时才会</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyObject</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> constant;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">		constant = <span class="number">120</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p>细节：</p>
 <p>  (1) 无论常量在什么时候赋值，在使用常量之前 <strong>必须被初始化并且赋值</strong>，否则编译报错</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> consVal; <span class="comment">// 这种情况是不被编译器允许的：必须赋值</span></span><br></pre></td></tr></table></div></figure>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> consVal; <span class="comment">// 这种情况是不被编译器允许的：必须赋值</span></span><br></pre></td></tr></table></figure>
 
 <p>  (2) <a style="color:red;">常量值既不属于 <strong>当前</strong> 类也不属于对象，属于运行该类方法的主类</a> （<code>JVM</code> 相关）</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConstantClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 注意：这里是公共属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> constantValue = <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitializationClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 引用类的常量值</span></span><br><span class="line">        System.out.println(Constant.constantValue);</span><br><span class="line">        <span class="comment">// 编译阶段通过常量传播优化，常量值并没有存储在 ConstantClass 的常量池中，而是存储在 NotInitializationClass 类中</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConstantClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// 注意：这里是公共属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> constantValue = <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitializationClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 引用类的常量值</span></span><br><span class="line">        System.out.println(Constant.constantValue);</span><br><span class="line">        <span class="comment">// 编译阶段通过常量传播优化，常量值并没有存储在 ConstantClass 的常量池中，而是存储在 NotInitializationClass 类中</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>静态常量：</p>
@@ -660,12 +552,9 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 <li><p>细节：编译时静态常量的命名方式必须采用 <strong>全部字母大写</strong> 和 <strong>下划线隔开</strong> 的方式</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> CONSTANT_VALUE = <span class="number">10</span>;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> CONSTANT_VALUE = <span class="number">10</span>;</span><br></pre></td></tr></table></figure></li>
 </ul>
-
-        <h4 id="不可变方法"   >
-          <a href="#不可变方法" class="heading-link"><i class="fas fa-link"></i></a><a href="#不可变方法" class="headerlink" title="不可变方法"></a>不可变方法</h4>
-      <ul>
+<h4 id="不可变方法"><a href="#不可变方法" class="headerlink" title="不可变方法"></a>不可变方法</h4><ul>
 <li><p>定义：采用关键字 <code>final</code> 修饰的方法</p>
 </li>
 <li><p>特点：</p>
@@ -685,10 +574,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 </li>
 </ul>
-
-        <h4 id="不可变类"   >
-          <a href="#不可变类" class="heading-link"><i class="fas fa-link"></i></a><a href="#不可变类" class="headerlink" title="不可变类"></a>不可变类</h4>
-      <ul>
+<h4 id="不可变类"><a href="#不可变类" class="headerlink" title="不可变类"></a>不可变类</h4><ul>
 <li>定义：采用关键字 <code>final</code> 修饰的类</li>
 <li>特点：<ul>
 <li><a style="color:red;">被修饰的类不可以被任何类继承</a>，但是自己可以继承其他类</li>
@@ -700,13 +586,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <blockquote>
 <p>如果某个类被 <code>fianl</code> 修饰，但是我们依然需要 <strong>使用</strong> 这个类中的所有方法，那么应该怎么实现？</p>
 </blockquote>
-
-        <h4 id="重排序"   >
-          <a href="#重排序" class="heading-link"><i class="fas fa-link"></i></a><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h4>
-      
-        <h2 id="Object"   >
-          <a href="#Object" class="heading-link"><i class="fas fa-link"></i></a><a href="#Object" class="headerlink" title="Object"></a>Object</h2>
-      <ul>
+<h4 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h4><h2 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h2><ul>
 <li><p>定义：==所有类的父类==：无论是自定义类还是库中提供的类都会继承它</p>
 </li>
 <li><p>工具类：<code>Objects</code></p>
@@ -716,53 +596,23 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li><p><code>equals()</code></p>
 <p>  (1) <a style="color:red;">采用等号比较对象是否相同</a>：实际比较的是两个对象的地址是否相同，大多数情况都是不相同的，一般需要重写</p>
 <p>  (2) 调用方法的对象可能为空：<code>Objects</code> 中提供了 <code>equals</code> 方法用于比较两个对象，两个对象都可以为空</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*Objects 提供的方法 */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object a, Object b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (a == b) || (a != <span class="keyword">null</span> &amp;&amp; a.equals(b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*Objects 提供的方法 */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object a, Object b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (a == b) || (a != <span class="keyword">null</span> &amp;&amp; a.equals(b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p><code>hashCode</code></p>
 <p>  (1) <a style="color:red;">计算哈希值的方法是本地方法</a>：各种哈希表和类基本都是重写了这个方法</p>
 <p>  (2) 重写 <code>hashCode()</code> 方法时通常需要重写 <code>equals()</code>，否则很容易带来不一致的问题（详情见哈希表）</p>
 <p>  (3) 等价的两个对象散列值一定相同，但是散列值相同的两个对象不一定等价</p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>; 		</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>; 		</span><br></pre></td></tr></table></figure></li>
 <li><p><code>notify() &amp; notifyAll() &amp; wait()</code></p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span></span>; 	<span class="comment">// 唤醒线程池中的某个线程</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span></span>; <span class="comment">// 唤醒线程池中的所有线程</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;		<span class="comment">// 让某个线程进入线程池等待</span></span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure></li>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span></span>; 	<span class="comment">// 唤醒线程池中的某个线程</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span></span>; <span class="comment">// 唤醒线程池中的所有线程</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;		<span class="comment">// 让某个线程进入线程池等待</span></span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p><code>clone</code></p>
-  <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">native</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span>;</span><br></pre></td></tr></table></div></figure>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">native</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span>;</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
 </li>
 </ul>
-
-        <h2 id="枚举"   >
-          <a href="#枚举" class="heading-link"><i class="fas fa-link"></i></a><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2>
-      </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Fuyusakaiori</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2021/09/12/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">http://example.com/2021/09/12/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-ND</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2021/09/13/os/process/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">线程概述</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2021/09/12/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E6%A8%A1%E5%9D%97%E5%8C%96%E7%B3%BB%E7%BB%9F/"><span class="paginator-prev__text">类加载机制-模块化系统</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.</span> <span class="toc-text">
-          面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">
-          概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">
-          类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">
-          组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">1.2.2.</span> <span class="toc-text">
-          特性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%81%E8%A3%85"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">
-          封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">
-          继承</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%91%E4%B8%8A%E8%BD%AC%E5%9E%8B-amp-%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B"><span class="toc-number">1.2.2.2.1.</span> <span class="toc-text">
-          向上转型 &amp; 向下转型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%86%99-amp-%E9%87%8D%E8%BD%BD"><span class="toc-number">1.2.2.2.2.</span> <span class="toc-text">
-          重写 &amp; 重载</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%80%81"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">
-          多态</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB"><span class="toc-number">1.2.3.</span> <span class="toc-text">
-          关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="toc-number">1.3.</span> <span class="toc-text">
-          访问权限</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text">
-          包可见性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#public"><span class="toc-number">1.3.2.</span> <span class="toc-text">
-          public</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#private"><span class="toc-number">1.3.3.</span> <span class="toc-text">
-          private</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#protected"><span class="toc-number">1.3.4.</span> <span class="toc-text">
-          protected</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.4.</span> <span class="toc-text">
-          关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#static"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">
-          static</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">
-          静态变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">
-          静态方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">1.4.0.4.</span> <span class="toc-text">
-          静态代码块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB"><span class="toc-number">1.4.0.5.</span> <span class="toc-text">
-          静态内部类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%AF%BC%E5%8C%85"><span class="toc-number">1.4.0.6.</span> <span class="toc-text">
-          静态导包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.4.0.7.</span> <span class="toc-text">
-          初始化顺序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#final"><span class="toc-number">1.4.1.</span> <span class="toc-text">
-          final</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%8F%98%E9%87%8F"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">
-          不可变变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">
-          不可变方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E7%B1%BB"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">
-          不可变类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-number">1.4.1.4.</span> <span class="toc-text">
-          重排序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Object"><span class="toc-number">1.5.</span> <span class="toc-text">
-          Object</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.6.</span> <span class="toc-text">
-          枚举</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1641882498931.3kditdl6ds40.webp" alt="avatar"></div><p class="sidebar-ov-author__text">什么都不会的废物</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/fuyusakaiori" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://weibo.com/Sakiless/home?topnav=1&amp;wvr=6" target="_blank" rel="noopener" data-popover="微博" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-weibo"></i></span></a><a class="sidebar-ov-social-item" href="670232228" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">108</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">32</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-nd.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020~2022</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>小忍的甜甜圈</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
+<h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Fuyusakaiori</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/12/java/面向对象/">http://example.com/2021/09/12/java/面向对象/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2021/09/13/os/process/%E7%BA%BF%E7%A8%8B%E6%A6%82%E8%BF%B0/"><i class="fa fa-chevron-left">  </i><span>线程概述</span></a></div><div class="next-post pull-right"><a href="/2021/09/12/jvm/classloader/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6-%E6%A8%A1%E5%9D%97%E5%8C%96%E7%B3%BB%E7%BB%9F/"><span>类加载机制-模块化系统</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
