@@ -22,7 +22,8 @@
 
 成帧：(1) 封装成帧的方式 (2) 帧格式
 
-差 ...</div><a class="more" href="/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">网络层概述
+差错控制：(1) 奇偶校验(包括二维的奇偶校验) (2) CRC 循环冗余校验 (3) 海明码校验
+  ...</div><a class="more" href="/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">网络层概述
 概念：
 负责转发数据报：并不是针对两个节点之间的
 确定数据报的转发路径
@@ -32,12 +33,23 @@
 单位：==数据报==
 功能
 异构网络互连：将物理层和数据链路层不同的网络用统一的协议互联起来
-[IP 协议](# IP 协议)：[IPv4](# I ...</div><a class="more" href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E4%BC%A0%E8%BE%93%E5%B1%82/">传输层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">传输层概述
+[IP 协议](# IP 协议)：[IPv4](# IPv4) [IPv6](# IPv6)
+[ARP 协议](# ARP 协议)：映射 IP 地址到 M ...</div><a class="more" href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E4%BC%A0%E8%BE%93%E5%B1%82/">传输层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">传输层概述
 概念：为运行在不同端系统上的 进程 提供了逻辑通信 (Logic Communication) (进程的概念详见操作系统)
   注：网络层是为不同的 端系统 之间提供逻辑通信
 
 单位：==报文段== (Segement)
-  注：UDP 协议是不对应用层交付的报文做任何处理的：所以也可以 ...</div><a class="more" href="/2021/09/09/network/%E4%BC%A0%E8%BE%93%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E5%BA%94%E7%94%A8%E5%B1%82/">应用层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">应用层应用层概述
+  注：UDP 协议是不对应用层交付的报文做任何处理的：所以也可以认为单位是报文
+
+协议：
+
+UDP 协议：用户数据报协议
+TCP 协议：传输控制协议
+
+
+
+
+应用层 ...</div><a class="more" href="/2021/09/09/network/%E4%BC%A0%E8%BE%93%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E5%BA%94%E7%94%A8%E5%B1%82/">应用层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">应用层应用层概述
 基本概念：
 应用层：使用下层协议为==应用软件==提供服务
 单位：报文（HTTP协议）
@@ -56,7 +68,12 @@ P2P
 
 
 
-协议DNS 协 ...</div><a class="more" href="/2021/09/09/network/%E5%BA%94%E7%94%A8%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E7%89%A9%E7%90%86%E5%B1%82/">物理层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">物理层物理层基本概念物理层功能
+协议DNS 协议（需要修改）
+域名（主机名）
+
+概念：应用层用于==标识主机==的方式
+
+传输层：采用 IP 地址 ...</div><a class="more" href="/2021/09/09/network/%E5%BA%94%E7%94%A8%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E7%89%A9%E7%90%86%E5%B1%82/">物理层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">物理层物理层基本概念物理层功能
 机械特性：规定实现物理连接的各种设备的参数大小
 电器特性：规定传输二进制比特时的电压范围等参数
 功能特性：规定线路上不同电压的含义
@@ -64,12 +81,20 @@ P2P
 
 物理媒体两者的区别：
 物理层是规定实现数据传输的线路的参数，并不涉及实际的传输过程
-物理媒体 ...</div><a class="more" href="/2021/09/09/network/%E7%89%A9%E7%90%86%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E6%A6%82%E8%BF%B0/">概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">概述概念定义
+物理媒体则是真正实现了数据的传输，一般将物理媒体视为第 0 层
+数据通信基本知识基本知识
+
+信号
+
+数字信号 ...</div><a class="more" href="/2021/09/09/network/%E7%89%A9%E7%90%86%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E6%A6%82%E8%BF%B0/">概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">概述概念定义
 定义：计算机网络是将多个 [分散独立]{.red} 的计算机系统，通过 [通信设备]{.red} 和 [通信链路]{.red} 连接起来，并且利用软件实现 [资源共享]{.red} 和 [数据传递]{.red} 的系统
   [互联网是 互联自治 的计算机集合]{.red}
 
 通信设备
- ...</div><a class="more" href="/2021/09/09/network/%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/java/io/AIO/">AIO</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/IO/">IO</a></span><div class="content">AIO概述
+
+链路层交换机 (Link-Layer Switch)  链路层交换机通常称为交换机
+
+路由器 (R ...</div><a class="more" href="/2021/09/09/network/%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/java/io/AIO/">AIO</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/IO/">IO</a></span><div class="content">AIO概述
 什么是 AIO？
 
 
@@ -81,7 +106,15 @@ AIO 全称为 Asynchronous IO
 
 AIO 实际上并不是官方定义的名称，而是根据新增加的核心类命名的，通常也可以称为 NIO2
 
-AIO 所有的核心类仍然是属 ...</div><a class="more" href="/2021/09/09/java/io/AIO/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/07/java/interface/Lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/">Lambda 表达式</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/%E6%8E%A5%E5%8F%A3/">接口</a></span><div class="content"></div><a class="more" href="/2021/09/07/java/interface/Lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/07/java/interface/%E5%86%85%E9%83%A8%E7%B1%BB/">内部类</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/%E6%8E%A5%E5%8F%A3/">接口</a></span><div class="content">内部类
+AIO 所有的核心类仍然是属于 java.nio 包下的，本质上是对 NIO 架构的完善
+
+
+
+
+
+
+什么是异步非阻塞式调用？
+ ...</div><a class="more" href="/2021/09/09/java/io/AIO/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/07/java/interface/Lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/">Lambda 表达式</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/%E6%8E%A5%E5%8F%A3/">接口</a></span><div class="content"></div><a class="more" href="/2021/09/07/java/interface/Lambda%20%E8%A1%A8%E8%BE%BE%E5%BC%8F/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/07/java/interface/%E5%86%85%E9%83%A8%E7%B1%BB/">内部类</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/%E6%8E%A5%E5%8F%A3/">接口</a></span><div class="content">内部类
 
 
 定义：可以将一个类的定义置于另一个类的定义内部
@@ -91,12 +124,18 @@ AIO 所有的核心类仍然是属 ...</div><a class="more" href="/2021/09/09/ja
 [非静态内部类可以直接访问外部类的所有成员变量和方法]{.red}
 [外部类不能够直接访问内部类成员变量和方法]{.red}
 [内部类在外部创建对象必须依附外部类创建]{.red}
-[所有类 ...</div><a class="more" href="/2021/09/07/java/interface/%E5%86%85%E9%83%A8%E7%B1%BB/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/07/java/interface/%E6%8E%A5%E5%8F%A3/">接口概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/%E6%8E%A5%E5%8F%A3/">接口</a></span><div class="content">抽象类
+[所有类型的内部类都具有构造器（包括匿名内部类）]{.red}
+
+
+类型：① 成员内部类 ② 静态内部类 ③ ...</div><a class="more" href="/2021/09/07/java/interface/%E5%86%85%E9%83%A8%E7%B1%BB/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/07/java/interface/%E6%8E%A5%E5%8F%A3/">接口概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/">Java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java/%E6%8E%A5%E5%8F%A3/">接口</a></span><div class="content">抽象类
 什么是抽象类？
 
 
 定义：[拥有抽象方法的类或者说采用 abstract 关键字修饰的类]{.red}
-  // 定义的抽象类public abstract class AbstractClass&#123;    // 定义的抽象方法    public abstract void abs ...</div><a class="more" href="/2021/09/07/java/interface/%E6%8E%A5%E5%8F%A3/#more" style="margin-top: 14px">Read more</a><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-chevron-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  // 定义的抽象类public abstract class AbstractClass&#123;    // 定义的抽象方法    public abstract void abstractMethod();&#125;
+特点：
+
+[抽象类中并非所有方法都是抽象的]{.red}： ...</div><a class="more" href="/2021/09/07/java/interface/%E6%8E%A5%E5%8F%A3/#more" style="margin-top: 14px">Read more</a><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-chevron-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1642739303853.5y6qd48prwk0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
   $('#top-container').addClass('is-mobile')
