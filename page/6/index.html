@@ -31,7 +31,23 @@
 手动垃圾回收
 代表语言：C/C++
 定义：[开发者必须手动调用方法去回收内存中的垃圾]{.blue}
-优点：[开发者 ...</div><a class="more" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/">概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">运行时数据区</a></span><div class="content">概述
+优点：[开发者 ...</div><a class="more" href="/2021/09/28/jvm/garbage-collection/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6-%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/">程序计数寄存器</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">运行时数据区</a></span><div class="content">程序计数寄存器
+什么是程序计数寄存器？
+
+
+名称：程序计数寄存器（Programmer Counter Register）
+
+别名：PC 寄存器、程序计数器、程序钩子
+
+
+定义：JVM 中的一块较小的 [内存区域]{.blue}
+
+区别：真实计算机中的程序计数器是 [物理硬件寄存器]{.blue} 制作完成的
+
+
+作用：[保存当前线程正在执行的字节码指令的地址]{.red}
+
+字节码指令：源代码被 ...</div><a class="more" href="/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/">概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">运行时数据区</a></span><div class="content">概述
 什么是 Java 虚拟机运行时数据区？
 
 
@@ -48,23 +64,7 @@
 
 第二个问题：什么是 Java 虚拟机？
 
-定义：简单来说就 ...</div><a class="more" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/">程序计数寄存器</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">运行时数据区</a></span><div class="content">程序计数寄存器
-什么是程序计数寄存器？
-
-
-名称：程序计数寄存器（Programmer Counter Register）
-
-别名：PC 寄存器、程序计数器、程序钩子
-
-
-定义：JVM 中的一块较小的 [内存区域]{.blue}
-
-区别：真实计算机中的程序计数器是 [物理硬件寄存器]{.blue} 制作完成的
-
-
-作用：[保存当前线程正在执行的字节码指令的地址]{.red}
-
-字节码指令：源代码被 ...</div><a class="more" href="/2021/09/24/jvm/runtime/%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/">执行引擎-概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">执行引擎</a></span><div class="content">概述
+定义：简单来说就 ...</div><a class="more" href="/2021/09/24/jvm/runtime/%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/24/jvm/execution-engine/%E6%A6%82%E8%BF%B0/">执行引擎-概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/">执行引擎</a></span><div class="content">概述
 什么是执行引擎?
 
 
