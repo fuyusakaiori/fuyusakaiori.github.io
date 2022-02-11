@@ -8,7 +8,252 @@
     noSupport: 'The browser does not support'
   },
   hexoVersion: '5.4.0'
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5"><span class="toc-number">1.</span> <span class="toc-text">主从同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.</span> <span class="toc-text">基础概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">实战配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">存在的问题</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">113</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">10</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">34</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/Home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">MySQL 主从同步</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-02-07</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/">MySQL</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/%E6%97%A5%E5%BF%97/">日志</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">19</span><span class="post-meta__separator">|</span><span>Reading time: 1 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="主从同步"><a href="#主从同步" class="headerlink" title="主从同步"></a>主从同步</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><h2 id="实战配置"><a href="#实战配置" class="headerlink" title="实战配置"></a>实战配置</h2><h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Fuyusakaiori</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/02/07/database/mysql/log/MySQL 主从同步/">http://example.com/2022/02/07/database/mysql/log/MySQL 主从同步/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%97%A5%E5%BF%97/">日志</a><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2022/02/06/database/mysql/log/MySQL%20%E4%B8%89%E5%A4%A7%E6%97%A5%E5%BF%97/"><span>MySQL 三大日志</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL-%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5"><span class="toc-number">1.</span> <span class="toc-text">MySQL 主从同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.</span> <span class="toc-text">基础概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">实战配置</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">114</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">12</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">34</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/Home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">MySQL 主从同步</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-02-07</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/">MySQL</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/%E6%97%A5%E5%BF%97/">日志</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">4.8k</span><span class="post-meta__separator">|</span><span>Reading time: 14 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="MySQL-主从同步"><a href="#MySQL-主从同步" class="headerlink" title="MySQL 主从同步"></a>MySQL 主从同步</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在此前的 MySQL 日志笔记中已经简单提到归档日志（binlog）的可以用于主从同步和数据备份，但是并没有详细提到 MySQL 主从同步的原理以及实现方式，那么这篇笔记就会详细去讲述 MySQL 的主从同步。借用 《MySQL 实战 45 讲》中的话，MySQL 能够成为如此流行的数据库，能够拥有如此高可用的架构，都离不开归档日志实现的主从同步</p>
+<h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><p>1、什么是主从同步？</p>
+<p><strong>简单说来主从同步就是让主数据库和从数据库之间的数据保持同步</strong></p>
+<p><strong>通常主数据库就是用于执行各种更新操作，称为主库；通常从数据库就是作为主库的备份，称为从库</strong></p>
+<p>至于两者配合的形式以及具体的同步方式接下来就会立刻讲述</p>
+<blockquote>
+<p><strong>主从形式</strong></p>
+</blockquote>
+<p>首先会介绍两种最为常见的基本机构，后续的结构可以认为就是在这种结构上进行改进的</p>
+<ul>
+<li><p>一主一从结构（M-S 结构）：仅存在单个主数据库，单个从数据库</p>
+<ul>
+<li>访问形式：主库可以执行任意的更新和查询操作，从库会设置为只读形式，也就是仅可以执行查询操作</li>
+<li>同步原理：每次主库发生更新操作后都会将归档日志发送给从库，从库接收到归档日志后就会执行归档日志，从而实现数据同步</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2022/02/11/400eb49a4a25331c24e1dcd5d8ca9560.png" alt="M-S 结构" style="zoom:50%;" /></li>
+<li><p>主主结构（双 M 结构）：仅存在两个数据库，两个数据库互为主数据库</p>
+<ul>
+<li>访问形式：两个数据库都可以对外提供读写服务，但如果一个正在执行更新操作，另一个就会“自动“设置为只读，仅提供查询<ul>
+<li>这里的自动实际上是需要采用某些手段进行控制的，从而避免同时向两个数据库写入的情况，通常有以下两种方式<ul>
+<li>基于自主主键的控制</li>
+<li>基于库级别的或者基于表级别的控制</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>同步原理：<ul>
+<li>每次主库发生更新之后依然会发送归档日志给从库进行数据同步，但是从库也会向主库发送归档日志进行数据同步</li>
+<li>设计相互发送的目的是因为主库可以自动发生变化，变化后就要重设接收归档日志的位置，就相当于依然要手动更改主库</li>
+<li>现在直接让两个主数据库互相发送归档日志，就可以避免手动输入命令切换主库，从而实现快速切换主库</li>
+</ul>
+</li>
+<li>双主结构的好处就在于能够更加快速的切换主库，因为不需要手动切换（?），但是存在数据不一致的问题</li>
+</ul>
+  <img src="https://i1.xpic.jp/file/xpicjp/2022/02/11/1b86e433f2f4790b37290257c1966b6b.png" alt="双 M 结构" style="zoom:50%;" /></li>
+</ul>
+<p>如下三种结构就是在上面两种基础结构进行的改进，这里就不再做详细介绍</p>
+<ul>
+<li>一主多从结构：仅存在单个主数据库，但是存在多个从数据库</li>
+<li>多主一从结构：仅存在单个从数据库，但是存在多个主数据库</li>
+<li>联级复制结构</li>
+</ul>
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/11/238481b524d49423bd06d633dc0c48ef.png" alt="其余结构" style="zoom:50%;" />
+
+<p><a style="color:grey;">真实的数据库架构设计应该是多个主数据库和多个从数据库，然后会使用 MyCat 等中间件来完成数据库的负载均衡，从而降低数据库的压力</a></p>
+<blockquote>
+<p><strong>潜在“问题”</strong></p>
+</blockquote>
+<p>在介绍了两种基础的数据库架构之后，你可能存在一定的疑问，不要着急，接下来就会详细解释</p>
+<ul>
+<li><p>为什么要将从库设置为只读形式？</p>
+<ul>
+<li>主从同步通常会用于读写分离，也就是仅在从库上执行查询操作，所以设置为只读模式是为了防止在从库上执行更新的误操作</li>
+<li>可以通过是否设置为只读模式从而区分数据库的角色，也就是哪个是主库，哪个是从库</li>
+<li>防止在主备切换的过程中出现双写的情况，从而造成数据不一致</li>
+</ul>
+<p>  <a style="color:grey;">注：主备切换过程中需要等待主备延迟降低到 0，所以这个过程如果没有设置为只读就会出现双写的情况，之后会详细介绍</a></p>
+</li>
+<li><p>从库被设置为只读形式，而执行归档日志是更新操作，两者不应该是矛盾的吗？</p>
+<ul>
+<li>每个数据库中都会设计超级权限的存在，具有超级权限的用户或者线程是不会受到只读模式的影响的</li>
+<li>而从库中执行归档日志的更新线程就是具有超级权限的，所以可以无视设置的只读模式进行更新</li>
+</ul>
+</li>
+<li><p>双 M 结构不会造成循环复制问题吗？</p>
+<ul>
+<li>什么是循环复制问题？<ul>
+<li>在主库执行更新操作之后就会将归档日志发送给从库，而从库接收到归档日志并执行后又会发送回给主库</li>
+<li>而主库在接收到归档日志又会去执行更新操作，然后再发送归档日志给从库执行，这就造成了死循环</li>
+</ul>
+</li>
+<li>如何解决循环复制问题？解决的方式非常简单<ul>
+<li>每个数据库在其配置文件中都会设置 server_id，确保主库和从库的 server_id 不同，如果相同则不能够互为主从关系</li>
+<li>每次主库向从库发送的归档日志中就会写入数据库的 server_id<ul>
+<li>如果数据库接收到的归档日志记录的 server_id 和自己拥有的 server_id 不同，就会执行归档日志</li>
+<li>反之，就不会去执行归档日志，从而让循环复制断开</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>核心机制</strong></p>
+</blockquote>
+<p>在此之前讲述主从同步的基本架构和原理，以及可能存在的疑惑，但是并没有讲述主库和从库内部到底是如何控制归档日志，并实现数据同步，接下来就会详细讲述这部分的内容。先来大致看下这张图中的内容，就可以知道主从同步的基本流程是如何执行的。</p>
+<img src="https://static001.geekbang.org/resource/image/a6/a3/a66c154c1bc51e071dd2cc8c1d6ca6a3.png" style="zoom:33%;" alt="主从同步流程"/>
+
+<p>主库和从库之间会通过命令设置相关信息建立长连接，然后分别开启相应的线程去负责归档日志的发送、接收、执行等过程，从而确保主从同步能够顺利执行</p>
+<ul>
+<li><p>从库使用 <code>change master</code> 命令设置相关的信息，然后就会开启 <code>io_thread</code> 和 <code>sql_thread</code> 分别负责接收和执行归档日志</p>
+<ul>
+<li>相关信息：从库访问主库的用户名和密码，IP 地址和端口号，访问的归档日志的文件名以及起始位置</li>
+</ul>
+</li>
+<li><p>主库更新内存中的数据并向内存中写入重做日志，然后开启两阶段提交机制，完成重做日志的持久化后，就会开始向从库发送重做日志</p>
+</li>
+<li><p>主库再验证从库发送的用户名和密码，以及对应的重做日志和起始位置，然后通过 <code>dump_thread</code> 线程发送归档日志</p>
+</li>
+<li><p>从库就通过 <code>io_thread</code> 从主库中接收发送过来的归档日志，并且将其持久化到磁盘中称为中转日志（<code>relay_log</code>）</p>
+<ul>
+<li>将归档日志持久化存储到磁盘的目的是为了让其他线程去执行归档日志</li>
+<li><code>io_thread</code> 线程能够继续接收中转日志，而不用等待中转日志执行结束，从而实现异步的效果，提高同步的效率</li>
+</ul>
+</li>
+<li><p>最后从库就通过 <code>sql_thread</code> 并采用合适的并行策略开始解析中转日志中的内容并且执行，从而完成数据同步</p>
+<ul>
+<li>解析并执行归档日志中的内容是非常消耗时间的，所以会采用适当的并行策略来加速执行，从而减少主备延迟</li>
+<li><a style="color:grey;">至于并行策略和主备延迟两个内容会在之后详细讲述</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>2、为什么采用主从同步？</p>
+<p>在之前已经提到从库通常是作为主库的备份存在，为什么采用主从同步这个问题也就变成为什么要采用从库作为备份这个问题，这个备份到底可以应对什么样的情况呢？</p>
+<ul>
+<li>读写分离：主库仅执行更新操作，从库负责执行所有的查询操作，从而降低主库的压力</li>
+<li>容灾备份：在主库突然宕机故障之后，能够立刻将备库切换为主库继续提供相应的服务</li>
+<li>数据备份：在出现误操作或者数据丢失之后，能够利用备库中保存的数据恢复主库中丢失的数据</li>
+</ul>
+<p><a style="color:grey;">注：读写分离是最为重要的用途，之后还会详细介绍读写分离存在的问题</a></p>
+<hr>
+<p>3、归档日志的格式</p>
+<p>在此前介绍归档日志的笔记中，实际上已经提到归档日志的三种日志格式了，但是没有详细提到每种格式内部到底的怎么样，如何才能够看到内部的内容，这部分内容就会补全之前缺失的部分， 不过不是很重要，更加偏向实战，基本特点都在之前已经提过了</p>
+<p><a style="color:grey;">注：如果想要测试，那么就需要配置主从同步</a></p>
+<p>3.1、STATEMENT</p>
+<p>① 归档日志默认记录格式是 ROW，所以需要提前修改归档日志的记录格式</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 设置 binlog 格式</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> binlog_format <span class="operator">=</span> <span class="string">&#x27;statement&#x27;</span>;</span><br><span class="line"># 查看 binlog 格式</span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;binlog_fomrat&#x27;</span>;</span><br><span class="line"># 重启数据库</span><br></pre></td></tr></table></figure>
+
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/11/d5f00364e0e3c7d28567ae05711b67e6.png" alt="设置归档日志格式" style="zoom:67%;" />
+
+<p>② 找到已经存储了记录的数据库中的表，然后随意执行一条更新语句即可</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 删除相应的数据: 这里只会删除一条数据, 也就是最后一条, 这是根据索引查询出来的结果集而定的</span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> category <span class="keyword">where</span> category_pid <span class="operator">=</span>  <span class="number">15</span> limit <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/11/c02c24d0756de428bf93ca783c8bde67.png" alt="删除的数据" style="zoom:50%;" />
+
+<p>③ 然后找打开该行记录可能存在的 binlog 文件（通常都是最新的那个，在 data 文件夹下可以看到）</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 打开对应的 binlog</span><br><span class="line"><span class="keyword">show</span> binlog events <span class="keyword">in</span> <span class="string">&#x27;master-bin.000039&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/11/49ff23c79bae9b6750433ba4b7414b57.png" alt="日志记录的内容" style="zoom:50%;" />
+
+<ul>
+<li><p>SET @@SESSION.GTID_NEXT= ‘ANONYMOUS’：</p>
+</li>
+<li><p>可以看到在事务之间执行的 SQL 语句被非常完整的保存下来了</p>
+  <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> category <span class="keyword">where</span> category_pid <span class="operator">=</span>  <span class="number">15</span> limit <span class="number">1</span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>BEGIN 和 COMMIT 显然都是事物的标志；XID 是用于联系重做日志的标志</p>
+</li>
+</ul>
+<p>3.2、ROW</p>
+<p>① 再将归档日志格式切换回 ROW 格式</p>
+<p>② 然后执行任意的更新语句后查询 binlog 文件</p>
+<p>你会发现此时记录的内容，是你看不懂的东西，所以这个时候就需要依赖 <code>mysqlbinlog</code> 工具来解析 binlog 文件</p>
+<p>③ 解析 binlog 文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqlbinlog  -vv data/master.000039 --start-position=8900;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>即使我执行的是 delete 语句，row 格式的 binlog 也会把被删掉的行的整行信息保存起来。所以，如果你在执行完一条 delete 语句以后，发现删错数据了，可以直接把 binlog 中记录的 delete 语句转成 insert，把被错删的数据插入回去就可以恢复了。如果你是执行错了 insert 语句呢？那就更直接了。row 格式下，insert 语句的 binlog 里会记录所有的字段信息，这些信息可以用来精确定位刚刚被插入的那一行。这时，你直接把 insert 语句转成 delete 语句，删除掉这被误插入的一行数据就可以了。如果执行的是 update 语句的话，binlog 里面会记录修改前整行的数据和修改后的整行数据。所以，如果你误执行了 update 语句的话，只需要把这个 event 前后的两行信息对调一下，再去数据库里面执行，就能恢复这个更新操作了</p>
+<p>3.3、 MIXED</p>
+<blockquote>
+<p>参考资料</p>
+<p>《<a target="_blank" rel="noopener" href="https://www.cnblogs.com/gaogao67/p/10931313.html">MySQL Replication–双主结构优缺点</a>》</p>
+<p>《<a target="_blank" rel="noopener" href="https://blog.csdn.net/helloxiaozhe/article/details/79548186">Mysql主从基本原理，主要形式以及主从同步延迟原理 (读写分离)导致主库从库数据不一致问题的及解决方案</a>》</p>
+<p>《MySQL 实战 45 讲》</p>
+</blockquote>
+<h2 id="实战配置"><a href="#实战配置" class="headerlink" title="实战配置"></a>实战配置</h2><p>在了解主从同步的基本概念之后，先不去详细了解主从同步潜在的问题，先来看看主从同步大致是如何配置的</p>
+<p>整个过程虽然并不困难，但是可能存在许多奇怪的问题，但是这篇文章是在我配置结束很久之后写的，所以部分问题可能无法复现</p>
+<p>1、搭建多个 MySQL 实例的基本前提</p>
+<p>如果拥有两台云服务器，就非常容易配置两个不同的数据库，只需要在每台服务器上都安装 MySQL 就可以了</p>
+<p>如果只有一台云服务器，那么就不要想着让本地计算机的 MySQL 作为主库，让云服务器作为从库。因为云服务器上的从库必须从主库获取相应归档日志才能够实现主从同步，但是你的本地计算机是根本没有公网地址的（如果你有公网地址，那就当我没说），所以云服务器是无法检测到你的本地计算机上的主库的</p>
+<p>这也是接下来要讲述的，如何在本地计算中配置多个 MySQL 实例</p>
+<hr>
+<p>2、准备从库需要的基本数据</p>
+<p>首先将主库中的数据 <strong>全部拷贝</strong> 到从数据库文件夹下：这里将 mysql-5.7.33-winx64 下的数据全部拷贝到 mysql-backup 中</p>
+<p>这里千万注意一定是所有的数据，而不要只拷贝部分数据库实例，因为所有数据库实例的二次缓冲、事务等相关信息都是存储在共享文件表（ibdata1），如果只拷贝部分数据库实例，那么就会出现共享文件表记录的有关信息，但是关联的数据库却是不存在的情况，这样从库启动后就会出现问题</p>
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/10/5f7cf424f8449fb9f08ad944eb113bc2.png" alt="拷贝主库的数据到从库中" style="zoom:50%;" />
+
+<hr>
+<p>3、修改配置文件</p>
+<p>找到你的数据库的配置文件所在的位置，然后进行修改，主要修改的就是端口号，不可以和主库的端口号相同</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="section">[mysqld]</span></span><br><span class="line"><span class="comment"># 配置 MySQL 实例的地址</span></span><br><span class="line"><span class="attr">basedir</span>=D:\MySQL\mysql-<span class="number">5.7</span>.<span class="number">33</span>-winx64\mysql-backup</span><br><span class="line"><span class="comment"># 配置 MySQL 实例的仓库地址</span></span><br><span class="line"><span class="attr">datadir</span>=D:\MySQL\mysql-<span class="number">5.7</span>.<span class="number">33</span>-winx64\mysql-backup\data\</span><br><span class="line"><span class="comment"># 端口号必须和此前的 MySQL 实例不同</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">3308</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>4、直接安装新的 MySQL 实例</p>
+<p>用 <strong>管理员身份</strong> 打开终端然后输入相应的命令：</p>
+<ul>
+<li>如果出现 <code>Service successfully installed</code> 就是安装成功</li>
+<li>如果是 <code>Install/Remove of the Service Denied!</code> 那么就是没有使用管理员身份打开终端 </li>
+</ul>
+<p><a style="color:grey;">注：如果你此前 MySQL 已经配置了环境变量，那么就不用切换到 bin 目录下，直接输入命令就行</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># --defaults-file 后面跟的就是你的配置文件所在路径</span></span><br><span class="line">mysqld install MySQL-Backup --defaults-file=<span class="string">&quot;D:\MySQL\mysql-5.7.33-winx64\mysql-backup\my.ini&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，就打开任务管理器去启动 MySQL 实例。这个方法比较简单粗暴，因为有时候使用其他的命令，命令的影响可能是全局的，不要乱用</p>
+<p>比如重新初始化仓库中的数据，以及卸载等命令，千万不要乱用，很有可能主库从库的数据全部都被清除，或者一起被卸载</p>
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/10/0dd9431e135dd123b3630f7aa7180a8a.png" alt="安装成功" style="zoom: 50%;" />
+
+<p>也可以尝试使用各种连接工具去连接相应的数据库，可以使用以下的命令，使用的账号密码和主库中保存的是相同的。记得，端口号一定是大写的 P，密码一定是小写的 p，千万不要整错了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -P3308 -uroot -p</span><br></pre></td></tr></table></figure>
+
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/10/b669a89cf57108f10490d09fefae5fc4.png" alt="成功登陆" style="zoom:50%;" />
+
+<p>如果你还想要验证是否连接的就是端口号为 3308 的从库，而不是端口号为 3306 的主库，完全可以在从库中写入数据，然后观察主库是否有相应的变化，就可以了，至此，MySQL 实例就算安装完成了，接下来就是主从同步相关</p>
+<p><a style="color:grey;">如果出现其他问题，那么请怀疑你自身是不是哪里做错了，因为这里是经过测试确认成功的</a></p>
+<hr>
+<p>5、设置主从同步需要的配置文件</p>
+<p>先在主库的配置文件添加如下的配置：每个 MySQL 实例必须具有不同的 server-id，否则也是启动之后会出现错误，也有可能启动不了</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 配置主数据库 ID</span></span><br><span class="line"><span class="attr">server-id</span>=<span class="number">1</span></span><br><span class="line"><span class="comment"># 启用二进制日志: BinaryLog ? BinLog</span></span><br><span class="line"><span class="attr">log-bin</span>=master-bin</span><br><span class="line"><span class="comment"># 打开索引是什么意思?</span></span><br><span class="line"><span class="attr">log-bin-index</span>=master-bin.index</span><br><span class="line"><span class="comment"># 记得重启数据库</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在从库的配置文件中添加如下的配置</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">server-id</span>=<span class="number">3</span></span><br><span class="line"><span class="attr">relay-log-index</span>=backup-relay-bin.index</span><br><span class="line"><span class="attr">relay-log</span>=backup-relay-bin</span><br></pre></td></tr></table></figure>
+
+<p>主库和从库的配置文件更新完成之后，就分别重启主库和从库，建议从任务管理中重启</p>
+<hr>
+<p>6、调试主从同步</p>
+<p>先在主库中输入相应的命令，检查是否有对应的归档日志</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">show</span> master status;</span><br></pre></td></tr></table></figure>
+
+<img src="https://i1.xpic.jp/file/xpicjp/2022/02/10/064582ee9a80e717d5c2975b0730ce56.png" alt="调试主库成功" style="zoom:50%;" />
+
+<p>然后在主库中创建新的用户，用于从库访问主库的时候使用，并授予相应的权限</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 创建相应的用户</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> backup</span><br><span class="line"># 授予权限</span><br><span class="line"><span class="keyword">grant</span> replication slave <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> <span class="string">&#x27;backup&#x27;</span>@<span class="string">&#x27;%&#x27;</span> identified <span class="keyword">by</span> <span class="string">&#x27;123456&#x27;</span></span><br><span class="line"># 刷新权限</span><br><span class="line">flush privileges</span><br></pre></td></tr></table></figure>
+
+<p>然后在从库中设置主库的地址、端口号以及访问主库的用户名，还有从哪个归档日志中的哪个位置开始读取</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">change master <span class="keyword">to</span> </span><br><span class="line"># 主库的 IP 地址以及端口号</span><br><span class="line">master_host<span class="operator">=</span><span class="string">&#x27;127.0.0.1&#x27;</span>,master_port<span class="operator">=</span><span class="number">3306</span>, </span><br><span class="line"># 从库访问主库的用户名和密码</span><br><span class="line">master_user<span class="operator">=</span><span class="string">&#x27;backup&#x27;</span>,master_password<span class="operator">=</span><span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line"># 从哪里开始访问</span><br><span class="line">master_log_file<span class="operator">=</span><span class="string">&#x27;master-bin.000039&#x27;</span>,master_log_pos<span class="operator">=</span><span class="number">806</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然后查看从库是否完成主从同步，此时可能会发现下面抛出了 IO 异常信息（这次配置没有复现这个错误），或者什么都没有抛出，但是你如果尝试在主库中更新，从库中是不会更新的。原因是因为你之前直接复制了主库的内容，导致主库和从库中的 UUID 是完全相同，所以需要去修改从库中的 UUID</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 查看主从同步状态</span><br><span class="line"><span class="keyword">show</span> slave status \G;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>先停止主从同步，然后去数据库实例下的仓库文件夹中找到 auto.cnf 文件，将 UUID 修改为和主库不同的即可，这里也就是去 <code>D:\MySQL\mysql-5.7.33-winx64\mysql-backup\data</code> 文件夹下找到 auto.cnf 文件进行修改</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># 停止主从同步</span><br><span class="line">stop slave;</span><br><span class="line"># 去修改 UUID</span><br><span class="line"># 重新启动主从同步</span><br><span class="line"><span class="keyword">start</span> slave;</span><br><span class="line"># 查看主从同步状态</span><br><span class="line"><span class="keyword">show</span> slave status \G;</span><br></pre></td></tr></table></figure>
+
+<p>最后在主库中执行更新操作，验证下即可</p>
+<blockquote>
+<p>参考资料</p>
+<p><a target="_blank" rel="noopener" href="https://jwnote.com/mysql-multi-instances-on-windows/">Windows上的MySQL多实例配置</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000012541291">WINDOWS下配置MYSQL多实例和主备同步</a></p>
+</blockquote>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Fuyusakaiori</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/02/07/database/mysql/log/MySQL 主从同步/">http://example.com/2022/02/07/database/mysql/log/MySQL 主从同步/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%97%A5%E5%BF%97/">日志</a><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2022/02/11/database/mysql/log/MySQL%20%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"><i class="fa fa-chevron-left">  </i><span>MySQL 主从同步问题及其解决方案</span></a></div><div class="next-post pull-right"><a href="/2022/02/06/database/mysql/log/MySQL%20%E4%B8%89%E5%A4%A7%E6%97%A5%E5%BF%97/"><span>MySQL 三大日志</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
   $('#top-container').addClass('is-mobile')
