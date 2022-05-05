@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="事务：基础篇"><meta name="keywords" content="日志,事务,MVCC,锁"><meta name="author" content="Fuyusakaiori"><meta name="copyright" content="Fuyusakaiori"><title>事务：基础篇 | 天鹅绒房间</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"37DAS9P43B","apiKey":"c2a5f8cdb503b255bb4384b147d4ab84","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}.","hits_stats":"${hits} results found in ${time} ms"}},
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">事务：基础篇</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E8%AF%86%E4%BA%8B%E5%8A%A1"><span class="toc-number">1.1.</span> <span class="toc-text">初识事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E7%89%B9%E6%80%A7"><span class="toc-number">1.2.</span> <span class="toc-text">事务特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-number">1.3.</span> <span class="toc-text">隔离级别</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">116</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">17</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">36</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">事务：基础篇</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-05-05</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/">MySQL</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/%E4%BA%8B%E5%8A%A1/">事务</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">1.9k</span><span class="post-meta__separator">|</span><span>Reading time: 5 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="事务：基础篇"><a href="#事务：基础篇" class="headerlink" title="事务：基础篇"></a>事务：基础篇</h1><img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/事务.4i36uceigik0.png" alt="事务知识体系" style="zoom:80%;" />
+
+<p>事务的主要内容可以从以下几个问题来解决：</p>
+<ul>
+<li><a style="color:#1890FF;">什么是事务？为什么需要事务？如何开启事务呢？</a></li>
+<li><a style="color:#1890FF;">事务有哪些特性呢？为什么需要这些特性呢？这些特性是如何实现的？</a></li>
+<li><a style="color:#1890FF;">事务的隔离性有哪些隔离级别？不同的隔离级别分别可以解决哪些问题？</a></li>
+<li><a style="color:#1890FF;">隔离性具体是如何实现的？锁机制如何实现？<em>MVCC</em> 如何实现？</a></li>
+</ul>
+<p>事务的所有内容基本都包含在这些问题中，相比于索引来说会更加重要</p>
+<blockquote>
+<p>注：这里是按照 <em>MySQL</em> 中的事务来讲述的，其他数据库中的事务可能存在些微出入</p>
+</blockquote>
+<h2 id="初识事务"><a href="#初识事务" class="headerlink" title="初识事务"></a>初识事务</h2><p><a style="color:#1890FF;">什么是事务？为什么需要事务？</a></p>
+<p><a style="color:#F5222D;">简单来说事务就是一组数据库操作或者说一组 SQL 集合，这组 SQL 集合要么全部执行成功，要么全部都不执行；主要的目的就是保证数据库在执行 SQL 时数据的一致性和完整性</a></p>
+<p>如果不能理解事务的定义的话，那么接下来这个非常经典的转账例子应该能够让你大致理解事务这个概念：</p>
+<p>如果没有事务的话，在我们的账户拥有 100 元的情况下给某个人转账，由于转账的过程中系统需要完成非常多的操作，可能没有办法立刻完成转账的行为；此时我们查询账户余额就会发现账户余额依然是 100 元，如果此时我们打算再给其他人转账，那么最终就可能导致账户余额显示为负数，这就破坏了数据的一致性</p>
+<p><a style="color:#1890FF;">事务是如何启动的？</a></p>
+<ul>
+<li><em>start transaction / begin</em>：事务要等到第一个 <em>DQL</em> 执行的时候才会启动，也就是视图才真正创建</li>
+<li><em>start transaction with consistent snapshot</em>：事务立刻启动，也就是事务立刻创建</li>
+<li><em>set autocommit</em>：设置自动开启事务，之后不需要再手动声明事务，但是需要手动提交，容易导致长事务</li>
+<li><em>commit</em>：事务提交</li>
+<li><em>rollback</em>：事务回滚 </li>
+</ul>
+<blockquote>
+<p>注：如果不能理解这里开启事务的区别，可以等到了解 <em>MVCC</em> 机制之后再倒回来看</p>
+</blockquote>
+<h2 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h2><p><a style="color:#1890FF;">事务有哪些特性？具体是如何实现的？</a></p>
+<p>事务的 <em>ACID</em> 特性：</p>
+<ul>
+<li><a style="color:#F5222D;">原子性：如果事务中的所有操作执行成功才可以提交；如果某个操作执行失败，那么就会发生回滚</a></li>
+<li><a style="color:#F5222D;">持久性：如果事务执行成功并且提交后，无论事务是否写入磁盘，对于数据库的修改都是永久性的</a></li>
+<li><a style="color:#F5222D;">隔离性：防止多个事务在并发执行的过程中交错执行导致的数据不一致性</a></li>
+<li><a style="color:#F5222D;">一致性：事务执行的前后数据库的完整性约束都没有被破坏，也就是说更新之后的数据是符合要求的</a></li>
+</ul>
+<p>事务 <em>ACID</em> 具体实现：</p>
+<ul>
+<li><a style="color:#F5222D;">原子性：采用回滚日志实现事务的原子性（<em>undo log</em>）</a><ul>
+<li>每次事务执行操作的时候，回滚日志会记录这次操作对应的相反操作</li>
+<li>只要事务执行失败，那么就会找到回滚日志中相应的记录并依次执行，回滚到事务执行前的状态</li>
+</ul>
+</li>
+<li><a style="color:#F5222D;">持久性：采用重做日志实现事务的持久性（<em>redo log</em>）</a><ul>
+<li>每次事务执行 SQL 更新内存中对应的数据页的时候，重做日志就会记录这次更新操作或者更新内容</li>
+<li>只要事务能够成功提交，那么重做日志就可以采用两阶段提交的方式持久化到磁盘中</li>
+<li>那么即使事务因为提交后还没有持久化到磁盘中而造成丢失，也是可以通过重做日志恢复的</li>
+</ul>
+</li>
+<li><a style="color:#F5222D;">隔离性：传统的事务隔离性是通过加锁来解决的，<em>MySQL</em> 采用 <em>MVCC + 加锁</em> 两种方案实现的</a></li>
+</ul>
+<h2 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h2><blockquote>
+<p>注：事务隔离级别的具体实现会在之后的原理篇中提到，因为会涉及到非常多的内容，这里就暂且不去展开 </p>
+</blockquote>
+<p><a style="color:#1890FF;">为什么需要事务的隔离级别？</a></p>
+<p><a style="color:#F5222D;">简单来说，就是此前提到的为了防止多个事务并发执行时由于交错执行带来的数据不一致的问题</a></p>
+<p>具体来讲主要分为以下两类问题：</p>
+<ul>
+<li>读-写：<ul>
+<li><a style="color:#F5222D;">脏读：如果当前事务读取到其他事务尚未提交的数据，就称为脏读</a>，而脏读主要会导致事务读取的数据不正确。比如说某个事务数据发生回滚，那么当前事务读取到的数据就是错误的</li>
+<li><a style="color:#F5222D;">不可重复读：如果当前事务前后两次查询读取到的数据不一致，就称为不可重复读</a>，而不可重复读主要会导致当前事务读取到的数据频繁变化，在校验数据的时候非常不方便，大多数时候没有太多的危害</li>
+<li><a style="color:#F5222D;">幻读：如果当前事务前后两次查询得到的结果集的行数不一致，就称为幻读</a>，而幻读主要可能造成日志和数据逻辑不一致的情况，有时还会破坏锁的语义</li>
+</ul>
+</li>
+<li>写-写：<ul>
+<li><a style="color:#F5222D;">提交覆盖：两个事务并发读取到相同行，然后都基于数据的旧值做出修改，前一个事务的修改被后一个事务的修改所覆盖，就称为提交覆盖问题</a></li>
+<li><a style="color:#F5222D;">回滚覆盖：两个事务并发修改相同行，然后其中一个事务已经做出修改并提交，另外一个事务发生回滚，导致回滚的数据将此前修改的数据覆盖，相当于前一个事务的修改无效了</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>提交覆盖，回滚覆盖 &gt; 脏读 &gt; 不可重复读 &gt; 幻读</p>
+</blockquote>
+<p>因为每种问题的严重性也都是不同的，所以如果我们能够容忍一些问题的出现，那么就可以获取性能上的提升，这也是为什么要设计四种事务隔离级别的原因</p>
+<p><a style="color:#1890FF;">事务的隔离级别有哪些？</a></p>
+<p>注：事务的隔离级别也是典中典的问题，不仅要知道事务隔离级别有哪些，还要知道如何实现的</p>
+<ul>
+<li><a style="color:#F5222D;">读未提交：允许当前事务读取其他事务未提交的数据：</a><ul>
+<li>仅能够避免回滚覆盖问题，但是依然存在脏读，不可重复读，幻读，提交覆盖的问题</li>
+</ul>
+</li>
+<li><a style="color:#F5222D;">读已提交：不允许当前事务读取其他事务没有提交的数据</a><ul>
+<li>可以解决脏读，回滚覆盖问题，大多数系统都适合这种隔离级别，无法解决不可重复读，幻读，提交覆盖的问题</li>
+</ul>
+</li>
+<li><a style="color:#F5222D;">可重复读：事务启动时会获取一致性快照，无论其余事务是否提交，都是无法读取其余事务的更新的</a><ul>
+<li><em>SQL</em> 标准中规定该级别可以解决脏读，不可重复读，回滚覆盖和提交覆盖，是无法解决幻读问题的</li>
+<li><em>MySQL</em> 中采用 <em>MVCC</em> 仅能避免快照读下的幻读问题，还需要配合</li>
+</ul>
+</li>
+<li><a style="color:#F5222D;">串行化：仅允许事务串行执行，不允许并发执行</a><ul>
+<li>既然事务都不能够并发执行，那么肯定就不存在任何问题了，不过性能肯定非常低</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>参考内容：</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904096378404872#heading-5">https://juejin.cn/post/6844904096378404872#heading-5</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.zhenlanghuo.top/2019/09/07/Mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/"> Mysql学习笔记——事务与隔离级别</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/i5QWx3QPZNkV51ghFbtXCw">https://mp.weixin.qq.com/s/i5QWx3QPZNkV51ghFbtXCw</a></p>
+</blockquote>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Fuyusakaiori</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/05/05/database/mysql/transaction/事务：基础篇/">http://example.com/2022/05/05/database/mysql/transaction/事务：基础篇/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%97%A5%E5%BF%97/">日志</a><a class="post-meta__tags" href="/tags/%E4%BA%8B%E5%8A%A1/">事务</a><a class="post-meta__tags" href="/tags/MVCC/">MVCC</a><a class="post-meta__tags" href="/tags/%E9%94%81/">锁</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2022/05/05/database/mysql/transaction/%E4%BA%8B%E5%8A%A1%EF%BC%9A%E5%8E%9F%E7%90%86%E7%AF%87/"><i class="fa fa-chevron-left">  </i><span>事务：原理篇</span></a></div><div class="next-post pull-right"><a href="/2022/02/14/blog/%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1/"><span>每日任务</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

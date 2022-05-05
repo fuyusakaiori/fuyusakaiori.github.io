@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="索引：深入篇"><meta name="keywords" content="日志,索引,change buffer"><meta name="author" content="Fuyusakaiori"><meta name="copyright" content="Fuyusakaiori"><title>索引：深入篇 | 天鹅绒房间</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"37DAS9P43B","apiKey":"c2a5f8cdb503b255bb4384b147d4ab84","indexName":"blog","hits":{"per_page":10},"languages":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}.","hits_stats":"${hits} results found in ${time} ms"}},
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%EF%BC%9A%E6%B7%B1%E5%85%A5%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">索引：深入篇</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">索引类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">索引优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">覆盖索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">联合索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%BC%80%E7%B4%A2%E5%BC%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">前缀索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88"><span class="toc-number">1.3.</span> <span class="toc-text">索引失效</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">116</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">17</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">36</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">索引：深入篇</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-01-25</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/">MySQL</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/MySQL/%E7%B4%A2%E5%BC%95/">索引</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">4.8k</span><span class="post-meta__separator">|</span><span>Reading time: 14 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="索引：深入篇"><a href="#索引：深入篇" class="headerlink" title="索引：深入篇"></a>索引：深入篇</h1><h2 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h2><p><a style="color:#1890FF;">索引主要分为哪几类？每种索引的特点是什么？</a></p>
+<p><em>MySQL</em> <em>InnoDB</em> 索引主要分为聚簇索引和非聚簇索引两大类：</p>
+<p><a style="color:#F5222D;">聚簇索引实际指的就是每张表中的主键，非聚簇索引主要包含普通索引，唯一索引，联合索引，前缀索引四种</a></p>
+<p>聚簇索引主要的特点：</p>
+<ul>
+<li><a style="color:#F5222D;">B+ 树中的叶子结点存储的是整行数据</a>：只要聚簇索引更新整行数据都会发生移动，更新代价较高；但是查询整行数据仅需要一次 IO 过程就可以完成，不需要回表</li>
+<li><a style="color:#F5222D;">每张表都必须设置聚簇索引且只能设置一个</a>：如果没有设置聚簇索引，那么会将表中第一个唯一索引作为聚簇索引；如果也没有唯一索引，那么会自动生成 <em>ROWID</em> 作为聚簇索引</li>
+<li><a style="color:#F5222D;">每张表中的聚簇索引中的内容都是不可重复的，且不可以为空</a></li>
+</ul>
+<p>非聚簇索引主要特点：</p>
+<ul>
+<li><a style="color:#F5222D;">B+ 树中的叶子结点只存储主键或者联合索引中的字段而不存储整行数据</a>：这样即使非聚簇索引发生更新也只需要移动主键的值，更新代价较低；但是在查询整行数据的时候需要回表，也就是要先查询到主键然后再去聚簇索引中查询整行数据，查询效率更低</li>
+<li><a style="color:#F5222D;">每张表中不一定都需要非聚簇索引，也可以设置多个非聚簇索引；每个非聚簇索引中的内容都是可以为空的，并且只有唯一索引中的内容是不可重复的，其余的非聚簇索引的内容都是可以重复的</a></li>
+</ul>
+<blockquote>
+<p>注：聚簇索引和非聚簇索引大致就是这些区别，剩下就是每种索引的详细内容</p>
+</blockquote>
+<p><a style="color:#1890FF;">如何在普通索引和唯一索引中选择？</a></p>
+<p>索引主要的目的就是为了提高效率，那么选择哪种索引的决定性因素就是索引的效率高低；接下来从查询和更新两个角度分析普通索引和唯一索引的效率，从而得出在大多数情况下应该选择哪种索引</p>
+<p><a style="color:#13C2C2;">查询过程：</a></p>
+<ul>
+<li><p>首先需要根据索引查找到数据所在的数据页然后将其读取到内存中，如果查找的数据不在内存中的话</p>
+</li>
+<li><p>然后在内存中通过数据页内部的 <em>Page Directory</em> 查询到第一个符合条件的行记录（这里假设是等值查询）</p>
+<ul>
+<li><p>唯一索引在查询到第一个符合条件的行记录之后就会立刻返回，因为不会再有重复的索引</p>
+</li>
+<li><p>但是普通索引就会继续查询直到发现有不符合条件的行记录之后才会停止，毕竟会有重复的内容</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><a style="color:#F5222D;">从整个过程来看，在等值查询的情况下唯一索引可能扫描的行数会比普通索引更少</a>，但是对于内存中的读取操作来说其实差距是微乎其微的，所以唯一索引和普通索引在查询过程中的效率是没有太大区别的</p>
+<p>但是存在一个比较特殊的情况，如果等值查询到的第一个符合条件的记录是数据页中的最后一行，那么普通索引想要向后继续扫描就必须将下一个数据页读取到内存中才可以继续扫描，这就会增大查询带来的成本，但是这种情况的概率比较低</p>
+<p><a style="color:#13C2C2;">更新过程：</a></p>
+<ul>
+<li>如果需要更新的数据就在内存中：<ul>
+<li>普通索引只需要找到需要更新的位置，然后更新即可</li>
+<li>唯一索引在找到更新的位置后要判断唯一索引的更新值是否会和当前已存在的值冲突，如果没有发生冲突那么就更新</li>
+<li>普通索引和唯一索引在这种情况下的效率也没有相差太多</li>
+</ul>
+</li>
+<li>如果要更新的数据不在内存中，那么唯一索引的效率机会比普通索引的效率低得多<ul>
+<li><a style="color:#F5222D;">普通索引会直接将更新值记录在 <em>change buffer</em> 中而不会将磁盘中的数据页读取进来再修改，然后后台线程会选择合适的时机将 <em>change buffer</em> 中的内容和磁盘中的数据进行合并，从而达到修改的目的</a></li>
+<li><a style="color:#F5222D;">但是唯一索引因为需要验证索引的唯一性，就只能将磁盘中的数据页读取到内存中，然后在没有冲突的情况下才可以修改，这里显然无法避免磁盘 IO 的开销</a></li>
+</ul>
+</li>
+</ul>
+<p>总的来说，普通索引和唯一索引在查询过程基本没有性能差距，但是在更新过程中由于查询语句可以使用 <em>change buffer</em> 减少磁盘 IO 的次数，所以效率会优于唯一索引。不过，如果在业务逻辑不能够保证数据的唯一性的时候还是有必要使用唯一索引的，不过在其他情况下还是建议使用普通索引</p>
+<p><a style="color:#13C2C2;">补充：<em>change buffer</em></a></p>
+<p><em>change buffer</em> 将需要更新的内容暂时缓存在内存，然后后台线程选择合适的时机将 <em>change buffer</em> 合并到数据库中</p>
+<p>这里的合适的时机主要分为三种情况：</p>
+<ul>
+<li>如果更新完数据之后，需要访问更新的数据，那么就需要执行合并的行为，确保读取到的是最新的数据</li>
+<li>后台线程在主循环中会定期将 <em>change buffer</em> 中的内容合并到数据库中 </li>
+<li>数据库正常关闭的时候也会将 <em>change buffer</em> 中的内容合并到数据库中</li>
+</ul>
+<p><em>change buffer</em> 发生更新时，其更新的内容也会记录在 <em>redo log</em> 中，所以不需要担心 <em>change buffer</em> 中的内容因为数据库宕机或者断电丢失。此外，<em>change buffer</em> 会定期刷新到 ibdata1 这个共享表空间中。</p>
+<h2 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h2><h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p><a style="color:#F5222D;">简单来说，如果需要查询的字段刚好就在非聚簇索引（辅助索引）的叶子结点中</a>，那么就认为这个索引已经覆盖了我们的查询需求，那么就称这个索引为覆盖索引。覆盖索引主要有两种具体的情况，如果没有使用联合索引，那么只有在查询主键字段的时候才会启用覆盖索引；如果使用联合索引，那么只要查询的字段在联合索引中，那么就可以启用覆盖索引</p>
+<p>覆盖索引的好处非常明显，如果能够在非聚簇索引对应的 B+ 树的叶子结点中查询到我们需要的字段，那么就可以避免回表查询从而减少树的搜索次数，显著提升查询性能</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 假设 name 字段是普通索引</span></span><br><span class="line"><span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> name <span class="keyword">like</span> &quot;张三&quot;;</span><br><span class="line"><span class="comment">-- 假设 name age gender 是联合索引</span></span><br><span class="line"><span class="keyword">select</span> name, age <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> name <span class="keyword">like</span> &quot;张三&quot;; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：对联合索引使用覆盖索引的前提是联合索引生效，但是如果使用联合索引的时候不遵循最左匹配原则，那么联合索引就不会生效，相应的覆盖索引也就不会生效</p>
+</blockquote>
+<h3 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h3><p><a style="color:#1890FF;">什么是联合索引？联合索引的最左匹配原则是什么？</a></p>
+<p><a style="color:#F5222D;">简单来说，联合索引就是将多个字段共同组合成一个索引，对应的 B+ 树中的每个结点中的关键字可以存储多个字段而不只是单个字段，并且字段之间也会按照特定的顺序进行排序，特定的顺序其实就是定义联合索引时字段的顺序</a></p>
+<p><a style="color:#F5222D;">此外，联合索引在创建的同时，还会同时从左到右依次组合字段创建相应的索引</a>：比如将 (<em>key1,key2,key3)</em> 作为联合索引创建，那么同时还会创建 (<em>key1</em>), (<em>key1, key2</em>) 这两个索引。如果还有更多的字段，那么依次类推就可以</p>
+<p>使用联合索引查询是有限制条件的，并不是随便就可以使用的，只有满足最左匹配原则才可以使用联合索引。<a style="color:#F5222D;">最左匹配原则实际上指的就是在使用联合索引的时候，要求 <em>where</em> 条件中使用的索引字段必须是联合索引的最左 N 个字段</a></p>
+<p>比如还是将 (<em>ke1,key2,key3</em>) 作为联合索引，那么使用 (<em>key1</em>), (<em>key1, key2</em>), (<em>key1, key2, key3</em>) 就可以启用联合索引查询，如果使用的是 (<em>key2, key3</em>)，(<em>key3</em>) 那么就是无法使用联合索引的，也就是出现索引失效的情况。这主要是因为联合索引中首先是按照第一个字段排序的，只有在第一个字段相同的情况下才会按照第二个字段排序，那么就有可能出现之后的字段无序，所以需要最左匹配原则。</p>
+<blockquote>
+<p>此外，既然存在最左匹配原则，那么就需要考虑字段在联合索引中的顺序，主要通过两个方面考虑</p>
+<ul>
+<li><p>维护的索引数量：如果某种联合索引中字段的顺序能够减少维护索引的数量，那么就会优先考虑</p>
+</li>
+<li><p>查询条件的频率：如果联合索引中某个字段的查询频率比较高，那么这个字段的顺序就应该靠前</p>
+</li>
+</ul>
+</blockquote>
+<p><a style="color:#1890FF;">索引下推优化是什么？</a></p>
+<p>如果 <em>where</em> 条件中使用的索引字段只有部分符合最左匹配原则，而剩下使用的索引字段虽然在联合索引中但是不在最左前缀索引中这种情况：比如 (<em>key1, key3</em>) 这种使用方式。</p>
+<p><em>MySQL</em> 在不同的版本中对于这种情况的处理方式存在差距：</p>
+<p>如果是在 <em>MySQL</em> 5.6 之前，<a style="color:#F5222D;">那么依然可以使用部分生效的最左前缀索引查询数据，然后将查询到的所有数据依次回表，找到整行数据，然后和 <em>where</em> 条件中剩余的联合索引字段进行比较，但是这样回表的次数会比较多，效率相对较低</a></p>
+<p>在 <em>MySQL 5.6</em> 之后，<a style="color:#F5222D;">那么就会在使用部分生效的最左前缀索引查询数据的过程中，就将 <em>where</em> 条件中剩余的联合索引字段挨个比较，从而在回表之前就可以过滤很多不需要回表比较的数据，从而减少回表的次数，提高查询的效率</a></p>
+<p><a style="color:#F5222D;">总的来说，索引下推旨在仅能够利用部分最左前缀索引而不是全部的联合索引时，对不在最左前缀索引中的其他联合索引字段加以利用的手段</a>，其实就是在使用最左前缀索引查询的过程中就对 <em>where</em> 条件中剩下的字段进行比较，从而过滤数据，最终减少回表次数</p>
+<blockquote>
+<p>注：<em>explain</em> 输出的信息中 <em>extra</em> 字段如果出现 <em>using index condition</em>，那么就意味着启动了索引下推优化</p>
+</blockquote>
+<h3 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h3><p><a style="color:#F5222D;">简单来说，前缀索引就是将字符串的部分字符取出来作为索引，对应的 B+ 树中每个结点存储的关键字的值也只有字符串的部分字符而不是全部</a></p>
+<p>使用前缀索引的原因主要是可以减少字符串索引占用的空间大小，但是可能造成回表次数增多，以及覆盖索引失效的问题</p>
+<ul>
+<li><a style="color:#F5222D;">回表次数增多</a>：主要是因为各个字符串的部分前缀可能是一样的，那么就会导致很多索引的前缀也是一样的，导致索引的区分度就相对较差过滤的数据就少，回表的次数就变多了</li>
+<li><a style="color:#F5222D;">覆盖索引失效</a>：主要因为前缀索引中仅包含字符串的部分信息，但是查询的内容包含的是完整的字符串信息，如果直接使用覆盖索引，那么就可能返回多个值，这肯定是不对的，所以只能够全部回表查询</li>
+</ul>
+<p>所以使用前缀索引时要注意区分度是否足够优秀，如果区分度太差就应该适当增加前缀索引的长度，从而避免区分度太差</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 可以用下面这个函数来验证区分度</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">  <span class="built_in">count</span>(<span class="keyword">distinct</span> <span class="keyword">left</span>(email, <span class="number">4</span>)),</span><br><span class="line">  <span class="built_in">count</span>(<span class="keyword">distinct</span> <span class="keyword">left</span>(email, <span class="number">5</span>))</span><br><span class="line"><span class="keyword">from</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
+
+<p>通常会在身份证号，邮箱等字符串信息中使用前缀索引</p>
+<p>如果前缀索引的区分度始终不够好，那么就要考虑和其他的方法结合使用</p>
+<ul>
+<li>倒序存储 + 前缀索引</li>
+<li>哈希校验码</li>
+</ul>
+<h2 id="索引失效"><a href="#索引失效" class="headerlink" title="索引失效"></a>索引失效</h2><blockquote>
+<p>注：索引失效有非常多种情况，只需要记住几种常见的失效情况就可以了，我会尽可能解释每种情况为什么失效</p>
+</blockquote>
+<p><a style="color:#1890FF;">解释索引的命令：<em>explain</em></a></p>
+<p>// TODO</p>
+<p><a style="color:#1890FF;">索引失效的几大情况：</a></p>
+<blockquote>
+<p>注：索引失效的很大程度上都是因为 <em>MySQL</em> 优化器对于成本的判断和我们预想中的不同造成的</p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/学习图示/索引失效.7j5cdjlbecg0.png" alt="索引失效" style="zoom:80%;" />
+
+<p><a style="color:#F5222D;"><em>where</em> 条件中包含 <em>or</em> 逻辑运算符的时候，可能导致索引失效</a></p>
+<p><a style="color:#F5222D;">如果 or 关联的字段不是索引的话，那么索引基本都会失效</a>。如果走了索引那么就会先遍历一次索引树，然后再走非索引字段进行全表扫描，最后再将两者的结果进行合并，就相当于需要 索引扫描 + 全表扫描 + 合并三次操作。<em>MySQL</em> 优化器此时就会认为还不如直接走全表扫描，然后比较两个字段的值就可以找到符合条件的数据了，显然效率更高。<a style="color:#F5222D;">如果 or 关联的字段是索引的话，那么是有可能会走索引的</a>，这个就取决于 <em>MySQL</em> 的优化器对于执行成本的估计了。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 这种没有关联的字段不是索引的情况下, 大概率会失效</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">or</span> name <span class="operator">=</span> <span class="string">&#x27;张三&#x27;</span>;</span><br><span class="line"><span class="comment">-- 这种关联的字段是索引的情况下, 是有可能成功的</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">or</span> uid <span class="operator">=</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p><a style="color:#F5222D;"><em>where</em> 条件中使用 <em>like</em> 通配符可能导致索引失效</a></p>
+<p>如果查询内容中将 <em>%</em> 通配符放在最前边就可能导致索引失效，最好是将 <em>%</em> 通配符放在最后边</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;%三&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><a style="color:#F5222D;"><em>where</em> 条件中查询内容的类型和字段的类型不匹配可能导致索引失效</a></p>
+<p>如果定义的字段类型是字符串类型，而传递的查询内容是数字类型，那么就会导致索引失效。主要是因为 <em>MySQL</em> 会隐式地将两者都转换为浮点数再进行比较，所以就不会走字符串索引了</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 索引直接失效</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> id <span class="operator">=</span> <span class="string">&#x27;1&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><a style="color:#F5222D;"><em>where</em> 条件中使用联合索引的时候，不满足最左匹配原则会导致索引失效</a></p>
+<p><em>where</em> 条件中使用 != / &lt;&gt; / not in 等类似表达，都可能导致索引失效</p>
+<p><a style="color:#F5222D;"><em>where</em> 条件中使用前缀索引的时候，也会导致覆盖索引失效</a></p>
+<p><em>MySQL</em> 错误估计全表扫描的成本，认为比不使用索引会更快</p>
+<p><a style="color:#1890FF;">什么情况下可能出现选错索引的情况呢？</a></p>
+<blockquote>
+<p>注：其实索引选错的情况没有太具体的例子，<em>MySQL 实战 45 讲</em> 中的例子感觉也不是很典型，所以这里主要讲 MySQL 优化器如何选择索引的，然后根据相关的命令查看信息后判断是否选错索引</p>
+</blockquote>
+<p><em>SQL</em> 的执行流程中会经过优化器这个部分，那么优化器主要就是<a style="color:#F5222D;">根据扫描行数最少的原则</a>来选择最优的执行方案，选择的过程就是通过调整联表的顺序以及选择的索引。</p>
+<p>优化器肯定是无法在 <em>SQL</em> 执行之前就直接清楚地知道每种方案下扫描的行数是多少，所以优化器会采用基数（<em>cardinality</em>）来估计每种执行方案大致的扫描行数，也就是每个索引对应的扫描行数。而基础则是采用采样统计的方式来计算的，<a style="color:#F5222D;">采样统计就是选取 <em>N</em> 个数据页然后扫描每个数据页中该索引下的不同的值的数量，然后取平均值，最后将平均值 x 索引页的数量，就可以得到基数的大小</a>。只要基数统计出现错误，那么很有可能导致优化器之后的代价计算错误，最终导致选错索引</p>
+<p>例子：</p>
+<p>现在存在两个事务，第一个事务开启之后不做任何操作，第二个事务开启之后先将表中的数据全部删除，然后再向表中插入 10w 行数据，之后再使用索引查询 10000~20000 范围内的数据，此时就会出现索引选择错误的情况，优化器会选择全表扫描而不走索引</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 事务-1</span></span><br><span class="line"><span class="keyword">start</span> transaction <span class="keyword">with</span> consistent snapshot;</span><br><span class="line"><span class="comment">-- 什么也不做</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 事务-2</span></span><br><span class="line"><span class="keyword">start</span> transaction;</span><br><span class="line"><span class="comment">-- 删除数据</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> t;</span><br><span class="line"><span class="comment">-- 插入数据: 调用的是存储过程</span></span><br><span class="line"><span class="keyword">call</span> idata();</span><br><span class="line"><span class="comment">-- 查询数据</span></span><br><span class="line">explain <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> a <span class="keyword">between</span> <span class="number">10000</span> <span class="keyword">and</span> <span class="number">20000</span>;</span><br><span class="line"><span class="keyword">commit</span>;</span><br></pre></td></tr></table></figure>
+
+<p>原因分析：主要是因为事务-1在启动之后立刻记录了当前数据库的快照，那么此时的快照记录的就是旧版本的数据，而之后事务-2在启动之后删除了表中的数据并插入了新的数据，对应快照记录的是新版本的数据，此时就相当于表中的每行数据都有两个版本，从而导致优化器在采用基数统计的时候出现错误，统计多了。</p>
+<p>那么只要出现索引选择错误的情况，那肯定是优化器认为选择这个索引或者说不选择索引带来的开销会低于选择我们想要使用的索引带来的开销，但是这个有可能是优化器估计错误了，如果想要修正，那么可以采用其他的办法。</p>
+<p>常见的几种办法：</p>
+<ul>
+<li>直接使用 <em>force index</em>( 索引名字 ) <em>,</em> 那么就可以强制优化器走某个索引</li>
+<li>扫描的行数出现错误可以使用 <em>analyze table t</em> 这个命令来要求重新统计</li>
+<li>使用 <em>explain</em> 命令查看执行计划，然后具体原因具体分析</li>
+</ul>
+<blockquote>
+<p>参考内容：</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903859673006094#heading-1">https://juejin.cn/post/6844903859673006094#heading-1</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903845554814983">https://juejin.cn/post/6844903845554814983</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904073955639304#heading-0">https://juejin.cn/post/6844904073955639304#heading-0</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903885501530125">https://juejin.cn/post/6844903885501530125</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904015872917517#heading-1">https://juejin.cn/post/6844904015872917517#heading-1</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/michael9/p/12929775.html">https://www.cnblogs.com/michael9/p/12929775.html</a></p>
+<p>《MySQL 实战 45 讲》</p>
+</blockquote>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Fuyusakaiori</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2022/01/25/database/mysql/index/索引：深入篇/">http://example.com/2022/01/25/database/mysql/index/索引：深入篇/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%97%A5%E5%BF%97/">日志</a><a class="post-meta__tags" href="/tags/%E7%B4%A2%E5%BC%95/">索引</a><a class="post-meta__tags" href="/tags/change-buffer/">change buffer</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2022/02/06/database/mysql/log/MySQL%20%E4%B8%89%E5%A4%A7%E6%97%A5%E5%BF%97/"><i class="fa fa-chevron-left">  </i><span>MySQL 三大日志</span></a></div><div class="next-post pull-right"><a href="/2022/01/25/database/mysql/index/%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87/"><span>索引：基础篇</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
