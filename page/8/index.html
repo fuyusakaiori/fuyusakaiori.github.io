@@ -8,104 +8,141 @@
     noSupport: 'The browser does not support'
   },
   hexoVersion: '5.4.0'
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="false"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">115</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">17</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">35</span></a></div></div></div><nav id="nav" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="site-info"><div id="site-title">天鹅绒房间</div><div id="site-sub-title">Velvet Room</div><div id="site-social-icons"><a class="social-icon" href="https://github.com/fuyusakaiori" target="_blank" rel="noreferrer noopener nofollow"><i class="fa-github fa"></i></a><a class="social-icon" href="https://weibo.com/Sakiless/profile?rightmod=1&amp;wvr=6&amp;mod=personinfo" target="_blank" rel="noreferrer noopener nofollow"><i class="fa-weibo fa"></i></a></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/21/jvm/runtime/methodarea/%E6%96%B9%E6%B3%95%E5%8C%BA/">方法区</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-21</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">运行时数据区</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/%E6%96%B9%E6%B3%95%E5%8C%BA/">方法区</a></span><div class="content">方法区概述
-定义：虚拟机中独立于堆空间的较大存储空间
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="false"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://i1.xpic.jp/file/xpicjp/2022/01/21/2070676bca90a832cba0ff3e76a701b1.png"></div><div class="author-info__name text-center">Fuyusakaiori</div><div class="author-info__description text-center">啥也不会的大三狗</div><div class="follow-button"><a target="_blank" rel="noopener" href="https://github.com/fuyusakaiori">いらしゃい</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">94</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">18</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">31</span></a></div></div></div><nav id="nav" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">天鹅绒房间</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/home">主页 | Home</a><a class="site-page" href="/archives">归档 | Archives</a><a class="site-page" href="/categories">分类 | Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="site-info"><div id="site-title">天鹅绒房间</div><div id="site-sub-title">Velvet Room</div><div id="site-social-icons"><a class="social-icon" href="https://github.com/fuyusakaiori" target="_blank" rel="noreferrer noopener nofollow"><i class="fa-github fa"></i></a><a class="social-icon" href="https://weibo.com/Sakiless/profile?rightmod=1&amp;wvr=6&amp;mod=personinfo" target="_blank" rel="noreferrer noopener nofollow"><i class="fa-weibo fa"></i></a></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/11/os/disk/%E7%A3%81%E7%9B%98%E6%A6%82%E8%BF%B0/">磁盘概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%A3%81%E7%9B%98/">磁盘</a></span><div class="content"></div><a class="more" href="/2021/09/11/os/disk/%E7%A3%81%E7%9B%98%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/11/os/memory/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">内存管理</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%86%85%E5%AD%98/">内存</a></span><div class="content">内存管理内存概述
+定义：具有巨大容量的字节数组，每个字节都具有自己相应的地址
 
-作用：[存放所有和 类相关的信息 ]{.red}
+处理器 &amp; 内存
 
-实现方式：
+执行过程
 
-永久代（PermSpace）：[方法区使用的虚拟机的内存]{.red}
-元空间（MetaSpace）：[方法区直接使用操作系统提供的物理内存]{.red}
+程序源代码经过 编译 后存放在外部存储中
 
-  +++danger 为什么要采用元空间实现方法区而不是永久代呢？
-  ① 官方文档中的解释非常模糊：因为被收购的 J ...</div><a class="more" href="/2021/09/21/jvm/runtime/methodarea/%E6%96%B9%E6%B3%95%E5%8C%BA/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/20/jvm/runtime/heapspace/%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98/">堆空间-直接内存</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-20</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/">Java 虚拟机</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">运行时数据区</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Java-%E8%99%9A%E6%8B%9F%E6%9C%BA/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/%E5%A0%86%E7%A9%BA%E9%97%B4/">堆空间</a></span><div class="content"></div><a class="more" href="/2021/09/20/jvm/runtime/heapspace/%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/process/%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD/">进程加载</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/">进程</a></span><div class="content">进程加载前提：基于硬件的语言编写的程序（Java 编写的程序是在虚拟机上运行的 -&gt; 存在一定的出入）
-编译
-定义：
-编译程序将 ==源代码==（高级语言）编译成处理器可识别的 ==目标代码==
-编译程序将 ==目标代码== 分割成许多目标代码段，目标代码段被封装形成 ==目标模块==
-编译程序为每个目标模块分配 ==逻辑地址空间== 然后 ==存放在磁盘== 中
+程序需要运行时：
 
-
-细节：
-Java 源代 ...</div><a class="more" href="/2021/09/18/os/process/%E8%BF%9B%E7%A8%8B%E5%8A%A0%E8%BD%BD/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/">内存分配</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%86%85%E5%AD%98/">内存</a></span><div class="content">内存分配
-前提：操作系统也存放在内存中：通常存放在低内存，也可以存放在高内存
-细节：
-决定操作系统存放位置的因素是 ==中断向量== 的位置
-操作系统可以利用 ==暂时的操作系统代码== 在进程执行过程中动态 ==改变操作系统的大小==
-暂时的操作系统代码：操作系统中 ==并不常用的服务== 可以暂时并不保存在内存中，空闲出来的内存用于其他目的
-
-
-
-
-
-
-
-内存保护
-定义：进程 禁止 访问不属于 ...</div><a class="more" href="/2021/09/18/os/memory/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">虚拟内存</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%86%85%E5%AD%98/">内存</a></span><div class="content">虚拟内存
+链接程序对程序各模块和库函数进行 链接
+调度程序 / 调页器 将 程序 / 需要使用的页面调度 加载进入内存中 （过程：==长期调度==；技术：虚拟内存）
+调度程序 / 调页器 为 程序 / 调入的页面 分配内存 / ...</div><a class="more" href="/2021/09/11/os/memory/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/11/os/file-system/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/">文件管理</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%96%87%E4%BB%B6/">文件</a></span><div class="content">文件管理
 引入：
 
-程序加载进入内存中有两种方式：(1) 程序 ==完整== 地加载进入内存 (2) 仅加载 ==部分== 程序，剩余部分在需要时再进行加载
-  解释 1：此前提到的 ==分页技术== 都是在内存中为程序的每页都分配相应的帧：相当于将程序完整地加载进入内存中
-  解释 2：此前提到的 ==动态加载== 就是加载部分程序，需要时再加载；即将提到的 ==虚拟内存== 基本原理也是如此
- ...</div><a class="more" href="/2021/09/18/os/memory/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/overview/%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/">硬件概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A6%82%E8%BF%B0/">概述</a></span><div class="content">硬件设备I/O 设备
-组成部分：==I/O 设备控制器 + I/O 设备==
+核心：屏蔽底层不同存储介质的异构性
+每种存储介质的 基本存储单元 显然是不同的 (磁盘、磁带、光盘…)
+每台计算机显然可以同时拥有这些不同的存储介质
+操作系统为了统一管理不同的存储介质的存储而提出了 文件 的这种抽象的概念
+解释1：无论具体的存储介质是如何实现的，操作系统都只会认为这种存储介质的基本存储单元是文件而不是其他的
+解释2：操作系统如果不提供 文件 这种抽象概念，那么 ...</div><a class="more" href="/2021/09/11/os/file-system/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/11/os/overview/%E6%A6%82%E8%BF%B0/">操作系统-概述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A6%82%E8%BF%B0/">概述</a></span><div class="content">概述计算机组成
+硬件
 
-I/O 结构模式：
-
-同步 I/O 结构：==进程== 必须等待 I/O 完成后才可以继续执行（进程进入 ==等待== 状态）
-  注：处理器并不会等待 I/O 完成 -&gt; 处理器执行另外的程序
-
-异步 I/O 结构：==进程== 不需要等待 I/O 完成而是由处理器继续执行剩下的代码
-  注：进程可以申请多个  ...</div><a class="more" href="/2021/09/18/os/overview/%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/overview/%E5%8E%86%E5%8F%B2/">操作系统-操作系统历史</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A6%82%E8%BF%B0/">概述</a></span><div class="content">操作系统发展第一代计算机
-计算机构成：电子管
-
-操作系统：电子管计算机没有操作系统
-
-程序执行过程
-
-程序员将程序写在纸上并将其制成穿孔卡片（Job）
-操作员将穿孔卡片放入计算机中执行程序等待输出结果
-
-  注：穿孔卡片就称为作业（Job），也就是程序；为了方便之后都称作程序
-
-问题：没有操作系统的情况下每次只能够执行一次作业 -&gt; 效率非常低下
-
-语言：机器语言（二进制）
+体系结构
+原始计算机体系结构==控制器 + 运算器 + 存储器 + 输入设备 + 输出设备==
+原始计算机体系结构又称为 冯 · 诺依曼 结构
+冯 · 诺依曼三大贡献
+提出软硬件分离的思想
+设计完成计算机体系结构
+提出二进制编码
 
 
-第二代计算机 ...</div><a class="more" href="/2021/09/18/os/overview/%E5%8E%86%E5%8F%B2/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/overview/%E7%BB%93%E6%9E%84/">操作系统-操作系统结构</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A6%82%E8%BF%B0/">概述</a></span><div class="content">操作系统结构简单结构
-定义：没有 ==模块化== 的设计，利用最小的空间尽可能提供操作系统所有功能
-优点 &amp; 缺点：
-优点：操作系统所有功能之间可以 ==任意== 通信 -&gt; 效率相对较高
-缺点：(1) 操作系统理解维护非常困难 (2) 单个功能的崩溃会影响整个操作系统
 
 
-细节：
-早期的 MS-DOS 操作系统就是采用 ==简单结构== -&gt; 没有明确的区分功能的接口和层次
- ...</div><a class="more" href="/2021/09/18/os/overview/%E7%BB%93%E6%9E%84/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">系统调用</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A6%82%E8%BF%B0/">概述</a></span><div class="content">系统调用
-定义：系统调用是进程调用操作系统提供的服务的接口
-  注：系统调用的实现通常使用 汇编语言 或者 C/C++ 编写
+现代计算机体系结构：==处理器 + 存储器 + 输入设备 + 输出设备==
+处理器 = 控制器 + 运算器
+现代计算机体系结构都是将 处理 ...</div><a class="more" href="/2021/09/11/os/overview/%E6%A6%82%E8%BF%B0/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/11/linux/Linux%20%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">Linux 文件系统</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><div class="content">文件系统
+核心：万物皆文件
 
-类型：(1) 进程管理 (2) 文件管理 (3) I/O 管理 (4) 信息维护 (5) 进程通信 (6) 保护
+文件目录文件权限
+属性：文件类型 + 文件权限 + 链接数 + 文件所属用户 + 文件所属组 + 文件大小 + 文件修改日期 + 文件名
 
-执行过程：
 
-进程 传递 系统调用需要的 参数
-进程执行陷入指令从用户态切换到内核态
-操作系统根据 系统调用接口 查找相应的系统调用
-操作系统执行系统调用的 ...</div><a class="more" href="/2021/09/18/os/overview/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/18/os/overview/%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/">中断机制</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A6%82%E8%BF%B0/">概述</a></span><div class="content">中断机制
-中断定义：[处理器暂停当前正在执行的进程，并将当前进程保存在上下文中，转而恢复其他新的进程的并执行的过程]{.red}
-  [注：上下文采用进程控制块实现]{.red}
+文件类型：
 
-中断处理程序：用于处理各种中断的程序
-  [注：中断处理程序都是存放在内存中的]{.red}
+常规文件：[采用 [-] 表示]{.red}（文本文件、二进制文件、数据文件）
+文件目录：[采用 [d] 表示]{.red}
+链接文件：[采用 [l] 表示]{.red}（软链接文件）
+设备文件：[块设备文件采用  ...</div><a class="more" href="/2021/09/11/linux/Linux%20%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/11/linux/Linux%20%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F/">Linux 用户系统</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><div class="content">用户系统概述
+为什么 Linux 需要提供用户管理机制？
 
-中断向量：各种设备的中断处理程序的地址数组
 
-中断过程：
+核心：[用户管理机制是用于 文件的安全防护措施]{.red}
+描述：普通用户只有具备权限才可以进行操作；系统管理员拥有最大的权限从而可以进行 [任何操作]{.green}
 
-进程使用 [系统调用]{.blue} 获取操作系统提供的服务  ...</div><a class="more" href="/2021/09/18/os/overview/%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/#more" style="margin-top: 14px">Read more</a><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-chevron-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+
+Linux 用户管理机制分为几个级别？
+
+
+定义：① 用户 ② 用户组 ② 其他用户组
+
+
+
+用户管理概述
+定义：文件的拥有者
+
+分类：
+
+普通账号：可以被正常登 ...</div><a class="more" href="/2021/09/11/linux/Linux%20%E7%94%A8%E6%88%B7%E7%B3%BB%E7%BB%9F/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">数据链路层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">数据链路层概述
+概念：[数据链路层解决的是两个节点之间如何传输数据的问题]{.red}
+
+术语
+
+节点：主机，路由器，交换机
+通信链路：网络中两个节点之间的通信的通道
+协议数据单位：[帧]{.red} (通过封装网络层传递的数据包得到)
+
+
+功能
+
+成帧：(1) 封装成帧的方式 (2) 帧格式
+
+差错控制：(1) 奇偶校验(包括二维的奇偶校验) (2) CRC 循环冗余校验 (3) 海明码校验
+  ...</div><a class="more" href="/2021/09/09/network/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">网络层概述
+概念：
+负责转发数据报：并不是针对两个节点之间的
+确定数据报的转发路径
+
+
+核心：网络层 不提供可靠传输服务 和 流量控制 服务：尽力而为
+单位：==数据报==
+功能
+异构网络互连：将物理层和数据链路层不同的网络用统一的协议互联起来
+[IP 协议](# IP 协议)：[IPv4](# IPv4) [IPv6](# IPv6)
+[ARP 协议](# ARP 协议)：映射 IP 地址到 M ...</div><a class="more" href="/2021/09/09/network/%E7%BD%91%E7%BB%9C%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E4%BC%A0%E8%BE%93%E5%B1%82/">传输层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">传输层概述
+概念：为运行在不同端系统上的 进程 提供了逻辑通信 (Logic Communication) (进程的概念详见操作系统)
+  注：网络层是为不同的 端系统 之间提供逻辑通信
+
+单位：==报文段== (Segement)
+  注：UDP 协议是不对应用层交付的报文做任何处理的：所以也可以认为单位是报文
+
+协议：
+
+UDP 协议：用户数据报协议
+TCP 协议：传输控制协议
+
+
+
+
+应用层 ...</div><a class="more" href="/2021/09/09/network/%E4%BC%A0%E8%BE%93%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/09/network/%E5%BA%94%E7%94%A8%E5%B1%82/">应用层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span><div class="content">应用层应用层概述
+基本概念：
+应用层：使用下层协议为==应用软件==提供服务
+单位：报文（HTTP协议）
+
+
+功能
+域名解析（DNS 协议）
+文件传输（FTP 协议）
+邮件系统（SMTP，POP3协议）
+虚拟终端（HTTP协议）
+
+
+网络应用模型
+C/S 客户端/服务器
+P2P
+
+
+
+协议DNS 协议（需要修改）
+域名（主机名）
+
+概念：应用层用于==标识主机==的方式
+
+传输层：采用 IP 地址 ...</div><a class="more" href="/2021/09/09/network/%E5%BA%94%E7%94%A8%E5%B1%82/#more" style="margin-top: 14px">Read more</a><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-chevron-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://cdn.jsdelivr.net/gh/fuyusakaiori/image@master/随机图库/1643042375499.2rf317jrwiw0.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2022 By Fuyusakaiori</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">wind glass bluebird</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
   $('#top-container').addClass('is-mobile')
